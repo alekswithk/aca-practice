@@ -34,3 +34,11 @@ for(const mutate of [s=>s.attempts[0].optionId='missing',s=>s.attempts[0].outcom
 const conflict=JSON.parse(JSON.stringify(restored));conflict.attempts[0].notesSnapshot='different';assert.throws(()=>mergeBackups(restored,conflict));
 const newer=JSON.parse(JSON.stringify(restored));newer.drafts[q.id].updatedAt='2026-10-01T12:00:00.000Z';newer.drafts[q.id].notes='Newest draft';assert.equal(mergeBackups(restored,newer).drafts[q.id].notes,'Newest draft');
 console.log('PASS: shuffled grading for every scored question, snapshots, unknown responses, filters, retries, follow-ups, statistics, backup round trips and invalid/conflicting imports.');
+
+// An existing browser profile upgrades the bank without losing drafts, attempts or option order.
+const legacy=structuredClone(restored);legacy.bankVersion='2026-09-30.1';legacy.attempts.forEach(a=>a.bankVersion=legacy.bankVersion);
+const upgraded=validateBackup(legacy,bank);assert.equal(upgraded.bankVersion,bank.bankVersion);assert.deepEqual(upgraded.attempts,legacy.attempts);assert.deepEqual(upgraded.drafts,legacy.drafts);assert.deepEqual(upgraded.session,legacy.session);
+assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,46);
+assert.equal(questions.filter(q=>q.topic==='Management Accounting'&&q.status==='review').length,5);
+assert.equal(questions.filter(q=>q.topic==='Management Accounting').length,51);
+console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 46 scored and 5 excluded.');

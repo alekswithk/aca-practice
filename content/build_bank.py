@@ -1,6 +1,7 @@
 """Reproducible source import and authored content. Run from the ACA course folder."""
 from pathlib import Path
 import re, json
+from management_accounting import import_management, SOURCE as MANAGEMENT_SOURCE
 ROOT = Path(__file__).resolve().parents[2]
 OUT = Path(__file__).resolve().parent
 BANKS = {
@@ -325,6 +326,9 @@ tax('tax-12','Medium','An asset has a CHF 28,000 deductible temporary difference
 
 by_id['eq-05']['calculationCheck']={'kind':'sum','inputs':{'values':[210000,25000,40000]},'expected':275000,'unit':'CHF'}
 
+questions.extend(import_management(ROOT))
+BANKS['ma'] = MANAGEMENT_SOURCE
+
 # Give original distractors a relevant generated follow-up pool without repeating source numbers.
 for q in questions:
  q.setdefault('targets',[])
@@ -337,7 +341,7 @@ for q in questions:
  q['targets']=[t.replace('impairment-v i u-only','impairment-viu-only') for t in q['targets']]
 
 if __name__ == '__main__':
- bank={'schemaVersion':1,'bankVersion':'2026-09-30.1','difficultyNote':'Estimated study rating, not an official exam classification. Generated questions have no official marks.',
+ bank={'schemaVersion':1,'bankVersion':'2026-10-09.1','difficultyNote':'Estimated study rating, not an official exam classification. Generated questions have no official marks.',
        'validationNote':'Validated against the supplied lessons and identified standards. Source answers are unverified student responses. Explicit study clarifications are documented per question.',
        'sourceInventory':[{'path':v,'count':sum(q['source']['path']==v for q in questions)} for v in BANKS.values()], 'questions':questions}
  (OUT/'questions.json').write_text(json.dumps(bank,ensure_ascii=False,indent=2)+'\n')

@@ -1,8 +1,8 @@
 # Content validation — Phase 1
 
-Bank version: 2026-09-30.1. Content gate passed before interface implementation.
+Bank version: 2026-10-09.1. Extension content gate passed before the interface refresh. The original bank was validated on 30 September 2026.
 
-**128 questions imported/authored: 115 validated for scoring, 13 unresolved for review.** All 92 question bodies actually present in the three banks were imported: 25 Consolidated Statements, 25 Financial Reporting, 42 Auditing. Batch headings mention some absent questions; absent bodies were not invented. The Financial Reporting bank places ABC questions 14–15 after AlphaTech; their ABC context is restored explicitly.
+**179 questions imported/authored: 161 validated for scoring, 18 unresolved for review.** All 143 question bodies in four banks were imported: 25 Consolidated Statements, 25 Financial Reporting, 42 Auditing, 51 Management Accounting. Batch headings mention some absent questions; absent bodies were not invented. The Financial Reporting bank places ABC questions 14–15 after AlphaTech; their ABC context is restored explicitly.
 
 ## Generated coverage
 
@@ -11,11 +11,11 @@ Bank version: 2026-09-30.1. Content gate passed before interface implementation.
 ## Validation performed
 
 - Read the bank wording and relevant Week 1–3 lesson sections. Student answers were never used as the key. No separate official exam solution bank was available.
-- Reviewed every scored option for one defensible answer under the displayed assumptions. All 115 scored questions have exactly one stable correct option ID, a rule explanation, and specific option feedback/misconception tags.
-- Independently recomputed 48 numerical results with a separate Decimal-based checker using discounted individual cash flows, carrying values, fair-value net assets, tax bases and signed profit corrections. Compared with both declared results and correct numeric option text where present. This is a separate calculation implementation; semantic review was performed by the author, not an external examiner.
+- Reviewed every scored option for one defensible answer under the displayed assumptions. All 161 scored questions have exactly one stable correct option ID, a rule explanation, and specific option feedback/misconception tags.
+- Independently recomputed 89 numerical results with a separate Decimal-based checker using discounted individual cash flows, carrying values, fair-value net assets, tax bases and signed profit corrections. Compared with both declared results and correct numeric option text where present. This is a separate calculation implementation; semantic review was performed by the author, not an external examiner.
 - Verified source counts, unique IDs, distinct options, exact original raw excerpts, metadata, preserved marks, nonempty evidence and exclusion of unresolved keys. Ran `python3 content/validate_bank.py` successfully.
 - Corrected a generated equity roll-forward arithmetic slip during this gate: 95,000 + 14,000 − 6,000 − 2,000 = **101,000**, with the key, option and calculation updated together.
-- Units are explicit CHF or MCHF. Lease intermediate balances use cents; required final amounts round upward to CHF 1. Tax amounts apply enacted reversal rates. Partial goodwill, deferred-tax treatment of uplifts, dividend timing and DTA recovery assumptions are displayed per scenario.
+- Units are explicit CHF, MCHF, currency units, physical units or percentages. The inventory set does not specify a currency; none was invented. Lease intermediate balances use cents; required final amounts round upward to CHF 1. Tax amounts apply enacted reversal rates. Partial goodwill, deferred-tax treatment of uplifts, dividend timing and DTA recovery assumptions are displayed per scenario.
 
 ## Source discrepancies and clarifications
 
@@ -24,6 +24,14 @@ Examples: Financial Reporting Batch 5 Q5 is **b**, the adverse price decline, ra
 The local Quick Reference contains an erroneous acquisition-equity formula. Keys use the detailed lesson’s acquisition-date elimination, not that shortcut. General course discussions allow other-framework proportionate joint-venture accounting; current IFRS joint ventures use equity accounting. Lease transcript operating/finance concepts are not treated as current IFRS lessee exemptions.
 
 All original wording, options and recorded answers remain in `original`; shared scenarios are preserved separately. Added assumptions, repaired context and option clarifications are recorded in `changes`. Illustrative 5% materiality percentages are explicitly authored study assumptions, not claimed to be present in the student tutorial or official exam rules. Audit market answers are tied to the historical course chart; sustainability answers concern its 2024 sample.
+
+## Management accounting extension, 9 October 2026
+
+Imported all 51 questions from the requested Management Accounting file, retaining wording, shared scenarios, tables, A–E options and marks. IDs include batch and question number to avoid collisions. A local source copy is retained in the parent course folder. Existing 128 question records and IDs are unchanged. The interface retains each original option label during shuffling, so cross-references such as A)–D) and lettered distractor explanations remain meaningful. “None/all of the above” is displayed as “none/all of the other answers” to remove positional ambiguity; original wording remains in JSON and the source excerpt. This display clarification is also shown in each affected question’s source details.
+
+46 additions are scored, with explanations, calculations and option-specific diagnostic feedback. Five are excluded below. The 41 new numerical results were independently recomputed using Decimal-based cost-flow, CVP, allocation, markup and target-cost models. Whole-unit tax targets also check that one fewer unit fails the target. Course evidence is Week 4's lecture summary and underlying transcripts for cost classifications, manufacturing cost flows, CVP, job costing and pricing. Supplied answers and displayed Ecoreps solutions were treated as claims to check, not as authoritative keys. This was an author review with an independent calculation implementation, not an external examiner review.
+
+Documented clarifications include Kyle's malformed option E range; Café Baer's target-volume context for contribution margin; gross profit with separately listed sales salaries; minimum whole-unit quantities; pre-tax versus after-tax target terminology; rounding and relevant-range assumptions. Terra's six components sum to CHF 4,340,000, conflicting with the source total of CHF 4,335,000. The practice table uses the component sum and explicitly states this assumption; the original table is preserved. Terra's stray company name “Wilde’s” is also corrected with a change record.
 
 ## Unresolved source questions — excluded from scoring
 
@@ -42,6 +50,11 @@ All original wording, options and recorded answers remain in `original`; shared 
 | au-07 | Batch 3 — Fraud AG materiality, Questions 4.1–4.2 / Q4.2 | The omitted sale increases profit by 2,000 and the omitted damage claim reduces it by 2,000: net correction is zero, but gross errors cannot simply be ignored. The source gives no materiality percentage or qualitative assessment. At an illustrative 5% of 45,000 = 2,250, gross errors total 4,000. None of the options expresses correction with zero net profit effect. |
 | au-08 | Batch 3 — Fraud AG materiality, Questions 4.1–4.2 / Q3.5 | The wording conflates unrecognized misstatements, disclosed valuation uncertainty and going-concern uncertainty. Adequate disclosure and material/pervasive effects are missing. Emphasis of matter is not a substitute for a necessary modification or the dedicated going-concern section. |
 | au-15 | Batch 4 — Questions 16–23 / Q22 | Analytical procedures may themselves be substantive. “Greater focus on substantive procedures” does not distinguish limited from ordinary audit reliably, and “analytical and substantive” treats overlapping categories as exclusive. Source needs a clearer comparison. |
+| ma-08-7.3 | Batch 8 — SS20 Question 7: Costing and pricing decisions / Q7.3 | B and D can both describe profitable incremental supply when willingness to pay is the attainable selling price. No market condition distinguishes B from D. The source solution selects D, but its explanation adds an unstated competition assumption. Needs revised wording before scoring. |
+| ma-10-1.2 | Batch 10 — SS21 Question 1: Management and cost accounting concepts / Q1.2 | The source selects B, but the supplied Week 4 lessons do not establish the stated cost-type / cost-center / cost-object accounting sequence or its “why” criterion. Need the corresponding lecture or authoritative solution context to validate every statement; source key alone is insufficient. |
+| ma-11-2.1 | Batch 11 — SS21 Question 2: Rucksack AG costing and breakeven / Q2.1 | The scenario says 28,000 backpacks were produced, but their direct materials alone would be 28,000 × 3.20 = 89,600, exceeding the 60,000 company total. PCC I backpack wages alone would be 84,000, exceeding that center’s 56,000 total. The displayed overhead-rate calculation ignores these contradictory totals. Production quantity or cost-allocation table needs correction. For 2.3 the administration/distribution allocation base is also unstated. |
+| ma-11-2.2 | Batch 11 — SS21 Question 2: Rucksack AG costing and breakeven / Q2.2 | The scenario says 28,000 backpacks were produced, but their direct materials alone would be 28,000 × 3.20 = 89,600, exceeding the 60,000 company total. PCC I backpack wages alone would be 84,000, exceeding that center’s 56,000 total. The displayed overhead-rate calculation ignores these contradictory totals. Production quantity or cost-allocation table needs correction. For 2.3 the administration/distribution allocation base is also unstated. |
+| ma-11-2.3 | Batch 11 — SS21 Question 2: Rucksack AG costing and breakeven / Q2.3 | The scenario says 28,000 backpacks were produced, but their direct materials alone would be 28,000 × 3.20 = 89,600, exceeding the 60,000 company total. PCC I backpack wages alone would be 84,000, exceeding that center’s 56,000 total. The displayed overhead-rate calculation ignores these contradictory totals. Production quantity or cost-allocation table needs correction. For 2.3 the administration/distribution allocation base is also unstated. |
 
 ## Evidence references
 
@@ -64,6 +77,8 @@ All original wording, options and recorded answers remain in `original`; shared 
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Audit reports: significant audit judgments and Key Audit Matters.
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slide 14: Three Lines Model. [Primary reference](https://www.theiia.org/globalassets/documents/resources/the-iias-three-lines-model-an-update-of-the-three-lines-of-defense-july-2020/three-lines-model-updated-english.pdf).
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slide 21: 87 of 89 assured reports had limited assurance, 2024 sample.
+
+- `ACA Course Materials/Week 4/W4 Lecture Summary.md` — Sections 1–6; underlying videos 1.1–1.3, 2.1–2.2, 3.1–3.2.
 
 ## Reproduce the content gate
 

@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#126153"><title>ACA Practice — quiz & notebook</title>
+  <meta name="theme-color" content="#142b40"><meta name="description" content="ACA exam practice with worked feedback, a personal notebook and saved learning history."><title>ACA Study | Practice & notebook</title>
   <link rel="stylesheet" href="styles.css"><script type="module" src="app.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to study area</a>
 <header class="masthead">
- <div class="identity"><span class="mark" aria-hidden="true">ACA</span><div><h1>Practice & notebook</h1><p>Accounting, Controlling & Auditing</p></div></div>
+ <div class="identity"><span class="mark" aria-hidden="true">ACA<span class="mark-dot"></span></span><div><h1>Practice & notebook</h1><p>Accounting · Controlling · Auditing</p></div></div>
  <nav aria-label="Study views"><button data-view="practice" aria-pressed="true">Practice</button><button data-view="history" aria-pressed="false">Learning history</button><button data-view="review" aria-pressed="false">Source review <span id="review-count"></span></button></nav>
 </header>
 <div id="notice" class="notice" role="status" hidden></div>
 <div class="layout">
  <aside class="sidebar" aria-label="Practice setup">
-  <h2>Your next session</h2><p class="muted">Work through a small set. Use your notes to make the reasoning visible.</p>
+  <details id="session-settings" class="session-settings" open><summary><span class="eyebrow">PRACTICE SETUP</span><span>Your next session</span></summary><p class="muted">Choose your focus. Take it one question at a time.</p>
   <form id="setup">
    <label for="mode">Practice mode</label><select id="mode"><option value="mixed">Mixed practice</option><option value="topic">Topic practice</option><option value="missed">Review missed / unknown</option></select>
    <label for="topic">Topic</label><select id="topic"><option value="">All topics</option></select>
@@ -24,8 +24,9 @@
    <label for="length">Session length</label><select id="length"><option value="10">10 questions</option><option value="5">5 questions</option><option value="20">20 questions</option><option value="all">All matching questions</option></select>
    <p id="available" class="muted" aria-live="polite"></p><button class="primary" type="submit" id="start" disabled>Start practice</button>
   </form>
+  </details>
   <button id="tax-focus" class="focus-button">Focus on deferred taxes</button>
-  <div class="storage"><h3>Your data stays here</h3><p>Notes and attempts are saved in this browser. They can be cleared by browser settings. Export a backup to move them between devices.</p><p id="global-save" role="status">Loading…</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></div>
+  <details class="storage" open><summary>Notes & backups</summary><p>Notes and attempts are saved in this browser. They can be cleared by browser settings. Export a backup to move them between devices.</p><p id="global-save" role="status">Loading…</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
  </aside>
  <main id="main" tabindex="-1"><p>Loading validated questions…</p></main>
 </div>

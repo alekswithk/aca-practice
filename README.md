@@ -1,6 +1,6 @@
 # ACA practice & notebook
 
-A local study tool with 92 imported exam-bank questions and 36 generated questions. There are 115 scored questions and 13 unresolved originals in **Source review**. The [content validation report](CONTENT_VALIDATION.md) identifies every unresolved question and explains the study clarifications.
+A local study tool with 143 imported exam-bank questions and 36 generated questions. There are 161 scored questions and 18 unresolved originals in **Source review**. The [content validation report](CONTENT_VALIDATION.md) identifies every unresolved question and explains the study clarifications.
 
 ## Launch
 
@@ -14,6 +14,10 @@ python3 -m http.server 8011 --bind 127.0.0.1
 Open **http://127.0.0.1:8011**. Keep the terminal running; press Ctrl+C to stop it. Opening `index.html` directly will not load the separate JSON bank reliably.
 
 Use the same browser, address and port each time. `localhost` and `127.0.0.1` have separate browser storage, as do different ports. Private browsing may discard saved data when the browser closes.
+
+## What changed on 9 October 2026
+
+Added all 51 Management Accounting questions. 46 are scored; five need further source review. Cost flows, CVP, job costing and pricing are now available in the topic filter and home-page topic cards. The refresh adds a study overview, more space for calculations, compact mobile setup and short transitions. Reduced-motion preferences turn animations off. Existing question IDs, notes, snapshots and history remain compatible.
 
 ## Practice
 
@@ -44,13 +48,14 @@ Repository: [alekswithk/aca-practice](https://github.com/alekswithk/aca-practice
 3. Choose **main** and **/ (root)**, then click **Save**.
 4. Wait for the deployment to complete. The shareable address will be **https://alekswithk.github.io/aca-practice/**.
 
-The app uses relative paths and ordinary HTML/CSS/JavaScript/JSON. The entry point and `.nojekyll` are at the repository root; no build step is required. Pages has not been enabled yet. [GitHub's publishing instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) describe these settings.
+The app uses relative paths and ordinary HTML/CSS/JavaScript/JSON. The entry point and `.nojekyll` are at the repository root; no build step is required. Pages is enabled for `main` at the repository root. [GitHub's publishing instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) describe these settings.
 
 [GitHub Pages hosts static files](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages). It can share the tool and question bank across devices; notes and attempts remain in each device's browser. Automatic cross-device history sync needs an additional storage/authentication design in that later phase. For now, export/import transfers the learning data. Export locally before moving to the hosted address, then import there.
 
 ## Files and checks
 
 - `content/questions.json`: delivered question data, independent of interface code.
+- `content/management_accounting.py`: Management Accounting import and reviewed teaching feedback.
 - `content/build_bank.py`: source importer and authored definitions. Requires the original parent course folders to rebuild; it is not needed to run the app.
 - `content/validate_bank.py`: structure and independent numerical checks. Original-excerpt comparisons also run when the parent course-source files are present; a standalone clone reports those comparisons as skipped.
 - `core.mjs`: grading, filtering, follow-ups, statistics and backup validation.

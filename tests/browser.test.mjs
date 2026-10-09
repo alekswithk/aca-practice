@@ -17,7 +17,7 @@ try{
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor();};
  const data=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
- await load();assert.equal(await page.locator('#review-count').textContent(),'(13)');
+ await load();assert.equal(await page.locator('#review-count').textContent(),`(${bank.questions.filter(q=>q.status==='review').length})`);
  await page.selectOption('#topic','Financial Reporting');await page.selectOption('#difficulty','Hard');await page.selectOption('#origin','original');
  assert.equal(Number((await page.locator('#available').textContent()).split(' ')[0]),bank.questions.filter(q=>q.status==='validated'&&q.topic==='Financial Reporting'&&q.difficulty==='Hard'&&q.origin==='original').length);
  await page.click('#tax-focus');let state=await data();const firstId=state.session.queue[0],q=bank.questions.find(q=>q.id===firstId);assert.equal(q.subtopic,'Deferred taxes');assert.equal(q.origin,'generated');
@@ -25,7 +25,7 @@ try{
  const draft='Difference first, then multiply by the rate.';await page.locator('textarea[data-notes]').fill(draft);
  const wrong=q.options.find(o=>o.misconception==='tax-rate-omitted');assert.ok(wrong);
  await page.locator(`input[name=answer][value="${wrong.id}"]`).check();
- const initialOrder=(await data()).session.order;
+ const initialOrder=(await data()).session.order;assert.ok(await page.locator('.option').evaluateAll(options=>options.every(el=>el.querySelector('span').textContent.startsWith(el.querySelector('input').value.toUpperCase()+'. '))),'Source option labels must remain stable when shuffled');
  await page.reload();await page.locator('textarea[data-notes]').waitFor();assert.equal(await page.locator('textarea[data-notes]').inputValue(),draft);
  assert.equal(await page.locator(`input[value="${wrong.id}"]`).isChecked(),true);assert.deepEqual((await data()).session.order,initialOrder);
  await page.getByRole('button',{name:'Submit answer',exact:true}).click();await page.locator('.feedback[data-outcome=incorrect]').waitFor();
@@ -41,7 +41,7 @@ try{
  await page.locator(`input[name=answer][value="${q.correctOptionId}"]`).check();await page.getByRole('button',{name:'Submit answer',exact:true}).click();await page.locator('.feedback[data-outcome=correct]').waitFor();
  state=await data();assert.equal(state.attempts.length,3);assert.deepEqual(state.attempts.map(a=>a.outcome),['incorrect','unknown','correct']);assert.equal(state.attempts[0].notesSnapshot,draft);
  await page.getByRole('button',{name:'Learning history',exact:true}).click();const row=page.locator('tbody tr').filter({hasText:'Financial Reporting'});assert.match(await row.textContent(),/50%/);
- await page.getByRole('button',{name:/Source review/}).click();assert.equal(await page.locator('.review-item').count(),13);const review=page.locator('.review-item').first();await review.locator('summary').first().click();await review.locator('textarea').fill('Ask why this has two correct options.');
+ await page.getByRole('button',{name:/Source review/}).click();assert.equal(await page.locator('.review-item').count(),bank.questions.filter(q=>q.status==='review').length);const review=page.locator('.review-item').first();await review.locator('summary').first().click();await review.locator('textarea').fill('Ask why this has two correct options.');
  await page.reload();await page.locator('.review-item').first().waitFor();assert.equal(await page.locator('.review-item').first().locator('textarea').inputValue(),'Ask why this has two correct options.');
  const downloadPromise=page.waitForEvent('download');await page.click('#export');const exported=await downloadPromise;const exportPath=await exported.path();const backup=JSON.parse(readFileSync(exportPath,'utf8'));assert.equal(backup.attempts.length,3);assert.equal(backup.attempts[0].notesSnapshot,draft);
  await page.click('#reset');await page.locator('#reset-dialog[open]').waitFor();await page.keyboard.press('Escape');assert.equal((await data()).attempts.length,3);
@@ -54,9 +54,9 @@ try{
  const cancelledBackup=structuredClone(backup);cancelledBackup.drafts[firstId].notes='Never merge this cancelled draft';cancelledBackup.drafts[firstId].updatedAt='2050-01-01T00:00:00.000Z';
  await page.locator('#import').setInputFiles({name:'cancelled.json',mimeType:'application/json',buffer:Buffer.from(JSON.stringify(cancelledBackup))});await page.locator('#import-dialog[open]').waitFor();await page.keyboard.press('Escape');await page.locator('#import-dialog').waitFor({state:'hidden'});assert.equal((await data()).drafts[firstId].notes,backup.drafts[firstId].notes);
  await page.locator('#import').setInputFiles({name:'bad.json',mimeType:'application/json',buffer:Buffer.from('{"app":"bad"}')});await page.waitForFunction(()=>document.querySelector('#notice').textContent.includes('Invalid'));assert.equal((await data()).attempts.length,3);assert.match(await page.locator('#notice').textContent(),/Invalid/);
- await page.getByRole('button',{name:'Practice',exact:true}).click();await page.screenshot({path:output+'/desktop.png',fullPage:true});
+ await page.getByRole('button',{name:'Practice',exact:true}).click();await page.screenshot({path:output+'/desktop.png',fullPage:true,animations:'disabled'});
  for(const width of [375,768,1024,1440]){await page.setViewportSize({width,height:900});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`overflow at ${width}`);}
- await page.setViewportSize({width:375,height:900});await page.waitForFunction(()=>document.querySelector('#notebook').parentElement.id==='notebook-slot');assert.ok(await page.evaluate(()=>!!(document.querySelector('#notebook').compareDocumentPosition(document.querySelector('#feedback'))&Node.DOCUMENT_POSITION_FOLLOWING)),'Mobile notebook must precede feedback');await page.emulateMedia({reducedMotion:'reduce'});await page.screenshot({path:output+'/mobile.png',fullPage:true});
+ await page.setViewportSize({width:375,height:900});await page.waitForFunction(()=>document.querySelector('#notebook').parentElement.id==='notebook-slot');assert.ok(await page.evaluate(()=>!!(document.querySelector('#notebook').compareDocumentPosition(document.querySelector('#feedback'))&Node.DOCUMENT_POSITION_FOLLOWING)),'Mobile notebook must precede feedback');await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.question').evaluate(el=>getComputedStyle(el).animationName),'none');await page.screenshot({path:output+'/mobile.png',fullPage:true,animations:'disabled'});
  await page.evaluate(()=>document.documentElement.style.fontSize='24px');assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'overflow with large text');await page.evaluate(()=>document.documentElement.style.fontSize='16px');
  // Close and reopen a page in the same browser profile: storage survives the closure.
  await page.close();const reopened=await context.newPage();await reopened.goto(base);await reopened.locator('textarea[data-notes]').waitFor();assert.equal(await reopened.locator('textarea[data-notes]').inputValue(),backup.drafts[firstId].notes);
@@ -66,6 +66,19 @@ try{
  await keyboardPage.setViewportSize({width:375,height:900});await keyboardPage.locator('#tax-focus').focus();await keyboardPage.keyboard.press('Enter');assert.ok(await keyboardPage.evaluate(()=>!!(document.querySelector('#notebook').compareDocumentPosition(document.querySelector('#answer-form button[type=submit]'))&Node.DOCUMENT_POSITION_FOLLOWING)),'Mobile notes must precede submission');await keyboardPage.locator('input[name=answer]').first().focus();await keyboardPage.keyboard.press('Space');await keyboardPage.keyboard.press('ArrowDown');assert.equal(await keyboardPage.locator('input[name=answer]:checked').count(),1);
  assert.equal(await keyboardPage.locator('input[name=answer]:checked').evaluate(el=>getComputedStyle(el).outlineStyle),'solid');
  await keyboardPage.getByRole('button',{name:'Submit answer',exact:true}).focus();await keyboardPage.keyboard.press('Enter');await keyboardPage.locator('.feedback').waitFor();assert.equal(await keyboardPage.locator('#feedback-heading').evaluate(el=>el===document.activeElement),true);
+ // New topic cards route to validated Management Accounting questions, including five-option questions.
+ const maContext=await browser.newContext({viewport:{width:1440,height:1000}});const maPage=await maContext.newPage();await maPage.goto(base);await maPage.locator('[data-topic="Management Accounting"]').waitFor();
+ await maPage.screenshot({path:output+'/welcome.png',fullPage:true,animations:'disabled'});await maPage.setViewportSize({width:375,height:900});await maPage.reload();await maPage.locator('.study-hero').waitFor();assert.equal(await maPage.locator('#session-settings').getAttribute('open'),null);assert.ok(await maPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await maPage.screenshot({path:output+'/welcome-mobile.png',fullPage:true,animations:'disabled'});await maPage.setViewportSize({width:1440,height:1000});
+ await maPage.locator('[data-topic="Management Accounting"]').click();
+ const maState=await maPage.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
+ assert.ok(maState.session.queue.every(id=>bank.questions.some(q=>q.id===id&&q.topic==='Management Accounting'&&q.status==='validated')));
+ const maQuestion=bank.questions.find(q=>q.id===maState.session.queue[0]);assert.equal(await maPage.locator('input[name=answer]').count(),maQuestion.options.length);
+ await maPage.locator('textarea[data-notes]').fill('Management accounting: record the contribution and units.');
+ await maPage.locator(`input[name=answer][value="${maQuestion.correctOptionId}"]`).check();await maPage.getByRole('button',{name:'Submit answer',exact:true}).click();await maPage.locator('.feedback[data-outcome=correct]').waitFor();
+ await maPage.screenshot({path:output+'/management-accounting.png',fullPage:true,animations:'disabled'});
+ await maPage.setViewportSize({width:375,height:900});assert.ok(await maPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),'MA question overflow');
+ await maPage.getByRole('button',{name:'Learning history',exact:true}).click();assert.match(await maPage.locator('tbody tr').filter({hasText:'Management Accounting'}).textContent(),/100%/);
+ await maPage.getByRole('button',{name:/Source review/}).click();assert.equal(await maPage.locator('.review-item').filter({hasText:'ma-'}).count(),5);
  // Corrupt data must survive initialization; no blank state may overwrite it.
  const corruptContext=await browser.newContext();await corruptContext.addInitScript(key=>localStorage.setItem(key,'unreadable-json'),STORAGE_KEY);const corruptPage=await corruptContext.newPage();await corruptPage.goto(base);await corruptPage.getByRole('button',{name:'Download unreadable data'}).waitFor();assert.equal(await corruptPage.evaluate(key=>localStorage.getItem(key),STORAGE_KEY),'unreadable-json');
  // Restart a persistent browser profile, not just a page, to verify durable drafts/history.
