@@ -37,6 +37,17 @@ The previous 128 question records were compared with the committed bank and are 
 
 Desktop and mobile screenshots were visually inspected. Text, controls, feedback and the notebook fit without overlap or clipping.
 
+## Apple design checks
+
+Applied the requested `apple-design` skill and the companion `emil-design-eng` guidance from `emilkowalski/skills`, commit `e8a175d`.
+
+- Verified press feedback starts during pointer-down, before session creation on release.
+- Questions have no entry animation. Keyboard submission retains focus and has no running animation or transition. Pointer feedback uses 160ms transitions.
+- Touch emulation does not match mouse hover styling. Phone selects and notebook inputs use at least 16px text. Notes remain selectable.
+- Study navigation stays at the viewport top while scrolling. The desktop, phone and large-text layout checks still pass.
+- Emulated reduced-transparency and increased-contrast preferences disable toolbar blur and strengthen separation. Reduced-motion still disables animation and press movement.
+- Visually inspected the updated desktop and phone welcome screens and notebook. No clipping or overlap was found.
+
 ## Limits
 
-This is a Chromium regression check and visual review, not a formal accessibility certification. Safari, Firefox and assistive-technology sessions were not independently tested. Browser data belongs to its browser/origin; automatic cross-device synchronization is not implemented. The existing GitHub Pages configuration serves the main branch from the repository root.
+This is a Chromium regression check and visual review, not a formal accessibility certification. Safari, Firefox, physical phones and assistive-technology sessions were not independently tested. Touch checks used Chromium emulation; actual iPhone keyboard/zoom and translucency behavior still need a device check. Browser data belongs to its browser/origin; automatic cross-device synchronization is not implemented. The existing GitHub Pages configuration serves the main branch from the repository root.

@@ -19,6 +19,12 @@ Use the same browser, address and port each time. `localhost` and `127.0.0.1` ha
 
 Added all 51 Management Accounting questions. 46 are scored; five need further source review. Cost flows, CVP, job costing and pricing are now available in the topic filter and home-page topic cards. The refresh adds a study overview, more space for calculations, compact mobile setup and short transitions. Reduced-motion preferences turn animations off. Existing question IDs, notes, snapshots and history remain compatible.
 
+## Design approach
+
+The interface follows [apple-design](https://github.com/emilkowalski/skills/blob/main/skills/apple-design/SKILL.md) and [emil-design-eng](https://github.com/emilkowalski/skills/blob/main/skills/emil-design-eng/SKILL.md), reviewed at repository commit `e8a175d` on 9 October 2026.
+
+System typography, quiet surfaces and floating study navigation keep the question and notebook prominent. Press feedback starts on pointer-down; the action commits on release. Questions and keyboard actions update immediately. Feedback and dialogs use short, interruptible CSS transitions, with no delay before the next action. Hover styling follows pointer capabilities, and phone inputs use at least 16px text. Reduced-motion, reduced-transparency and increased-contrast preferences are supported. Native controls and CSS keep the app independent of UI libraries.
+
 ## Practice
 
 1. Choose mixed practice, a topic, or review of questions whose latest attempt was incorrect or "I don't know". Filters include topic, focus, estimated difficulty and question origin.
