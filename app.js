@@ -850,6 +850,12 @@ async function init(){
       notify('Saved browser data could not be read.');
     }
 
+    // The source filter is no longer shown in the interface. Older saved
+    // preferences could leave it set to "generated", silently hiding every
+    // original exam-bank question (including Budgeting and Variances).
+    state.preferences.origin='';
+    $('#origin').value='';
+
     view=state.view;
 
     // Populate topics
@@ -857,7 +863,7 @@ async function init(){
     topics.forEach(t=>{if(![...$('#topic').options].some(o=>o.value===t))$('#topic').add(new Option(t,t));});
     populateSubtopics(state.preferences.topic||'');
 
-    for(const key of ['topic','difficulty','origin']){
+    for(const key of ['topic','difficulty']){
       if($('#'+key)&&state.preferences[key])$('#'+key).value=state.preferences[key];
     }
     if(state.preferences.subtopic)$('#subtopic').value=state.preferences.subtopic;
