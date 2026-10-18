@@ -25,10 +25,11 @@ try{
  const draft='Difference first, then multiply by the rate.';await page.locator('textarea[data-notes]').fill(draft);
  const wrong=q.options.find(o=>o.misconception==='tax-rate-omitted');assert.ok(wrong);
  await page.locator(`input[name=answer][value="${wrong.id}"]`).check();
- const initialOrder=(await data()).session.order;assert.ok(await page.locator('.option').evaluateAll(options=>options.every(el=>el.querySelector('span').textContent.startsWith(el.querySelector('input').value.toUpperCase()+'. '))),'Source option labels must remain stable when shuffled');
+ const initialOrder=(await data()).session.order;assert.deepEqual(await page.locator('.option span').allTextContents().then(rows=>rows.map(x=>x.slice(0,3))),initialOrder.map((_,i)=>String.fromCharCode(65+i)+'. '),'Displayed labels must follow shuffled order');
  await page.reload();await page.locator('textarea[data-notes]').waitFor();assert.equal(await page.locator('textarea[data-notes]').inputValue(),draft);
  assert.equal(await page.locator(`input[value="${wrong.id}"]`).isChecked(),true);assert.deepEqual((await data()).session.order,initialOrder);
  await page.getByRole('button',{name:'Submit answer',exact:true}).click();await page.locator('.feedback[data-outcome=incorrect]').waitFor();
+ assert.match(await page.locator('.feedback').textContent(),new RegExp('Correct answer: '+String.fromCharCode(65+initialOrder.indexOf(q.correctOptionId))+'\\.'));
  assert.equal((await data()).attempts[0].notesSnapshot,draft);assert.equal(await page.locator('.feedback').evaluate(el=>getComputedStyle(el).transitionDuration),'0.16s, 0.16s');
  assert.match(await page.locator('#feedback').textContent(),/Misconception/);
  await page.locator('textarea[data-notes]').fill('Revised after feedback: apply the tax rate.');

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "bankVersion": "2026-10-09.1",
+  "bankVersion": "2026-10-12.1",
   "difficultyNote": "Estimated study rating, not an official exam classification. Generated questions have no official marks.",
   "validationNote": "Validated against the supplied lessons and identified standards. Source answers are unverified student responses. Explicit study clarifications are documented per question.",
   "sourceInventory": [
@@ -19,6 +19,10 @@
     {
       "path": "Exam by topic/Management Accounting/Management Accounting Exam Bank.md",
       "count": 51
+    },
+    {
+      "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+      "count": 45
     }
   ],
   "questions": [
@@ -15965,6 +15969,4242 @@
           "margin": 0.19,
           "measure": "unit"
         }
+      }
+    },
+    {
+      "id": "bud-ss16-5.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Activity-based budgeting",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the total budgeted delivery cost for all product categories?",
+      "scenario": "Bob’s grocery store budgets ordering at CHF 90/order, delivery at CHF 82/delivery, restocking at CHF 21/hour, and customer service at CHF 0.18/item. Beverages use 14 orders, 12 deliveries, 16 hours and 4,600 items; fresh food 24, 62, 172 and 34,200; packaged food 14, 19, 94 and 10,750.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 4,120",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 7,626",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 3,580",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 3,740",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Multiply the delivery rate by total planned deliveries.",
+      "workedCalculation": "Total deliveries = 12 + 62 + 19 = 93; 93 × CHF 82 = CHF 7,626.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS16 Mock Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS16 Mock Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the total budgeted delivery cost for all product categories?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 4,120"
+          },
+          {
+            "id": "b",
+            "text": "CHF 7,626"
+          },
+          {
+            "id": "c",
+            "text": "CHF 3,580"
+          },
+          {
+            "id": "d",
+            "text": "CHF 3,740"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the total budgeted delivery cost for all product categories?\n- A) CHF 4,120\n- B) CHF 7,626\n- C) CHF 3,580\n- D) CHF 3,740\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Bob’s grocery store budgets ordering at CHF 90/order, delivery at CHF 82/delivery, restocking at CHF 21/hour, and customer service at CHF 0.18/item. Beverages use 14 orders, 12 deliveries, 16 hours and 4,600 items; fresh food 24, 62, 172 and 34,200; packaged food 14, 19, 94 and 10,750.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss16-5.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Activity-based budgeting",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What are total budgeted activity costs for beverages?",
+      "scenario": "Bob’s grocery store budgets ordering at CHF 90/order, delivery at CHF 82/delivery, restocking at CHF 21/hour, and customer service at CHF 0.18/item. Beverages use 14 orders, 12 deliveries, 16 hours and 4,600 items; fresh food 24, 62, 172 and 34,200; packaged food 14, 19, 94 and 10,750.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 3,408",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 2,290",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 7,440",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 2,400",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Budget each activity separately and add the four costs.",
+      "workedCalculation": "90×14 + 82×12 + 21×16 + 0.18×4,600 = 1,260 + 984 + 336 + 828 = CHF 3,408.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS16 Mock Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS16 Mock Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What are total budgeted activity costs for beverages?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 3,408"
+          },
+          {
+            "id": "b",
+            "text": "CHF 2,290"
+          },
+          {
+            "id": "c",
+            "text": "CHF 7,440"
+          },
+          {
+            "id": "d",
+            "text": "CHF 2,400"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What are total budgeted activity costs for beverages?\n- A) CHF 3,408\n- B) CHF 2,290\n- C) CHF 7,440\n- D) CHF 2,400\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Bob’s grocery store budgets ordering at CHF 90/order, delivery at CHF 82/delivery, restocking at CHF 21/hour, and customer service at CHF 0.18/item. Beverages use 14 orders, 12 deliveries, 16 hours and 4,600 items; fresh food 24, 62, 172 and 34,200; packaged food 14, 19, 94 and 10,750.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss16-5.3",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Activity-based budgeting",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What are total budgeted activity costs for packaged food?",
+      "scenario": "Bob’s grocery store budgets ordering at CHF 90/order, delivery at CHF 82/delivery, restocking at CHF 21/hour, and customer service at CHF 0.18/item. Beverages use 14 orders, 12 deliveries, 16 hours and 4,600 items; fresh food 24, 62, 172 and 34,200; packaged food 14, 19, 94 and 10,750.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 7,332",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 6,874",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 6,727",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 9,229",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Apply every driver rate to the packaged-food activity level.",
+      "workedCalculation": "90×14 + 82×19 + 21×94 + 0.18×10,750 = 1,260 + 1,558 + 1,974 + 1,935 = CHF 6,727.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS16 Mock Question 5, Question 5.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS16 Mock Question 5",
+        "number": "5.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What are total budgeted activity costs for packaged food?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 7,332"
+          },
+          {
+            "id": "b",
+            "text": "CHF 6,874"
+          },
+          {
+            "id": "c",
+            "text": "CHF 6,727"
+          },
+          {
+            "id": "d",
+            "text": "CHF 9,229"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What are total budgeted activity costs for packaged food?\n- A) CHF 7,332\n- B) CHF 6,874\n- C) CHF 6,727\n- D) CHF 9,229\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Bob’s grocery store budgets ordering at CHF 90/order, delivery at CHF 82/delivery, restocking at CHF 21/hour, and customer service at CHF 0.18/item. Beverages use 14 orders, 12 deliveries, 16 hours and 4,600 items; fresh food 24, 62, 172 and 34,200; packaged food 14, 19, 94 and 10,750.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss17-5.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Cash collections",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "How much cash is collected from May and June service revenue?",
+      "scenario": "Elody forecasts bicycle sales/service revenue: April CHF 5,500/1,000; May CHF 6,200/1,400; June CHF 9,700/2,600. Service is paid by card. Bicycle sales are 50% card, 10% cash and 40% on account. Card fees are 3%; account sales collect 90% next month and 8% two months later.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 4,970",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 3,880",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 1,358",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 2,007",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Deduct the card fee from service receipts.",
+      "workedCalculation": "(1,400 + 2,600) × 97% = CHF 3,880.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS17 Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS17 Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "How much cash is collected from May and June service revenue?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 4,970"
+          },
+          {
+            "id": "b",
+            "text": "CHF 3,880"
+          },
+          {
+            "id": "c",
+            "text": "CHF 1,358"
+          },
+          {
+            "id": "d",
+            "text": "CHF 2,007"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "How much cash is collected from May and June service revenue?\n- A) CHF 4,970\n- B) CHF 3,880\n- C) CHF 1,358\n- D) CHF 2,007\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Elody forecasts bicycle sales/service revenue: April CHF 5,500/1,000; May CHF 6,200/1,400; June CHF 9,700/2,600. Service is paid by card. Bicycle sales are 50% card, 10% cash and 40% on account. Card fees are 3%; account sales collect 90% next month and 8% two months later.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss17-5.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Cash collections",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "How much June bicycle-sales revenue is received by credit card, excluding account collections?",
+      "scenario": "Elody forecasts bicycle sales/service revenue: April CHF 5,500/1,000; May CHF 6,200/1,400; June CHF 9,700/2,600. Service is paid by card. Bicycle sales are 50% card, 10% cash and 40% on account. Card fees are 3%; account sales collect 90% next month and 8% two months later.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 620",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 970",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 853",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 2,980",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "Half of June bicycle sales is paid by card and incurs the fee.",
+      "workedCalculation": "9,700 × 50% × 97% = CHF 4,704.50; none of A–D.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS17 Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS17 Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "How much June bicycle-sales revenue is received by credit card, excluding account collections?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 620"
+          },
+          {
+            "id": "b",
+            "text": "CHF 970"
+          },
+          {
+            "id": "c",
+            "text": "CHF 853"
+          },
+          {
+            "id": "d",
+            "text": "CHF 2,980"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "How much June bicycle-sales revenue is received by credit card, excluding account collections?\n- A) CHF 620\n- B) CHF 970\n- C) CHF 853\n- D) CHF 2,980\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Elody forecasts bicycle sales/service revenue: April CHF 5,500/1,000; May CHF 6,200/1,400; June CHF 9,700/2,600. Service is paid by card. Bicycle sales are 50% card, 10% cash and 40% on account. Card fees are 3%; account sales collect 90% next month and 8% two months later.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss17-5.3",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Cash collections",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "How much cash from bicycle sales on account is collected in June?",
+      "scenario": "Elody forecasts bicycle sales/service revenue: April CHF 5,500/1,000; May CHF 6,200/1,400; June CHF 9,700/2,600. Service is paid by card. Bicycle sales are 50% card, 10% cash and 40% on account. Card fees are 3%; account sales collect 90% next month and 8% two months later.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 2,524",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 2,408",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 2,232",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 2,907",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "June collections combine May’s 90% tranche and April’s 8% tranche.",
+      "workedCalculation": "6,200×40%×90% + 5,500×40%×8% = 2,232 + 176 = CHF 2,408.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS17 Question 5, Question 5.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS17 Question 5",
+        "number": "5.3",
+        "line": null
+      },
+      "original": {
+        "wording": "How much cash from bicycle sales on account is collected in June?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 2,524"
+          },
+          {
+            "id": "b",
+            "text": "CHF 2,408"
+          },
+          {
+            "id": "c",
+            "text": "CHF 2,232"
+          },
+          {
+            "id": "d",
+            "text": "CHF 2,907"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "How much cash from bicycle sales on account is collected in June?\n- A) CHF 2,524\n- B) CHF 2,408\n- C) CHF 2,232\n- D) CHF 2,907\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Elody forecasts bicycle sales/service revenue: April CHF 5,500/1,000; May CHF 6,200/1,400; June CHF 9,700/2,600. Service is paid by card. Bicycle sales are 50% card, 10% cash and 40% on account. Card fees are 3%; account sales collect 90% next month and 8% two months later.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss19-5.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Sales budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is planned annual revenue?",
+      "scenario": "Bär AG plans average monthly sales of 7,500 summer shoes at CHF 220 and 4,500 winter shoes at CHF 390.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 46,780,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 41,440,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 40,860,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 49,140,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Annualize both monthly product revenues.",
+      "workedCalculation": "12 × (7,500×220 + 4,500×390) = CHF 40,860,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS19 Mock Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS19 Mock Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is planned annual revenue?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 46,780,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 41,440,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 40,860,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 49,140,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is planned annual revenue?\n- A) CHF 46,780,000\n- B) CHF 41,440,000\n- C) CHF 40,860,000\n- D) CHF 49,140,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Bär AG plans average monthly sales of 7,500 summer shoes at CHF 220 and 4,500 winter shoes at CHF 390.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss19-5.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Production budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is minimum summer-shoe production?",
+      "scenario": "Bär AG plans average monthly sales of 7,500 summer shoes at CHF 220 and 4,500 winter shoes at CHF 390. Annual summer sales are 90,000; beginning inventory is 14,000 and minimum ending inventory 9,500.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "85,500",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "86,600",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "81,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "82,400",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Production equals sales plus desired ending inventory less beginning inventory.",
+      "workedCalculation": "90,000 + 9,500 − 14,000 = 85,500 pairs.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS19 Mock Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS19 Mock Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is minimum summer-shoe production?",
+        "options": [
+          {
+            "id": "a",
+            "text": "85,500"
+          },
+          {
+            "id": "b",
+            "text": "86,600"
+          },
+          {
+            "id": "c",
+            "text": "81,000"
+          },
+          {
+            "id": "d",
+            "text": "82,400"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is minimum summer-shoe production?\n- A) 85,500\n- B) 86,600\n- C) 81,000\n- D) 82,400\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Bär AG plans average monthly sales of 7,500 summer shoes at CHF 220 and 4,500 winter shoes at CHF 390. Annual summer sales are 90,000; beginning inventory is 14,000 and minimum ending inventory 9,500.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss19-5.3",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Production budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What beginning winter-shoe inventory is required?",
+      "scenario": "Bär AG plans average monthly sales of 7,500 summer shoes at CHF 220 and 4,500 winter shoes at CHF 390. Annual winter sales are 54,000, planned production 30,000 and ending inventory 2,500.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "24,550",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "28,450",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "27,320",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "26,500",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Rearrange production = sales + ending − beginning.",
+      "workedCalculation": "Beginning inventory = 54,000 + 2,500 − 30,000 = 26,500 pairs.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS19 Mock Question 5, Question 5.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS19 Mock Question 5",
+        "number": "5.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What beginning winter-shoe inventory is required?",
+        "options": [
+          {
+            "id": "a",
+            "text": "24,550"
+          },
+          {
+            "id": "b",
+            "text": "28,450"
+          },
+          {
+            "id": "c",
+            "text": "27,320"
+          },
+          {
+            "id": "d",
+            "text": "26,500"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What beginning winter-shoe inventory is required?\n- A) 24,550\n- B) 28,450\n- C) 27,320\n- D) 26,500\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Bär AG plans average monthly sales of 7,500 summer shoes at CHF 220 and 4,500 winter shoes at CHF 390. Annual winter sales are 54,000, planned production 30,000 and ending inventory 2,500.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss20-4.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Master budget",
+      "difficulty": "Easy",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "A master budget _____.",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "is the initial plan of what a company intends to accomplish and evolves from operating and financing decisions",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "is prepared only for manufacturing companies",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "improves market capitalization by definition",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "is another term for the financial budget",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The master budget integrates operating and financing plans.",
+      "workedCalculation": "Conceptual question; no calculation is required.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 4, Question 4.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 4",
+        "number": "4.1",
+        "line": null
+      },
+      "original": {
+        "wording": "A master budget _____.",
+        "options": [
+          {
+            "id": "a",
+            "text": "is the initial plan of what a company intends to accomplish and evolves from operating and financing decisions"
+          },
+          {
+            "id": "b",
+            "text": "is prepared only for manufacturing companies"
+          },
+          {
+            "id": "c",
+            "text": "improves market capitalization by definition"
+          },
+          {
+            "id": "d",
+            "text": "is another term for the financial budget"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "A master budget _____.\n- A) is the initial plan of what a company intends to accomplish and evolves from operating and financing decisions\n- B) is prepared only for manufacturing companies\n- C) improves market capitalization by definition\n- D) is another term for the financial budget\n- E) None of the answers A)–D) is correct.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss20-4.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Cash collections",
+      "difficulty": "Hard",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What cash is collected in March?",
+      "scenario": "Moe Co forecasts sales/purchases: Jan CHF 67,000/32,000; Feb 88,000/45,000; Mar 100,000/58,000. Thirty percent of sales is collected in-month and 70% next month.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 91,600",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 118,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 96,400",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 100,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "March collections include 30% of March sales and 70% of February sales.",
+      "workedCalculation": "0.30×100,000 + 0.70×88,000 = 30,000 + 61,600 = CHF 91,600.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 4, Question 4.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 4",
+        "number": "4.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What cash is collected in March?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 91,600"
+          },
+          {
+            "id": "b",
+            "text": "CHF 118,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 96,400"
+          },
+          {
+            "id": "d",
+            "text": "CHF 100,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What cash is collected in March?\n- A) CHF 91,600\n- B) CHF 118,000\n- C) CHF 96,400\n- D) CHF 100,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Moe Co forecasts sales/purchases: Jan CHF 67,000/32,000; Feb 88,000/45,000; Mar 100,000/58,000. Thirty percent of sales is collected in-month and 70% next month.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss20-4.3",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Profit planning",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "By how much does budgeted operating income decrease?",
+      "scenario": "Frucci budgets 67,000 pairs of socks and 20,000 ties. Sock direct material rises from CHF 2.00 to 3.50 per unit; tie labor rises from CHF 8.20 to 14.00 per unit; all other data are unchanged.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 116,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 514,500",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 216,500",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 100,500",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The profit decrease equals the two unit-cost increases at planned volumes.",
+      "workedCalculation": "(3.50−2.00)×67,000 + (14.00−8.20)×20,000 = 100,500 + 116,000 = CHF 216,500.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 4, Question 4.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 4",
+        "number": "4.3",
+        "line": null
+      },
+      "original": {
+        "wording": "By how much does budgeted operating income decrease?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 116,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 514,500"
+          },
+          {
+            "id": "c",
+            "text": "CHF 216,500"
+          },
+          {
+            "id": "d",
+            "text": "CHF 100,500"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "By how much does budgeted operating income decrease?\n- A) CHF 116,000\n- B) CHF 514,500\n- C) CHF 216,500\n- D) CHF 100,500\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Frucci budgets 67,000 pairs of socks and 20,000 ties. Sock direct material rises from CHF 2.00 to 3.50 per unit; tie labor rises from CHF 8.20 to 14.00 per unit; all other data are unchanged.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-as20-4.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Production budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "How many units must be produced?",
+      "scenario": "Lime plans sales of 22,000 units, ending finished goods of 9,000 and beginning finished goods of 5,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "31,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "26,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "22,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "36,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Use the finished-goods inventory roll-forward.",
+      "workedCalculation": "22,000 + 9,000 − 5,000 = 26,000 units.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS20 Question 4, Question 4.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS20 Question 4",
+        "number": "4.1",
+        "line": null
+      },
+      "original": {
+        "wording": "How many units must be produced?",
+        "options": [
+          {
+            "id": "a",
+            "text": "31,000"
+          },
+          {
+            "id": "b",
+            "text": "26,000"
+          },
+          {
+            "id": "c",
+            "text": "22,000"
+          },
+          {
+            "id": "d",
+            "text": "36,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "How many units must be produced?\n- A) 31,000\n- B) 26,000\n- C) 22,000\n- D) 36,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Lime plans sales of 22,000 units, ending finished goods of 9,000 and beginning finished goods of 5,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-as20-4.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Income statement budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is budgeted gross margin?",
+      "scenario": "Migos forecasts January revenue of CHF 203,000 and COGS of 68% of revenue.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 101,500",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 64,960",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 48,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 138,040",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Gross-margin ratio is 32%.",
+      "workedCalculation": "203,000 × (1−0.68) = CHF 64,960.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS20 Question 4, Question 4.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS20 Question 4",
+        "number": "4.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is budgeted gross margin?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 101,500"
+          },
+          {
+            "id": "b",
+            "text": "CHF 64,960"
+          },
+          {
+            "id": "c",
+            "text": "CHF 48,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 138,040"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is budgeted gross margin?\n- A) CHF 101,500\n- B) CHF 64,960\n- C) CHF 48,000\n- D) CHF 138,040\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Migos forecasts January revenue of CHF 203,000 and COGS of 68% of revenue.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss21-5.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Sensitivity analysis",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "Should Stellar implement the price increase?",
+      "scenario": "Stellar’s 2020 results: sales CHF 962,000 on 160,250 units; COGS CHF 641,000; operating expenses CHF 269,000; operating income CHF 52,000. For 2021, price rises 13.5%, volume falls 11%, COGS is variable and operating expense fixed.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Yes, because sales revenue decreases",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "No, because volume decreases",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "No, because gross margin decreases",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Yes, because operating income increases",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Compare the revised operating income with the current CHF 52,000.",
+      "workedCalculation": "Revenue = 962,000×1.135×0.89 = 971,902.30; COGS = 641,000×0.89 = 570,490; OI = 971,902.30−570,490−269,000 = CHF 132,412.30.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS21 Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS21 Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "Should Stellar implement the price increase?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Yes, because sales revenue decreases"
+          },
+          {
+            "id": "b",
+            "text": "No, because volume decreases"
+          },
+          {
+            "id": "c",
+            "text": "No, because gross margin decreases"
+          },
+          {
+            "id": "d",
+            "text": "Yes, because operating income increases"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "Should Stellar implement the price increase?\n- A) Yes, because sales revenue decreases\n- B) No, because volume decreases\n- C) No, because gross margin decreases\n- D) Yes, because operating income increases\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Stellar’s 2020 results: sales CHF 962,000 on 160,250 units; COGS CHF 641,000; operating expenses CHF 269,000; operating income CHF 52,000. For 2021, price rises 13.5%, volume falls 11%, COGS is variable and operating expense fixed.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-ss21-5.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Purchases budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What are February purchases?",
+      "scenario": "Revolution forecasts sales Jan–Apr of CHF 124,000, 111,000, 136,000 and 147,000. Gross margin is 25%; ending inventory is 10% of next month’s sales at cost.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 103,200",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 85,125",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 83,250",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 30,600",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Purchases equal February COGS plus desired ending inventory less beginning inventory.",
+      "workedCalculation": "COGS Feb = 111,000×75%=83,250; end =136,000×75%×10%=10,200; begin=111,000×75%×10%=8,325; purchases=CHF 85,125.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS21 Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS21 Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What are February purchases?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 103,200"
+          },
+          {
+            "id": "b",
+            "text": "CHF 85,125"
+          },
+          {
+            "id": "c",
+            "text": "CHF 83,250"
+          },
+          {
+            "id": "d",
+            "text": "CHF 30,600"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What are February purchases?\n- A) CHF 103,200\n- B) CHF 85,125\n- C) CHF 83,250\n- D) CHF 30,600\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Revolution forecasts sales Jan–Apr of CHF 124,000, 111,000, 136,000 and 147,000. Gross margin is 25%; ending inventory is 10% of next month’s sales at cost.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-as24-4.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Purchases budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What are February purchases?",
+      "scenario": "Doyo forecasts sales Jan–Apr of CHF 124,000, 111,000, 136,000 and 147,000. Gross margin is 25%; ending inventory is 20% of next month’s sales at cost.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 103,200",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 87,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 83,250",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 30,600",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Adjust February COGS for the 20% inventory policy.",
+      "workedCalculation": "83,250 + (136,000×75%×20%) − (111,000×75%×20%) = 83,250 +20,400−16,650 = CHF 87,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 4, Question 4.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 4",
+        "number": "4.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What are February purchases?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 103,200"
+          },
+          {
+            "id": "b",
+            "text": "CHF 87,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 83,250"
+          },
+          {
+            "id": "d",
+            "text": "CHF 30,600"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What are February purchases?\n- A) CHF 103,200\n- B) CHF 87,000\n- C) CHF 83,250\n- D) CHF 30,600\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Doyo forecasts sales Jan–Apr of CHF 124,000, 111,000, 136,000 and 147,000. Gross margin is 25%; ending inventory is 20% of next month’s sales at cost.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-as24-4.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Income statement budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is gross profit?",
+      "scenario": "GroceryNow forecasts January revenue CHF 203,000 and COGS at 58% of revenue.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 101,500",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 85,260",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 64,960",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 138,040",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Gross-profit ratio is 42%.",
+      "workedCalculation": "203,000×42% = CHF 85,260.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 4, Question 4.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 4",
+        "number": "4.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is gross profit?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 101,500"
+          },
+          {
+            "id": "b",
+            "text": "CHF 85,260"
+          },
+          {
+            "id": "c",
+            "text": "CHF 64,960"
+          },
+          {
+            "id": "d",
+            "text": "CHF 138,040"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is gross profit?\n- A) CHF 101,500\n- B) CHF 85,260\n- C) CHF 64,960\n- D) CHF 138,040\n- E) None of the answers A)–D) is correct.",
+        "scenario": "GroceryNow forecasts January revenue CHF 203,000 and COGS at 58% of revenue.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-as25-4.1",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Sales budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What is budgeted 2026 sales revenue, rounded to a whole CHF?",
+      "scenario": "Tsinghue’s 2025 sales were CHF 961,000 on 161,000 units. For 2026 price rises 13.5% and volume falls 9%.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 992,569",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 961,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 874,510",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 1,090,735",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Apply both price and volume changes.",
+      "workedCalculation": "961,000×1.135×0.91 = CHF 992,568.85 → CHF 992,569.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS25 Question 4, Question 4.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS25 Question 4",
+        "number": "4.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is budgeted 2026 sales revenue, rounded to a whole CHF?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 992,569"
+          },
+          {
+            "id": "b",
+            "text": "CHF 961,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 874,510"
+          },
+          {
+            "id": "d",
+            "text": "CHF 1,090,735"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is budgeted 2026 sales revenue, rounded to a whole CHF?\n- A) CHF 992,569\n- B) CHF 961,000\n- C) CHF 874,510\n- D) CHF 1,090,735\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Tsinghue’s 2025 sales were CHF 961,000 on 161,000 units. For 2026 price rises 13.5% and volume falls 9%.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "bud-as25-4.2",
+      "origin": "original",
+      "topic": "Budgeting",
+      "subtopic": "Direct labor budget",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What direct labor hours are budgeted?",
+      "scenario": "Rollx AP362 plans sales of 20,000 units, ending finished goods 5,000 and beginning finished goods 1,100. Each unit requires 2 assembly and 3 polishing hours.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "48,300 assembly; 32,200 polishing",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "47,800 assembly; 71,700 polishing",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "71,700 assembly; 47,800 polishing",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "32,200 assembly; 48,300 polishing",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Compute production first, then multiply by hours per unit.",
+      "workedCalculation": "Production = 20,000+5,000−1,100=23,900; assembly=23,900×2=47,800; polishing=23,900×3=71,700.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS25 Question 4, Question 4.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "budgeting-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS25 Question 4",
+        "number": "4.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What direct labor hours are budgeted?",
+        "options": [
+          {
+            "id": "a",
+            "text": "48,300 assembly; 32,200 polishing"
+          },
+          {
+            "id": "b",
+            "text": "47,800 assembly; 71,700 polishing"
+          },
+          {
+            "id": "c",
+            "text": "71,700 assembly; 47,800 polishing"
+          },
+          {
+            "id": "d",
+            "text": "32,200 assembly; 48,300 polishing"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What direct labor hours are budgeted?\n- A) 48,300 assembly; 32,200 polishing\n- B) 47,800 assembly; 71,700 polishing\n- C) 71,700 assembly; 47,800 polishing\n- D) 32,200 assembly; 48,300 polishing\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Rollx AP362 plans sales of 20,000 units, ending finished goods 5,000 and beginning finished goods 1,100. Each unit requires 2 assembly and 3 polishing hours.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss16-6.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is flexible-budget operating income?",
+      "scenario": "Dave AG budgets price CHF 1,326, variable cost CHF 504, fixed overhead CHF 4,400,000 and 8,800 units; actual production and sales are 10,400 units.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 4,210,800",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 4,148,800",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 3,247,400",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 4,560,300",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Use actual volume with budgeted price and cost.",
+      "workedCalculation": "10,400×(1,326−504)−4,400,000 = CHF 4,148,800.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS16 Mock Question 6, Question 6.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS16 Mock Question 6",
+        "number": "6.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is flexible-budget operating income?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 4,210,800"
+          },
+          {
+            "id": "b",
+            "text": "CHF 4,148,800"
+          },
+          {
+            "id": "c",
+            "text": "CHF 3,247,400"
+          },
+          {
+            "id": "d",
+            "text": "CHF 4,560,300"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is flexible-budget operating income?\n- A) CHF 4,210,800\n- B) CHF 4,148,800\n- C) CHF 3,247,400\n- D) CHF 4,560,300\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Dave AG budgets price CHF 1,326, variable cost CHF 504, fixed overhead CHF 4,400,000 and 8,800 units; actual production and sales are 10,400 units.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss16-6.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Sales-volume variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What is the sales-volume variance in operating income?",
+      "scenario": "Dave AG budgets price CHF 1,326, variable cost CHF 504, fixed overhead CHF 4,400,000 and 8,800 units; actual production and sales are 10,400 units.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 1,315,200 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 1,212,700 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 1,212,700 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 1,315,200 F",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Multiply the volume difference by budgeted contribution per unit.",
+      "workedCalculation": "(10,400−8,800)×(1,326−504) = 1,600×822 = CHF 1,315,200 favorable.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS16 Mock Question 6, Question 6.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS16 Mock Question 6",
+        "number": "6.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the sales-volume variance in operating income?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 1,315,200 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 1,212,700 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 1,212,700 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 1,315,200 F"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the sales-volume variance in operating income?\n- A) CHF 1,315,200 U\n- B) CHF 1,212,700 U\n- C) CHF 1,212,700 F\n- D) CHF 1,315,200 F\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Dave AG budgets price CHF 1,326, variable cost CHF 504, fixed overhead CHF 4,400,000 and 8,800 units; actual production and sales are 10,400 units.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss16-6.3",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Fixed-overhead variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What is the fixed-overhead production-volume variance?",
+      "scenario": "Dave AG budgets price CHF 1,326, variable cost CHF 504, fixed overhead CHF 4,400,000 and 8,800 units; actual production and sales are 10,400 units.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 500,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 960,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 800,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 470,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Compare budgeted fixed overhead with overhead allocated at actual output.",
+      "workedCalculation": "Rate = 4,400,000/8,800 = 500 per unit; allocated = 10,400×500=5,200,000; variance = 4,400,000−5,200,000 = CHF 800,000 favorable.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS16 Mock Question 6, Question 6.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS16 Mock Question 6",
+        "number": "6.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the fixed-overhead production-volume variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 500,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 960,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 800,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 470,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the fixed-overhead production-volume variance?\n- A) CHF 500,000\n- B) CHF 960,000\n- C) CHF 800,000\n- D) CHF 470,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Dave AG budgets price CHF 1,326, variable cost CHF 504, fixed overhead CHF 4,400,000 and 8,800 units; actual production and sales are 10,400 units.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss17-6.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible-budget variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the revenue flexible-budget variance?",
+      "scenario": "Flick budgets 200 car inspections and CHF 30,000 revenue; actual inspections are 225 and actual revenue CHF 39,375. Budgeted contribution margin is CHF 22,900.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 5,625 F",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 5,625 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 4,750 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 4,750 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Restate budgeted revenue at actual volume, then compare with actual.",
+      "workedCalculation": "Flexible revenue = 30,000/200×225=33,750; 39,375−33,750 = CHF 5,625 favorable.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS17 Question 6, Question 6.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS17 Question 6",
+        "number": "6.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the revenue flexible-budget variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 5,625 F"
+          },
+          {
+            "id": "b",
+            "text": "CHF 5,625 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 4,750 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 4,750 U"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the revenue flexible-budget variance?\n- A) CHF 5,625 F\n- B) CHF 5,625 U\n- C) CHF 4,750 F\n- D) CHF 4,750 U\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Flick budgets 200 car inspections and CHF 30,000 revenue; actual inspections are 225 and actual revenue CHF 39,375. Budgeted contribution margin is CHF 22,900.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss17-6.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Sales-volume variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the sales-volume variance in contribution margin?",
+      "scenario": "Flick budgets 200 car inspections and CHF 30,000 revenue; actual inspections are 225 and actual revenue CHF 39,375. Budgeted contribution margin is CHF 22,900.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 4,363 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 4,363 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 2,862 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 2,862 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "The exact calculation is CHF 2,862.50 favorable; none of the printed choices states it exactly.",
+      "workedCalculation": "22,900/200×(225−200) = CHF 2,862.50 favorable; therefore E.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS17 Question 6, Question 6.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Preserved the source rounding inconsistency and selected E for the exact result."
+      ],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS17 Question 6",
+        "number": "6.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the sales-volume variance in contribution margin?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 4,363 F"
+          },
+          {
+            "id": "b",
+            "text": "CHF 4,363 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 2,862 U"
+          },
+          {
+            "id": "d",
+            "text": "CHF 2,862 F"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the sales-volume variance in contribution margin?\n- A) CHF 4,363 F\n- B) CHF 4,363 U\n- C) CHF 2,862 U\n- D) CHF 2,862 F\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Flick budgets 200 car inspections and CHF 30,000 revenue; actual inspections are 225 and actual revenue CHF 39,375. Budgeted contribution margin is CHF 22,900.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss20-5.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Static-budget variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the static-budget variance in operating income?",
+      "scenario": "Daniels: actual price CHF 18, budget CHF 19; actual units 280,000, budget 278,000; actual/budget variable costs CHF 960,000/886,000; fixed costs CHF 60,000/51,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 325,000 U",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 316,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 325,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 316,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Compare actual operating income with static-budget operating income.",
+      "workedCalculation": "Actual OI=280,000×18−960,000−60,000=4,020,000; budget OI=278,000×19−886,000−51,000=4,345,000; variance=CHF 325,000 U.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the static-budget variance in operating income?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 325,000 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 316,000 F"
+          },
+          {
+            "id": "c",
+            "text": "CHF 325,000 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 316,000 U"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the static-budget variance in operating income?\n- A) CHF 325,000 U\n- B) CHF 316,000 F\n- C) CHF 325,000 F\n- D) CHF 316,000 U\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Daniels: actual price CHF 18, budget CHF 19; actual units 280,000, budget 278,000; actual/budget variable costs CHF 960,000/886,000; fixed costs CHF 60,000/51,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss20-5.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What variable cost appears in the flexible budget?",
+      "scenario": "Great Cabinets budgets variable cost CHF 463,910 at 23,000 units; actual volume is 18,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 592,774",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 363,060",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 463,910",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 460,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Scale budgeted variable cost to actual volume.",
+      "workedCalculation": "463,910/23,000×18,000 = CHF 363,060.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What variable cost appears in the flexible budget?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 592,774"
+          },
+          {
+            "id": "b",
+            "text": "CHF 363,060"
+          },
+          {
+            "id": "c",
+            "text": "CHF 463,910"
+          },
+          {
+            "id": "d",
+            "text": "CHF 460,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What variable cost appears in the flexible budget?\n- A) CHF 592,774\n- B) CHF 363,060\n- C) CHF 463,910\n- D) CHF 460,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Great Cabinets budgets variable cost CHF 463,910 at 23,000 units; actual volume is 18,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss20-5.3",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Direct labor price variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the direct labor price variance?",
+      "scenario": "Genent produced 4,000 units. Actual labor was 1,290 hours at CHF 18.40; standard rate is CHF 18.00.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 3,600 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 1,620 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 516 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 3,600 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "The calculated CHF 516 is unfavorable, while option C labels it favorable.",
+      "workedCalculation": "1,290×(18.40−18.00) = CHF 516 unfavorable; therefore E.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 5, Question 5.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Preserved the source sign inconsistency and selected E."
+      ],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 5",
+        "number": "5.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the direct labor price variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 3,600 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 1,620 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 516 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 3,600 F"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the direct labor price variance?\n- A) CHF 3,600 U\n- B) CHF 1,620 U\n- C) CHF 516 F\n- D) CHF 3,600 F\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Genent produced 4,000 units. Actual labor was 1,290 hours at CHF 18.40; standard rate is CHF 18.00.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss20-5.4",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Fixed-overhead variances",
+      "difficulty": "Easy",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "For fixed manufacturing overhead there is no ____ variance.",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "production-volume",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "efficiency",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "spending",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "flexible-budget",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Fixed overhead has spending/flexible-budget and production-volume variances, but no efficiency variance.",
+      "workedCalculation": "Conceptual question; no calculation is required.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS20 Question 5, Question 5.4; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS20 Question 5",
+        "number": "5.4",
+        "line": null
+      },
+      "original": {
+        "wording": "For fixed manufacturing overhead there is no ____ variance.",
+        "options": [
+          {
+            "id": "a",
+            "text": "production-volume"
+          },
+          {
+            "id": "b",
+            "text": "efficiency"
+          },
+          {
+            "id": "c",
+            "text": "spending"
+          },
+          {
+            "id": "d",
+            "text": "flexible-budget"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "For fixed manufacturing overhead there is no ____ variance.\n- A) production-volume\n- B) efficiency\n- C) spending\n- D) flexible-budget\n- E) None of the answers A)–D) is correct.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as20-5.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What variable cost appears in the flexible budget?",
+      "scenario": "Tenindo budgets variable cost CHF 377,550 at 15,000 units; actual volume is 12,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 302,040",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 377,550",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 471,938",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 375,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Scale variable cost to actual volume.",
+      "workedCalculation": "377,550/15,000×12,000 = CHF 302,040.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS20 Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS20 Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What variable cost appears in the flexible budget?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 302,040"
+          },
+          {
+            "id": "b",
+            "text": "CHF 377,550"
+          },
+          {
+            "id": "c",
+            "text": "CHF 471,938"
+          },
+          {
+            "id": "d",
+            "text": "CHF 375,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What variable cost appears in the flexible budget?\n- A) CHF 302,040\n- B) CHF 377,550\n- C) CHF 471,938\n- D) CHF 375,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Tenindo budgets variable cost CHF 377,550 at 15,000 units; actual volume is 12,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as20-5.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Static-budget variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the static-budget variance in operating income?",
+      "scenario": "Michaelsoft price is CHF 21. Actual/budget units are 177,000/185,000; variable costs CHF 1,088,000/1,289,000; fixed costs CHF 805,000/777,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 8,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 173,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 5,000 F",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 33,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Compute both operating-income amounts.",
+      "workedCalculation": "Actual=177,000×21−1,088,000−805,000=1,824,000; budget=185,000×21−1,289,000−777,000=1,819,000; CHF 5,000 F.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS20 Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS20 Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the static-budget variance in operating income?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 8,000 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 173,000 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 5,000 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 33,000 F"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the static-budget variance in operating income?\n- A) CHF 8,000 U\n- B) CHF 173,000 U\n- C) CHF 5,000 F\n- D) CHF 33,000 F\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Michaelsoft price is CHF 21. Actual/budget units are 177,000/185,000; variable costs CHF 1,088,000/1,289,000; fixed costs CHF 805,000/777,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as20-5.3",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Direct material price variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the direct material price variance?",
+      "scenario": "MultiMix standard material is 1 kg at CHF 3.25. Actual production is 1,000 units using 1,400 kg at CHF 3.00.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 950 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 350 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 950 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 350 F",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Price variance uses actual input quantity.",
+      "workedCalculation": "1,400×(3.00−3.25) = −CHF 350 = CHF 350 favorable.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS20 Question 5, Question 5.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS20 Question 5",
+        "number": "5.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the direct material price variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 950 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 350 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 950 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 350 F"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the direct material price variance?\n- A) CHF 950 U\n- B) CHF 350 U\n- C) CHF 950 F\n- D) CHF 350 F\n- E) None of the answers A)–D) is correct.",
+        "scenario": "MultiMix standard material is 1 kg at CHF 3.25. Actual production is 1,000 units using 1,400 kg at CHF 3.00.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as20-6.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Fixed-overhead variances",
+      "difficulty": "Easy",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Which expression calculates the fixed-overhead spending variance?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Actual costs incurred − flexible-budget amount",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "Static-budget amount − fixed overhead allocated for actual output",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Static-budget amount − flexible-budget amount",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Flexible-budget amount − fixed overhead allocated for actual output",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "For fixed overhead, the flexible-budget amount equals budgeted fixed overhead; compare actual with that amount.",
+      "workedCalculation": "Fixed-OH spending variance = actual fixed OH − budgeted (flexible-budget) fixed OH.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS20 Question 6, Question 6.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS20 Question 6",
+        "number": "6.1",
+        "line": null
+      },
+      "original": {
+        "wording": "Which expression calculates the fixed-overhead spending variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Actual costs incurred − flexible-budget amount"
+          },
+          {
+            "id": "b",
+            "text": "Static-budget amount − fixed overhead allocated for actual output"
+          },
+          {
+            "id": "c",
+            "text": "Static-budget amount − flexible-budget amount"
+          },
+          {
+            "id": "d",
+            "text": "Flexible-budget amount − fixed overhead allocated for actual output"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "Which expression calculates the fixed-overhead spending variance?\n- A) Actual costs incurred − flexible-budget amount\n- B) Static-budget amount − fixed overhead allocated for actual output\n- C) Static-budget amount − flexible-budget amount\n- D) Flexible-budget amount − fixed overhead allocated for actual output\n- E) None of the answers A)–D) is correct.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss21-6.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What variable cost appears in the flexible budget?",
+      "scenario": "AlphaProdukte budgets variable cost CHF 180,000 at 12,000 units; actual volume is 16,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 180,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 126,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 12,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 240,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Scale budgeted variable cost to actual volume.",
+      "workedCalculation": "180,000/12,000×16,000 = CHF 240,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS21 Question 6, Question 6.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS21 Question 6",
+        "number": "6.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What variable cost appears in the flexible budget?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 180,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 126,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 12,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 240,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What variable cost appears in the flexible budget?\n- A) CHF 180,000\n- B) CHF 126,000\n- C) CHF 12,000\n- D) CHF 240,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "AlphaProdukte budgets variable cost CHF 180,000 at 12,000 units; actual volume is 16,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss21-6.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Direct material variances",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the material efficiency variance?",
+      "scenario": "Materials flexible-budget variance is CHF 7,000 U and material price variance CHF 33,000 F.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 15,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 1,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 40,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 30,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "Efficiency must offset the favorable price variance and leave CHF 7,000 unfavorable overall.",
+      "workedCalculation": "7,000 U = efficiency + 33,000 F; efficiency = CHF 40,000 U, which is not A–D.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS21 Question 6, Question 6.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Selected E because option C has the correct magnitude but wrong direction."
+      ],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS21 Question 6",
+        "number": "6.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the material efficiency variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 15,000 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 1,000 F"
+          },
+          {
+            "id": "c",
+            "text": "CHF 40,000 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 30,000 U"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the material efficiency variance?\n- A) CHF 15,000 U\n- B) CHF 1,000 F\n- C) CHF 40,000 F\n- D) CHF 30,000 U\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Materials flexible-budget variance is CHF 7,000 U and material price variance CHF 33,000 F.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-ss21-6.3",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What are flexible-budget revenue A and static-budget revenue B?",
+      "scenario": "Actual revenue is CHF 21,690,000; revenue flexible-budget variance is CHF 1,110,000 F. Actual quantity is 49,000 and budget quantity 44,600.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 22,800,000; CHF 20,952,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 23,500,490; CHF 18,832,510",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 20,580,000; CHF 18,732,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 19,850,000; CHF 20,560,190",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Remove the favorable variance, then scale to budget quantity.",
+      "workedCalculation": "A=21,690,000−1,110,000=20,580,000; B=20,580,000/49,000×44,600=CHF 18,732,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "SS21 Question 6, Question 6.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "SS21 Question 6",
+        "number": "6.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What are flexible-budget revenue A and static-budget revenue B?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 22,800,000; CHF 20,952,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 23,500,490; CHF 18,832,510"
+          },
+          {
+            "id": "c",
+            "text": "CHF 20,580,000; CHF 18,732,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 19,850,000; CHF 20,560,190"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What are flexible-budget revenue A and static-budget revenue B?\n- A) CHF 22,800,000; CHF 20,952,000\n- B) CHF 23,500,490; CHF 18,832,510\n- C) CHF 20,580,000; CHF 18,732,000\n- D) CHF 19,850,000; CHF 20,560,190\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Actual revenue is CHF 21,690,000; revenue flexible-budget variance is CHF 1,110,000 F. Actual quantity is 49,000 and budget quantity 44,600.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as24-5.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What sales revenue appears in the flexible budget?",
+      "scenario": "Pearl’s static budget has 20,500 units and CHF 615,000 revenue; actual volume is 19,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 615,040",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 510,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 635,500",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 570,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Use the static price per unit at actual volume.",
+      "workedCalculation": "615,000/20,500×19,000 = CHF 570,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What sales revenue appears in the flexible budget?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 615,040"
+          },
+          {
+            "id": "b",
+            "text": "CHF 510,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 635,500"
+          },
+          {
+            "id": "d",
+            "text": "CHF 570,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What sales revenue appears in the flexible budget?\n- A) CHF 615,040\n- B) CHF 510,000\n- C) CHF 635,500\n- D) CHF 570,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Pearl’s static budget has 20,500 units and CHF 615,000 revenue; actual volume is 19,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as24-5.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Direct material standards",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the budgeted wool cost per unit of output?",
+      "scenario": "Nunangat uses a standard 2 m² of wool per coat at CHF 45/m². Actual input is 1.70 m² at CHF 36/m².",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 61.20",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 72.00",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 76.50",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 90.00",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Budgeted cost per output uses standard quantity and standard price.",
+      "workedCalculation": "2.00×CHF 45 = CHF 90 per coat.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the budgeted wool cost per unit of output?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 61.20"
+          },
+          {
+            "id": "b",
+            "text": "CHF 72.00"
+          },
+          {
+            "id": "c",
+            "text": "CHF 76.50"
+          },
+          {
+            "id": "d",
+            "text": "CHF 90.00"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the budgeted wool cost per unit of output?\n- A) CHF 61.20\n- B) CHF 72.00\n- C) CHF 76.50\n- D) CHF 90.00\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Nunangat uses a standard 2 m² of wool per coat at CHF 45/m². Actual input is 1.70 m² at CHF 36/m².",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as24-5.4",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Variance diagram",
+      "difficulty": "Easy",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "What does the marked area denote?",
+      "scenario": "A diagram shows planned and actual price and volume; the marked area uses planned price and planned quantity.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "the flexible budget",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "the static budget",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "the flexible-input budget",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "the contribution margin",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Planned quantity at planned price is the static-budget amount.",
+      "workedCalculation": "Conceptual diagram: static budget = planned input quantity × planned input price.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 5, Question 5.4; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 5",
+        "number": "5.4",
+        "line": null
+      },
+      "original": {
+        "wording": "What does the marked area denote?",
+        "options": [
+          {
+            "id": "a",
+            "text": "the flexible budget"
+          },
+          {
+            "id": "b",
+            "text": "the static budget"
+          },
+          {
+            "id": "c",
+            "text": "the flexible-input budget"
+          },
+          {
+            "id": "d",
+            "text": "the contribution margin"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What does the marked area denote?\n- A) the flexible budget\n- B) the static budget\n- C) the flexible-input budget\n- D) the contribution margin\n- E) None of the answers A)–D) is correct.",
+        "scenario": "A diagram shows planned and actual price and volume; the marked area uses planned price and planned quantity.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as24-6.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Variable-overhead variances",
+      "difficulty": "Easy",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Which expression calculates the variable-overhead flexible-budget variance?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Actual variable overhead incurred − flexible-budget variable overhead",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "Static budget − fixed overhead allocated for actual output",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Static variable overhead − flexible-budget variable overhead",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Flexible-budget variable overhead − fixed overhead allocated for actual output",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Flexible-budget variance compares actual cost with flexible-budget cost.",
+      "workedCalculation": "Variable-OH flexible-budget variance = actual variable OH − flexible-budget variable OH.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 6, Question 6.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 6",
+        "number": "6.1",
+        "line": null
+      },
+      "original": {
+        "wording": "Which expression calculates the variable-overhead flexible-budget variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Actual variable overhead incurred − flexible-budget variable overhead"
+          },
+          {
+            "id": "b",
+            "text": "Static budget − fixed overhead allocated for actual output"
+          },
+          {
+            "id": "c",
+            "text": "Static variable overhead − flexible-budget variable overhead"
+          },
+          {
+            "id": "d",
+            "text": "Flexible-budget variable overhead − fixed overhead allocated for actual output"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "Which expression calculates the variable-overhead flexible-budget variance?\n- A) Actual variable overhead incurred − flexible-budget variable overhead\n- B) Static budget − fixed overhead allocated for actual output\n- C) Static variable overhead − flexible-budget variable overhead\n- D) Flexible-budget variable overhead − fixed overhead allocated for actual output\n- E) None of the answers A)–D) is correct.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as24-6.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Variable-overhead budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What is the flexible-budget variable-overhead amount?",
+      "scenario": "Gilletson budgets 2,400 units, 14,400 machine-hours and CHF 158,400 variable overhead. Actual output is 3,330 units, actual hours 18,900 and actual variable overhead CHF 138,400.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 207,900",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 219,780",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 132,300",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 234,960",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "A flexible budget uses budgeted hours per unit and budgeted rate at actual output.",
+      "workedCalculation": "158,400/2,400×3,330 = CHF 219,780.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS24 Question 6, Question 6.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS24 Question 6",
+        "number": "6.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the flexible-budget variable-overhead amount?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 207,900"
+          },
+          {
+            "id": "b",
+            "text": "CHF 219,780"
+          },
+          {
+            "id": "c",
+            "text": "CHF 132,300"
+          },
+          {
+            "id": "d",
+            "text": "CHF 234,960"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the flexible-budget variable-overhead amount?\n- A) CHF 207,900\n- B) CHF 219,780\n- C) CHF 132,300\n- D) CHF 234,960\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Gilletson budgets 2,400 units, 14,400 machine-hours and CHF 158,400 variable overhead. Actual output is 3,330 units, actual hours 18,900 and actual variable overhead CHF 138,400.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as25-5.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible-budget variance",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the operating-income flexible-budget variance?",
+      "scenario": "LocaTea actual/flexible/static data include actual operating income CHF 17,740, flexible-budget operating income CHF 16,080 and static operating income CHF 15,140.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 1,660 F",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 1,660 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 340 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 340 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Higher actual income is favorable.",
+      "workedCalculation": "17,740−16,080 = CHF 1,660 favorable.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS25 Question 5, Question 5.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS25 Question 5",
+        "number": "5.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the operating-income flexible-budget variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 1,660 F"
+          },
+          {
+            "id": "b",
+            "text": "CHF 1,660 U"
+          },
+          {
+            "id": "c",
+            "text": "CHF 340 U"
+          },
+          {
+            "id": "d",
+            "text": "CHF 340 F"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the operating-income flexible-budget variance?\n- A) CHF 1,660 F\n- B) CHF 1,660 U\n- C) CHF 340 U\n- D) CHF 340 F\n- E) None of the answers A)–D) is correct.",
+        "scenario": "LocaTea actual/flexible/static data include actual operating income CHF 17,740, flexible-budget operating income CHF 16,080 and static operating income CHF 15,140.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as25-5.2",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Flexible budgets",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What variable cost appears in the flexible budget?",
+      "scenario": "Stellar budgets variable cost CHF 360,000 at 24,000 units; actual volume is 32,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 120,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 690,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 480,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 320,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Scale budgeted variable cost to actual volume.",
+      "workedCalculation": "360,000/24,000×32,000 = CHF 480,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS25 Question 5, Question 5.2; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS25 Question 5",
+        "number": "5.2",
+        "line": null
+      },
+      "original": {
+        "wording": "What variable cost appears in the flexible budget?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 120,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 690,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 480,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 320,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What variable cost appears in the flexible budget?\n- A) CHF 120,000\n- B) CHF 690,000\n- C) CHF 480,000\n- D) CHF 320,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Stellar budgets variable cost CHF 360,000 at 24,000 units; actual volume is 32,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as25-5.3",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Direct material variances",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the material efficiency variance?",
+      "scenario": "Materials flexible-budget variance is CHF 6,000 U and material price variance CHF 29,000 F.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 25,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 1,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 40,000 F",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 40,000 U",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "The exact result is CHF 35,000 U, absent from A–D.",
+      "workedCalculation": "Efficiency = 6,000 U − (29,000 F) = CHF 35,000 U; therefore E.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS25 Question 5, Question 5.3; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS25 Question 5",
+        "number": "5.3",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the material efficiency variance?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 25,000 U"
+          },
+          {
+            "id": "b",
+            "text": "CHF 1,000 F"
+          },
+          {
+            "id": "c",
+            "text": "CHF 40,000 F"
+          },
+          {
+            "id": "d",
+            "text": "CHF 40,000 U"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the material efficiency variance?\n- A) CHF 25,000 U\n- B) CHF 1,000 F\n- C) CHF 40,000 F\n- D) CHF 40,000 U\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Materials flexible-budget variance is CHF 6,000 U and material price variance CHF 29,000 F.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "var-as25-6.1",
+      "origin": "original",
+      "topic": "Variances",
+      "subtopic": "Variable-overhead budgets",
+      "difficulty": "Hard",
+      "type": "single-choice",
+      "marks": 4,
+      "prompt": "What is the flexible-input-budget amount for variable manufacturing overhead?",
+      "scenario": "Djoker budgets 8,000 units, 24,000 machine-hours and CHF 288,000 variable overhead. Actual output is 8,500 units, actual hours 25,500 and actual variable overhead CHF 250,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 306,000",
+          "explanation": "This matches the expanded source solution and the calculation shown.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 312,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 288,500",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 250,000",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of the answers A)–D) is correct.",
+          "explanation": "This does not follow the stated budget or variance calculation.",
+          "misconception": "variances-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Apply the budgeted variable-overhead rate per machine-hour to actual machine-hours.",
+      "workedCalculation": "Budgeted rate=288,000/24,000=CHF 12/hour; flexible-input budget=25,500×12=CHF 306,000.",
+      "evidence": [
+        {
+          "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+          "section": "AS25 Question 6, Question 6.1; expanded solution"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [],
+      "targets": [
+        "variances-calculation"
+      ],
+      "source": {
+        "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
+        "heading": "AS25 Question 6",
+        "number": "6.1",
+        "line": null
+      },
+      "original": {
+        "wording": "What is the flexible-input-budget amount for variable manufacturing overhead?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 306,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 312,000"
+          },
+          {
+            "id": "c",
+            "text": "CHF 288,500"
+          },
+          {
+            "id": "d",
+            "text": "CHF 250,000"
+          },
+          {
+            "id": "e",
+            "text": "None of the answers A)–D) is correct."
+          }
+        ],
+        "raw": "What is the flexible-input-budget amount for variable manufacturing overhead?\n- A) CHF 306,000\n- B) CHF 312,000\n- C) CHF 288,500\n- D) CHF 250,000\n- E) None of the answers A)–D) is correct.",
+        "scenario": "Djoker budgets 8,000 units, 24,000 machine-hours and CHF 288,000 variable overhead. Actual output is 8,500 units, actual hours 25,500 and actual variable overhead CHF 250,000.",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
       }
     }
   ]

@@ -4,6 +4,7 @@ const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
 const h=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const optionText=o=>o.text.replace(/None of the above(?: answers)?/gi,'None of the other answers').replace(/All of the above/gi,'All of the other answers');
+const shownLabel=(order,id)=>String.fromCharCode(65+order.indexOf(id));
 const root=document.documentElement;
 root.dataset.input='keyboard';
 document.addEventListener('keydown',()=>{if(root.dataset.input!=='keyboard')root.dataset.input='keyboard';});
@@ -55,6 +56,23 @@ const preciseSubtopics={
     {val:"Pricing and target costing",text:"Target Costing & Markup Pricing"},
     {val:"Job costing",text:"Job Costing & Manufacturing Overhead Allocation"},
     {val:"Cost concepts",text:"Direct vs Indirect & Fixed vs Variable Costs"}
+  ],
+  "Budgeting":[
+    {val:"",text:"All Budgeting Areas"},
+    {val:"Cash collections",text:"Cash Collections & Cash Budgets"},
+    {val:"Activity-based budgeting",text:"Activity-Based Budgeting (ABB)"},
+    {val:"Production budget",text:"Production & Materials Budgets"},
+    {val:"Sales budget",text:"Sales Forecasting & Operating Budgets"},
+    {val:"Purchases budget",text:"Direct Materials Purchases Budget"},
+    {val:"Income statement budget",text:"Budgeted Income Statement & Master Budget"}
+  ],
+  "Variances":[
+    {val:"",text:"All Variance Analysis Areas"},
+    {val:"Flexible budgets",text:"Flexible Budgets vs Static Budgets"},
+    {val:"Flexible-budget variance",text:"Flexible-Budget & Sales-Volume Variances"},
+    {val:"Direct material variances",text:"Direct Material Price & Efficiency Variances"},
+    {val:"Direct labor price variance",text:"Direct Labor Rate & Efficiency Variances"},
+    {val:"Fixed-overhead variances",text:"Fixed & Variable Overhead Variance Analysis"}
   ]
 };
 
@@ -152,7 +170,6 @@ function setAppMode(mode){
   $('#practice-panel').classList.toggle('hidden',mode!=='practice');
   $('#exam-panel').classList.toggle('hidden',mode!=='exam');
 
-  // When switching to Exam Mode, do NOT start timer automatically!
   if(mode==='exam'&&(!state.session||!state.session.mode.startsWith('exam'))){
     renderExamOverview();
   }else if(mode==='practice'&&state.session&&state.session.mode.startsWith('exam')){
@@ -222,7 +239,7 @@ function renderPractice(){
               const isChecked=(attempt?attempt.optionId:d?.selected)===id;
               return `<label class="option ${attempt&&id===q.correctOptionId?'correct-option':''} ${attempt?.outcome==='incorrect'&&id===attempt.optionId?'wrong-option':''}">
                 <input type="radio" name="answer" value="${h(id)}" ${isChecked?'checked':''}>
-                <span><strong>${h(o.id.toUpperCase())}.</strong> ${h(optionText(o))}</span>
+                <span><strong>${h(shownLabel(session.order,id))}.</strong> ${h(optionText(o))}</span>
               </label>`;
             }).join('')}
           </fieldset>
@@ -246,7 +263,6 @@ function renderPractice(){
     </div>
   `;
 
-  // Option selection enables Check Answer
   $$('input[name=answer]').forEach(el=>el.addEventListener('change',()=>{
     state.drafts[q.id]={notes:state.drafts[q.id]?.notes||'',selected:el.value,updatedAt:now()};
     save();
@@ -282,14 +298,15 @@ function submit(q,optionId){
 
 function feedback(q,a){
   const correct=q.options.find(o=>o.id===q.correctOptionId),selected=q.options.find(o=>o.id===a.optionId),suggested=a.outcome!=='correct'?followup(q,a,bank.questions,state.attempts):null;
+  const order=state.session.order;
   return `
     <section class="feedback" data-outcome="${h(a.outcome)}">
       <h3 class="outcome-${h(a.outcome)}" id="feedback-heading" tabindex="-1">${label[a.outcome]}</h3>
-      <p><strong>Correct answer:</strong> ${h(optionText(correct))}</p>
+      <p><strong>Correct answer:</strong> ${h(shownLabel(order,correct.id))}. ${h(optionText(correct))}</p>
       <p>${h(q.explanation)}</p>
       ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
       ${a.outcome==='incorrect'?`<p><strong>Why your choice is wrong:</strong> ${h(selected.explanation)}</p>`:''}
-      <details><summary>Explain all answer options</summary><ul>${q.options.map(o=>`<li><strong>${h(optionText(o))}</strong>${o.id===correct.id?' — correct':''}<br>${h(o.explanation)}</li>`).join('')}</ul></details>
+      <details><summary>Explain all answer options</summary><ul>${order.map(id=>{const o=q.options.find(o=>o.id===id);return `<li><strong>${h(shownLabel(order,id))}. ${h(optionText(o))}</strong>${o.id===correct.id?' — correct':''}<br>${h(o.explanation)}</li>`;}).join('')}</ul></details>
       ${suggested?`<div class="actions"><button id="followup" data-question="${h(suggested.id)}">Try relevant follow-up question</button></div>`:''}
     </section>
   `;
@@ -330,7 +347,7 @@ function renderExamOverview(){
       <div><strong>0 penalties</strong><span>Wrong answers count as 0</span></div>
     </div>
     <section class="topic-section">
-      <div class="section-heading"><h2>Exam Structure Reference</h2><p class="muted">Based directly on official sittings (Prof. Eugster & Prof. Fehrenbacher).</p></div>
+      <div class="section-heading"><h2>Exam Structure Reference</h2><p class="muted">Based directly on official past exam papers.</p></div>
       <div class="topic-grid">
         <div class="topic-card">
           <span class="topic-number">PART 1 · 45 MINUTES · 45 MARKS</span>
@@ -340,7 +357,7 @@ function renderExamOverview(){
         <div class="topic-card">
           <span class="topic-number">PART 2 · 45 MINUTES · 45 MARKS</span>
           <span class="topic-title">Controlling</span>
-          <span class="topic-count">Topic: Management Accounting & Cost Systems (45 Marks)<br>Total ~20 Exercises.</span>
+          <span class="topic-count">Topic: Management Accounting, Budgeting & Variances (45 Marks)<br>Total ~20 Exercises.</span>
         </div>
       </div>
     </section>
@@ -352,17 +369,16 @@ function renderExamOverview(){
 function launchExam(part){
   let pool=[];
   if(part==='part1'){
-    // 20 accounting + 10 auditing = 30
     const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
     const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
     pool=[...acct,...audit].map(q=>q.id);
   }else if(part==='part2'){
-    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Management Accounting')).slice(0,20).map(q=>q.id);
+    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20).map(q=>q.id);
   }else{
     const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
     const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
-    const ma=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Management Accounting')).slice(0,20);
-    pool=[...acct,...audit,...ma].map(q=>q.id);
+    const controlling=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20);
+    pool=[...acct,...audit,...controlling].map(q=>q.id);
   }
 
   const q=question(pool[0]);
@@ -468,7 +484,7 @@ function renderExamActive(){
             const isChecked=d?.selected===id;
             return `<label class="option">
               <input type="radio" name="exam-answer" value="${h(id)}" ${isChecked?'checked':''}>
-              <span><strong>${h(o.id.toUpperCase())}.</strong> ${h(optionText(o))}</span>
+              <span><strong>${h(shownLabel(s.order,id))}.</strong> ${h(optionText(o))}</span>
             </label>`;
           }).join('')}
         </fieldset>
@@ -484,7 +500,6 @@ function renderExamActive(){
     </div>
   `;
 
-  // Option change autosaves selection
   $$('input[name=exam-answer]').forEach(el=>el.addEventListener('change',()=>{
     state.drafts[q.id]={notes:state.drafts[q.id]?.notes||'',selected:el.value,updatedAt:now()};
     save();
@@ -521,7 +536,6 @@ function finishExam(){
   const answered=s.queue.filter(id=>state.drafts[id]?.selected).length;
   if(!confirm(`You answered ${answered} of ${s.queue.length} exercises. Ready to submit this exam?`))return;
   stopExamTimer();
-  // Grade each question
   s.queue.forEach(id=>{
     const q=question(id);
     const chosen=state.drafts[id]?.selected||null;
