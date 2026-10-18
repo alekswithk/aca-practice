@@ -1,36 +1,119 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#fafafc"><meta name="description" content="ACA exam practice with worked feedback, a personal notebook and saved learning history."><title>ACA Study | Practice & notebook</title>
-  <link rel="stylesheet" href="styles.css"><script type="module" src="app.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#142b40">
+  <meta name="description" content="ACA exam practice with worked feedback, session length slider and 45-minute exam simulation.">
+  <title>ACA Study | Practice & Exam Simulator</title>
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to study area</a>
 <header class="masthead">
- <div class="identity"><span class="mark" aria-hidden="true">ACA<span class="mark-dot"></span></span><div><h1>Practice & notebook</h1><p>Accounting · Controlling · Auditing</p></div></div>
- <nav aria-label="Study views"><button data-view="practice" aria-pressed="true">Practice</button><button data-view="history" aria-pressed="false">Learning history</button><button data-view="review" aria-pressed="false">Source review <span id="review-count"></span></button></nav>
+  <div class="identity"><span class="mark" aria-hidden="true">ACA<span class="mark-dot"></span></span><div><h1>Practice & Exam Mode</h1><p>Accounting · Controlling · Auditing</p></div></div>
+ <div class="masthead-controls">
+  <nav aria-label="Study views">
+   <button data-view="practice" id="nav-study" aria-pressed="true">Study & Exams</button>
+   <button data-view="history" id="nav-history" aria-pressed="false">Learning history</button>
+  </nav>
+  <button id="theme-toggle" class="theme-switch-track" type="button" role="switch" aria-checked="false" aria-label="Toggle dark mode" title="Toggle dark mode">
+   <span class="theme-icon sun" aria-hidden="true">☀️</span>
+   <span class="theme-icon moon" aria-hidden="true">🌙</span>
+   <span class="theme-switch-thumb" aria-hidden="true"></span>
+  </button>
+ </div>
 </header>
 <div id="notice" class="notice" role="status" hidden></div>
 <div class="layout">
  <aside class="sidebar" aria-label="Practice setup">
-  <details id="session-settings" class="session-settings" open><summary><span class="eyebrow">PRACTICE SETUP</span><span>Your next session</span></summary><p class="muted">Choose your focus. Take it one question at a time.</p>
-  <form id="setup">
-   <label for="mode">Practice mode</label><select id="mode"><option value="mixed">Mixed practice</option><option value="topic">Topic practice</option><option value="missed">Review missed / unknown</option></select>
-   <label for="topic">Topic</label><select id="topic"><option value="">All topics</option></select>
-   <label for="subtopic">Focus</label><select id="subtopic"><option value="">All subtopics</option></select>
-   <label for="difficulty">Estimated difficulty</label><select id="difficulty"><option value="">All study ratings</option><option>Easy</option><option>Medium</option><option>Hard</option></select>
-   <label for="origin">Question source</label><select id="origin"><option value="">Original + generated</option><option value="original">Original exam bank</option><option value="generated">Generated practice</option></select>
-   <label for="length">Session length</label><select id="length"><option value="10">10 questions</option><option value="5">5 questions</option><option value="20">20 questions</option><option value="all">All matching questions</option></select>
-   <p id="available" class="muted" aria-live="polite"></p><button class="primary" type="submit" id="start" disabled>Start practice</button>
-  </form>
-  </details>
-  <button id="tax-focus" class="focus-button">Focus on deferred taxes</button>
-  <details class="storage" open><summary>Notes & backups</summary><p>Notes and attempts are saved in this browser. They can be cleared by browser settings. Export a backup to move them between devices.</p><p id="global-save" role="status">Loading…</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
+  <div class="mode-selector-wrap">
+   <span class="eyebrow">MODE SELECTION</span>
+   <div class="mode-pill-group" role="tablist">
+    <button type="button" id="tab-mode-practice" class="mode-pill active" role="tab" aria-selected="true">Practice Mode</button>
+    <button type="button" id="tab-mode-exam" class="mode-pill" role="tab" aria-selected="false">Exam Mode</button>
+   </div>
+  </div>
+  <div id="practice-panel" class="setup-panel">
+   <form id="setup">
+    <label for="topic">Topic</label>
+    <select id="topic">
+     <option value="">All topics (Mixed)</option>
+     <option value="Financial Reporting">Financial Reporting</option>
+     <option value="Consolidated Statements">Consolidated Statements</option>
+     <option value="Auditing">Auditing</option>
+     <option value="Management Accounting">Management Accounting</option>
+    </select>
+    <label for="subtopic">Specific Focus Area</label>
+    <select id="subtopic">
+     <option value="">All specific focus areas</option>
+    </select>
+    <label for="difficulty">Estimated difficulty</label>
+    <select id="difficulty">
+     <option value="">All study ratings</option>
+     <option>Easy</option>
+     <option>Medium</option>
+     <option>Hard</option>
+    </select>
+    <!-- Hidden legacy compatibility hooks -->
+    <select id="origin" class="visually-hidden"><option value="">All</option><option value="original">Original</option><option value="generated">Generated</option></select>
+    <select id="mode" class="visually-hidden"><option value="mixed">Mixed</option><option value="topic">Topic</option><option value="missed">Missed</option></select>
+    <div class="slider-field">
+     <div class="slider-header">
+      <label for="length-slider">Session length</label>
+      <span id="slider-badge" class="slider-badge">15 questions</span>
+     </div>
+     <input type="range" id="length-slider" min="5" max="50" step="5" value="15">
+     <div class="slider-ticks"><span>5 q</span><span>20 q</span><span>35 q</span><span>50 q</span></div>
+     <select id="length" class="visually-hidden"><option value="15">15</option></select>
+    </div>
+    <p id="available" class="muted" aria-live="polite"></p>
+    <button class="primary" type="submit" id="start" disabled>Start practice session →</button>
+    <button id="tax-focus" type="button" class="visually-hidden">Focus on deferred taxes</button>
+   </form>
+  </div>
+  <div id="exam-panel" class="setup-panel hidden">
+   <div class="exam-info-card">
+    <strong>Simulate Real ACA Past Exams:</strong>
+    <p class="muted">Structured identically to past course sittings with a <strong>45-minute countdown</strong> per part.</p>
+   </div>
+   <form id="exam-setup">
+    <label class="eyebrow">SELECT EXAM PART</label>
+    <div class="exam-part-options">
+     <label class="exam-part-card">
+      <input type="radio" name="exam-part" value="part1" checked>
+      <div>
+       <strong>Part 1: Accounting & Auditing</strong>
+       <span class="muted">45 Minutes · 30 Exercises · 45 Marks</span>
+       <span class="part-topics">Accounting (30p) · Auditing (15p)</span>
+      </div>
+     </label>
+     <label class="exam-part-card">
+      <input type="radio" name="exam-part" value="part2">
+      <div>
+       <strong>Part 2: Controlling</strong>
+       <span class="muted">45 Minutes · ~20 Exercises · 45 Marks</span>
+       <span class="part-topics">Management Accounting & Cost Systems</span>
+      </div>
+     </label>
+     <label class="exam-part-card">
+      <input type="radio" name="exam-part" value="full">
+      <div>
+       <strong>Full Mock Exam (Both Parts)</strong>
+       <span class="muted">90 Minutes total · 50 Exercises · 90 Marks</span>
+      </div>
+     </label>
+    </div>
+    <button class="primary" type="button" id="start-exam">Start Exam Mode ⏱️</button>
+   </form>
+  </div>
+  <details class="storage"><summary>Settings & backups</summary><p>Notes and attempts are saved in this browser. Export a backup to preserve them or move to another device.</p><p id="global-save" role="status">Saved in this browser</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
+  <span id="review-count" class="visually-hidden"></span>
  </aside>
  <main id="main" tabindex="-1"><p>Loading validated questions…</p></main>
 </div>
-<footer>Study ratings are estimates. Practice results describe these attempts and do not establish mastery. <a href="CONTENT_VALIDATION.md">Content validation report</a> · <a href="README.md">Launch & backup instructions</a></footer>
+<footer>Study ratings are estimates. Practice results describe these attempts and do not establish mastery.</footer>
 <dialog id="reset-dialog"><form method="dialog"><h2>Reset all study data?</h2><p>This removes saved drafts, answer selections and every attempt from this browser. Export a backup first if you want to keep them.</p><div class="actions"><button value="cancel" autofocus>Cancel</button><button value="confirm" class="danger">Reset all data</button></div></form></dialog>
 <dialog id="import-dialog"><form method="dialog"><h2>Merge this backup?</h2><p id="import-summary"></p><p>All distinct attempts are kept. For each draft, the more recently saved version is used. Your current session is kept if one exists.</p><div class="actions"><button value="cancel" autofocus>Cancel</button><button value="confirm" class="primary">Merge backup</button></div></form></dialog>
 </body>

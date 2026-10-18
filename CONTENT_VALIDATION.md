@@ -58,17 +58,14 @@ Documented clarifications include Kyle's malformed option E range; Café Baer's 
 
 ## Evidence references
 
-- `ACA Course Materials/Week 1/Module 1 — Transcript Summary.md` — Sections 2–4: principles and Swiss reporting.
-- `ACA Course Materials/Week 1/Module 1 — Transcript Summary.md` — Section 7: initial cost, profit, dividends and hidden-reserve depreciation. [Primary reference](https://www.ifrs.org/issued-standards/list-of-standards/ias-28-investments-in-associates-and-joint-ventures/).
-- `ACA Course Materials/Week 1/Module 1 — Transcript Summary.md` — Section 6.2: partial goodwill and NCI.
+- `ACA Course Materials/Week 1/Lecture Summary.md` — reporting principles, Swiss reporting, equity-method mechanics, partial goodwill, and NCI. [Primary reference for equity-method context](https://www.ifrs.org/issued-standards/list-of-standards/ias-28-investments-in-associates-and-joint-ventures/).
 - `ACA Course Materials/Week 2/Session2_Students.md` — Lease example: present value, interest and depreciation.
 - `ACA Course Materials/Week 2/Session2_Students.md` — Impairment, slide 22: recoverable amount = max(FVLCD, VIU). [Primary reference](https://www.ifrs.org/issued-standards/list-of-standards/ias-36-impairment-of-assets/).
 - `ACA Course Materials/Week 1/Lecture/Session1_Students.md` — Goodwill policy choices under IFRS and Swiss GAAP FER.
-- `ACA Course Materials/Week 2/Module 2 — Transcript Summary.md` — Section 7: defined benefit obligations and investment risk.
-- `ACA Course Materials/Week 2/Module 2 — Transcript Summary.md` — Sections 9.5–9.9: temporary differences, direction and tax rate. [Primary reference](https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2021/issued/part-a/ias-12-income-taxes.pdf).
+- `ACA Course Materials/Week 2/Lecture Summary.md` — defined-benefit obligations, investment risk, temporary differences, direction, and tax rate. [Primary reference for deferred-tax context](https://www.ifrs.org/content/dam/ifrs/publications/pdf-standards/english/2021/issued/part-a/ias-12-income-taxes.pdf).
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slides 24 and 28: legal audit requirements and independence; course context.
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Audit Market of all Firms in Switzerland: historical course chart.
-- `ACA Course Materials/Week 3/Module 3 — Transcript Summary.md` — Sections 1, 4–6: audit purpose, reasonable assurance and evidence.
+- `ACA Course Materials/Week 3/Lecture Summary.md` — audit purpose, reasonable assurance, and evidence.
 - `ACA Course Materials/Week 3/HS26_Tutorial_3_Auditing_student.md` — Task 3: materiality benchmark and misstatement effects; explicit study thresholds where added.
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slide 52: qualified, adverse and disclaimer opinions. [Primary reference](https://www.iaasb.org/publications/international-standard-auditing-isa-705-revised-modifications-opinion-independent-auditor-s-report-3).
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slide 51: management and auditor going-concern responsibilities.
@@ -78,7 +75,7 @@ Documented clarifications include Kyle's malformed option E range; Café Baer's 
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slide 14: Three Lines Model. [Primary reference](https://www.theiia.org/globalassets/documents/resources/the-iias-three-lines-model-an-update-of-the-three-lines-of-defense-july-2020/three-lines-model-updated-english.pdf).
 - `ACA Course Materials/Week 3/HS26_Session3_Students.md` — Slide 21: 87 of 89 assured reports had limited assurance, 2024 sample.
 
-- `ACA Course Materials/Week 4/W4 Lecture Summary.md` — Sections 1–6; underlying videos 1.1–1.3, 2.1–2.2, 3.1–3.2.
+- `ACA Course Materials/Week 4/Lecture Summary.md` — management-accounting foundations, cost flow, CVP, costing systems, and pricing.
 
 ## Reproduce the content gate
 
