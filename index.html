@@ -79,8 +79,16 @@
     <p class="muted">Structured identically to past course sittings with a <strong>45-minute countdown</strong> per part.</p>
    </div>
    <form id="exam-setup">
-    <label class="eyebrow">SELECT EXAM PART</label>
+    <label class="eyebrow">SELECT EXAM SCOPE OR TOPIC</label>
     <div class="exam-part-options">
+     <label class="exam-part-card">
+      <input type="radio" name="exam-part" value="full">
+      <div>
+       <strong>Whole Exam (Both Parts)</strong>
+       <span class="muted">90 Minutes total · 50 Exercises · 90 Marks</span>
+       <span class="part-topics">Accounting, Auditing & Controlling</span>
+      </div>
+     </label>
      <label class="exam-part-card">
       <input type="radio" name="exam-part" value="part1" checked>
       <div>
@@ -94,14 +102,25 @@
       <div>
        <strong>Part 2: Controlling</strong>
        <span class="muted">45 Minutes · ~20 Exercises · 45 Marks</span>
-       <span class="part-topics">Management Accounting & Cost Systems</span>
+       <span class="part-topics">Management Accounting, Budgeting & Variances</span>
       </div>
      </label>
      <label class="exam-part-card">
-      <input type="radio" name="exam-part" value="full">
-      <div>
-       <strong>Full Mock Exam (Both Parts)</strong>
-       <span class="muted">90 Minutes total · 50 Exercises · 90 Marks</span>
+      <input type="radio" name="exam-part" value="topic">
+      <div style="width: 100%;">
+       <strong>Specific Topic Exam</strong>
+       <span class="muted">45 Minutes · 20 Exercises · 45 Marks</span>
+       <div id="exam-topic-select-wrap" class="hidden" style="margin-top: .5rem;">
+        <label for="exam-topic-select" class="visually-hidden">Choose exam topic</label>
+        <select id="exam-topic-select" style="width: 100%; font-size: .8rem; padding: .4rem .5rem;">
+         <option value="Financial Reporting">Financial Reporting</option>
+         <option value="Consolidated Statements">Consolidated Statements</option>
+         <option value="Auditing">Auditing</option>
+         <option value="Management Accounting">Management Accounting</option>
+         <option value="Budgeting">Budgeting</option>
+         <option value="Variances">Variances</option>
+        </select>
+       </div>
       </div>
      </label>
     </div>

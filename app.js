@@ -170,8 +170,19 @@ function setAppMode(mode){
   $('#practice-panel').classList.toggle('hidden',mode!=='practice');
   $('#exam-panel').classList.toggle('hidden',mode!=='exam');
 
-  if(mode==='exam'&&(!state.session||!state.session.mode.startsWith('exam'))){
-    renderExamOverview();
+  if(mode==='exam'){
+    if(!state.session||!state.session.mode.startsWith('exam')){
+      // Reset any drafted answers when entering exam mode
+      if(bank){
+        bank.questions.forEach(q=>{
+          if(state.drafts[q.id]?.selected){
+            state.drafts[q.id]={notes:state.drafts[q.id].notes||'',selected:null,updatedAt:now()};
+          }
+        });
+      }
+      save();
+      renderExamOverview();
+    }
   }else if(mode==='practice'&&state.session&&state.session.mode.startsWith('exam')){
     stopExamTimer();
     renderPractice();
@@ -331,65 +342,175 @@ function advanceQuestion(){
 // =================== EXAM MODE ===================
 function renderExamOverview(){
   stopExamTimer();
+  const selectedPart=document.querySelector('input[name="exam-part"]:checked')?.value||'full';
+  const selectedTopic=$('#exam-topic-select')?.value||'Financial Reporting';
+
+  let config={
+    title:'Whole Exam (Both Parts)',
+    duration:'90 minutes',
+    exerciseCount:'50 exercises',
+    marks:'90 marks total',
+    description:'Full-length mock exam replicating official past ACA exam papers across all course modules.',
+    modules:[
+      {title:'Part 1: Accounting & Auditing (45m · 45 Marks)',desc:'30 exercises: Financial Reporting & Consolidation (30 marks) + Auditing (15 marks).'},
+      {title:'Part 2: Controlling (45m · 45 Marks)',desc:'20 exercises: Management Accounting, Cost Systems, Budgeting & Variances (45 marks).'}
+    ]
+  };
+
+  if(selectedPart==='part1'){
+    config={
+      title:'Part 1: Accounting & Auditing',
+      duration:'45 minutes',
+      exerciseCount:'30 exercises',
+      marks:'45 marks total',
+      description:'Replication of Part 1 from official past ACA exam papers. Strictly 45 minutes.',
+      modules:[
+        {title:'Accounting (30 Marks · 20 Exercises)',desc:'Financial reporting standards, deferred taxes, leases, revenue recognition & consolidated balance sheets.'},
+        {title:'Auditing (15 Marks · 10 Exercises)',desc:'Audit risk assessment, internal controls, substantive testing procedures & audit opinion formulation.'}
+      ]
+    };
+  }else if(selectedPart==='part2'){
+    config={
+      title:'Part 2: Controlling',
+      duration:'45 minutes',
+      exerciseCount:'~20 exercises',
+      marks:'45 marks total',
+      description:'Replication of Part 2 from official past ACA exam papers. Strictly 45 minutes.',
+      modules:[
+        {title:'Management Accounting & Cost Systems (30 Marks)',desc:'Absorption vs. variable costing, contribution margin, breakeven analysis & cost allocations.'},
+        {title:'Budgeting & Variances (15 Marks)',desc:'Operational & flexible budgeting, direct material, direct labor & overhead variance calculations.'}
+      ]
+    };
+  }else if(selectedPart==='topic'){
+    const count=bank?bank.questions.filter(q=>q.status==='validated'&&q.topic===selectedTopic).length:0;
+    config={
+      title:`Topic Focus Exam: ${selectedTopic}`,
+      duration:'45 minutes',
+      exerciseCount:`${Math.min(20,count)} exercises`,
+      marks:'45 marks total',
+      description:`Intensive timed exam sitting focused exclusively on ${selectedTopic} under strict exam conditions.`,
+      modules:[
+        {title:`${selectedTopic} Focus (${Math.min(20,count)} Exercises)`,desc:`Simulated exam pool selected exclusively from validated ${selectedTopic} question bank (${count} questions available).`}
+      ]
+    };
+  }
+
   $('#main').innerHTML=`
     <section class="welcome study-hero">
-      <span class="eyebrow">ACA PAST EXAM REPLICATION</span>
-      <h2>Exam Mode</h2>
-      <p>Test yourself under real exam conditions matching past course sittings. The timer will <strong>not</strong> start until you explicitly click Begin below.</p>
-      <div class="actions">
-        <button class="primary" id="btn-begin-exam-part1">Begin Part 1: Accounting & Auditing (45m) →</button>
-        <button id="btn-begin-exam-part2">Begin Part 2: Controlling (45m) →</button>
+      <span class="eyebrow">CHOSEN EXAM CONFIGURATION</span>
+      <h2>${h(config.title)}</h2>
+      <p class="exam-lead">${h(config.description)}</p>
+      
+      <div class="exam-start-guidance">
+        <span class="guidance-icon" aria-hidden="true">👈</span>
+        <div>
+          <strong>Ready to start?</strong>
+          <p>Review the details below. When you are ready, click <strong>Start Exam Mode ⏱️</strong> in the left sidebar to begin. Your timer will start counting down immediately upon clicking.</p>
+        </div>
       </div>
     </section>
+
     <div class="study-stats">
-      <div><strong>45 min</strong><span>Duration per part</span></div>
-      <div><strong>Single-choice</strong><span>Only 1 correct option</span></div>
-      <div><strong>0 penalties</strong><span>Wrong answers count as 0</span></div>
+      <div><strong>${h(config.duration)}</strong><span>Duration</span></div>
+      <div><strong>${h(config.exerciseCount)}</strong><span>Exercise count</span></div>
+      <div><strong>${h(config.marks)}</strong><span>Total marks</span></div>
     </div>
+
     <section class="topic-section">
-      <div class="section-heading"><h2>Exam Structure Reference</h2><p class="muted">Based directly on official past exam papers.</p></div>
+      <div class="section-heading">
+        <h2>Syllabus Coverage for Selected Exam</h2>
+        <p class="muted">Based directly on official past exam papers.</p>
+      </div>
       <div class="topic-grid">
-        <div class="topic-card">
-          <span class="topic-number">PART 1 · 45 MINUTES · 45 MARKS</span>
-          <span class="topic-title">Accounting & Auditing</span>
-          <span class="topic-count">Topic 1: Accounting (30 Marks) · Topic 2: Auditing (15 Marks)<br>Total 30 Exercises.</span>
+        ${config.modules.map((m,idx)=>`
+          <div class="topic-card">
+            <span class="topic-number">SECTION 0${idx+1}</span>
+            <span class="topic-title">${h(m.title)}</span>
+            <span class="topic-count">${h(m.desc)}</span>
+          </div>
+        `).join('')}
+      </div>
+    </section>
+
+    <section class="exam-rules-section">
+      <div class="section-heading">
+        <h2>Exam Conditions & Mechanics</h2>
+        <p class="muted">How your exam sitting is graded and conducted.</p>
+      </div>
+      <div class="rules-grid">
+        <div class="rule-card">
+          <strong>Single Choice Questions</strong>
+          <p class="muted">Each exercise has only 1 correct answer. Incorrect answers receive 0 marks with no negative deductions.</p>
         </div>
-        <div class="topic-card">
-          <span class="topic-number">PART 2 · 45 MINUTES · 45 MARKS</span>
-          <span class="topic-title">Controlling</span>
-          <span class="topic-count">Topic: Management Accounting, Budgeting & Variances (45 Marks)<br>Total ~20 Exercises.</span>
+        <div class="rule-card">
+          <strong>Exercise Matrix & Flagging</strong>
+          <p class="muted">Jump freely between exercises and flag questions to revisit before final submission.</p>
+        </div>
+        <div class="rule-card">
+          <strong>Timer Controls & Cancellation</strong>
+          <p class="muted">Pause or reset the timer at any time. You can also cancel the exam sitting to discard progress without logging attempts.</p>
+        </div>
+        <div class="rule-card">
+          <strong>Built-in Scratchpad Notebook</strong>
+          <p class="muted">Use the side notebook for calculations; notes are saved with your exam attempt for later review.</p>
         </div>
       </div>
     </section>
   `;
-  $('#btn-begin-exam-part1').onclick=()=>launchExam('part1');
-  $('#btn-begin-exam-part2').onclick=()=>launchExam('part2');
 }
 
-function launchExam(part){
+function launchExam(part,topic){
   let pool=[];
-  if(part==='part1'){
-    const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
-    const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
-    pool=[...acct,...audit].map(q=>q.id);
-  }else if(part==='part2'){
-    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20).map(q=>q.id);
-  }else{
+  let durationSeconds=45*60;
+  let modeName='exam-part1';
+  let examTopicName=null;
+
+  if(part==='full'){
     const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
     const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
     const controlling=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20);
     pool=[...acct,...audit,...controlling].map(q=>q.id);
+    durationSeconds=90*60;
+    modeName='exam-full';
+  }else if(part==='part1'){
+    const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
+    const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
+    pool=[...acct,...audit].map(q=>q.id);
+    durationSeconds=45*60;
+    modeName='exam-part1';
+  }else if(part==='part2'){
+    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20).map(q=>q.id);
+    durationSeconds=45*60;
+    modeName='exam-part2';
+  }else if(part==='topic'){
+    const chosenTopic=topic||$('#exam-topic-select')?.value||'Financial Reporting';
+    examTopicName=chosenTopic;
+    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic===chosenTopic)).slice(0,20).map(q=>q.id);
+    durationSeconds=45*60;
+    modeName='exam-topic';
   }
+
+  if(!pool.length){
+    alert('No validated questions found for this exam selection.');
+    return;
+  }
+
+  // RESET ALL DRAFTS / ANSWERS FOR EXAM POOL
+  pool.forEach(id=>{
+    state.drafts[id]={notes:'',selected:null,updatedAt:now()};
+  });
 
   const q=question(pool[0]);
   state.session={
     queue:pool,
     index:0,
     order:shuffle(q.options.map(o=>o.id)),
-    mode:part==='part1'?'exam-part1':part==='part2'?'exam-part2':'exam-full',
+    mode:modeName,
+    examTopic:examTopicName,
     attemptId:null,
     attemptIds:[],
-    examTimeRemaining:part==='full'?90*60:45*60,
+    examInitialDuration:durationSeconds,
+    examTimeRemaining:durationSeconds,
     examFlags:{}
   };
   save();
@@ -427,13 +548,36 @@ function toggleExamTimer(){
   if(btn)btn.textContent=examTimerPaused?'▶ Resume':'⏸ Pause';
 }
 
+function resetExamTimer(){
+  if(!state.session||!state.session.mode.startsWith('exam'))return;
+  const initial=state.session.examInitialDuration||(state.session.mode==='exam-full'?90*60:45*60);
+  state.session.examTimeRemaining=initial;
+  const m=Math.floor(initial/60),s=initial%60;
+  const el=$('#exam-timer');
+  if(el)el.textContent=`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+  save();
+}
+
+function cancelExam(){
+  if(!state.session||!state.session.mode.startsWith('exam'))return;
+  if(!confirm('Are you sure you want to cancel this exam sitting? All answered questions will be cleared, timer stopped, and no attempts will be logged.'))return;
+  stopExamTimer();
+  state.session.queue.forEach(id=>{
+    state.drafts[id]={notes:'',selected:null,updatedAt:now()};
+  });
+  state.session=null;
+  save();
+  renderExamOverview();
+  $('#main').focus();
+}
+
 function renderExamActive(){
   const s=state.session;
   const q=question(s.queue[s.index]);
   const d=state.drafts[q.id];
   const m=Math.floor((s.examTimeRemaining||0)/60),sec=(s.examTimeRemaining||0)%60;
-  const isPart1=s.mode==='exam-part1',isPart2=s.mode==='exam-part2';
-  const examTitle=isPart1?'Part 1: Accounting & Auditing':isPart2?'Part 2: Controlling':'Full ACA Exam';
+  const isPart1=s.mode==='exam-part1',isPart2=s.mode==='exam-part2',isFull=s.mode==='exam-full';
+  const examTitle=isPart1?'Part 1: Accounting & Auditing':isPart2?'Part 2: Controlling':isFull?'Whole Mock Exam':(s.examTopic?`Topic: ${s.examTopic}`:'Topic Exam');
 
   $('#main').innerHTML=`
     <div class="exam-banner">
@@ -441,9 +585,13 @@ function renderExamActive(){
         <h2>Exam Mode — ${h(examTitle)}</h2>
         <p>Exercise ${s.index+1} of ${s.queue.length} · Single choice · No deduction for wrong answers</p>
       </div>
-      <div class="exam-timer-box">
-        <span class="exam-timer-display" id="exam-timer">${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}</span>
-        <button id="timer-toggle-btn" class="exam-timer-toggle" type="button">${examTimerPaused?'▶ Resume':'⏸ Pause'}</button>
+      <div class="exam-banner-controls">
+        <div class="exam-timer-box">
+          <span class="exam-timer-display" id="exam-timer">${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}</span>
+          <button id="timer-toggle-btn" class="exam-timer-toggle" type="button" title="Pause or resume timer">${examTimerPaused?'▶ Resume':'⏸ Pause'}</button>
+          <button id="timer-reset-btn" class="exam-timer-toggle" type="button" title="Reset countdown timer">🔄 Reset Timer</button>
+        </div>
+        <button type="button" id="btn-banner-cancel-exam" class="exam-cancel-btn" title="Cancel this exam sitting">Cancel Exam ✕</button>
       </div>
     </div>
     <div class="palette-card">
@@ -489,9 +637,14 @@ function renderExamActive(){
           }).join('')}
         </fieldset>
         <div class="exam-nav-bar">
-          <button type="button" id="btn-exam-prev" ${s.index===0?'disabled':''}>← Previous</button>
-          <button type="button" id="btn-exam-finish" class="danger">End & Submit Exam</button>
-          <button type="button" id="btn-exam-next" class="primary">${s.index+1<s.queue.length?'Next exercise →':'Finish exam'}</button>
+          <div class="exam-nav-left">
+            <button type="button" id="btn-exam-prev" ${s.index===0?'disabled':''}>← Previous</button>
+            <button type="button" id="btn-exam-cancel" class="quiet danger">Cancel Exam ✕</button>
+          </div>
+          <div class="exam-nav-right">
+            <button type="button" id="btn-exam-finish" class="danger">End & Submit Exam</button>
+            <button type="button" id="btn-exam-next" class="primary">${s.index+1<s.queue.length?'Next exercise →':'Finish exam'}</button>
+          </div>
         </div>
       </article>
       <aside id="notebook" class="notes-panel" aria-label="Exercise scratchpad">
@@ -529,6 +682,9 @@ function renderExamActive(){
 
   $('#btn-exam-finish').onclick=finishExam;
   $('#timer-toggle-btn').onclick=toggleExamTimer;
+  $('#timer-reset-btn').onclick=resetExamTimer;
+  $('#btn-banner-cancel-exam').onclick=cancelExam;
+  $('#btn-exam-cancel').onclick=cancelExam;
 }
 
 function finishExam(){
@@ -746,11 +902,26 @@ async function init(){
       startSession(pool.slice(0,length),'mixed');
     };
 
-    // Exam start button: explicit start!
+    // Exam start button: explicit start from left pane!
     $('#start-exam').onclick=()=>{
-      const selectedPart=document.querySelector('input[name="exam-part"]:checked')?.value||'part1';
-      launchExam(selectedPart);
+      const selectedPart=document.querySelector('input[name="exam-part"]:checked')?.value||'full';
+      const selectedTopic=$('#exam-topic-select')?.value||'Financial Reporting';
+      launchExam(selectedPart,selectedTopic);
     };
+
+    $$('input[name="exam-part"]').forEach(el=>el.addEventListener('change',()=>{
+      const isTopic=el.value==='topic';
+      $('#exam-topic-select-wrap')?.classList.toggle('hidden',!isTopic);
+      if(appMode==='exam'&&(!state.session||!state.session.mode.startsWith('exam'))){
+        renderExamOverview();
+      }
+    }));
+
+    $('#exam-topic-select')?.addEventListener('change',()=>{
+      if(appMode==='exam'&&(!state.session||!state.session.mode.startsWith('exam'))){
+        renderExamOverview();
+      }
+    });
 
     // Tax focus legacy hook
     $('#tax-focus').onclick=()=>{
