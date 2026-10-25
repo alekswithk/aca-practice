@@ -1,14 +1,14 @@
 # Content validation — Phase 1
 
-Bank version: 2026-10-09.1. Extension content gate passed before the interface refresh. The original bank was validated on 30 September 2026.
+Bank version: 2026-10-25.1. The original bank was validated on 30 September 2026.
 
-**179 questions imported/authored: 161 validated for scoring, 18 unresolved for review.** All 143 question bodies in four banks were imported: 25 Consolidated Statements, 25 Financial Reporting, 42 Auditing, 51 Management Accounting. Batch headings mention some absent questions; absent bodies were not invented. The Financial Reporting bank places ABC questions 14–15 after AlphaTech; their ABC context is restored explicitly.
+**254 questions imported/authored: 236 validated for scoring, 18 unresolved for review.** The six local Markdown banks contribute 173 source questions, including 14 Capital Budgeting and 16 Cost and Performance Management questions. Budgeting and variances contribute another 45. Batch headings mention some absent questions; absent bodies were not invented. The Financial Reporting bank places ABC questions 14–15 after AlphaTech; their ABC context is restored explicitly. All available local source excerpts are compared exactly. Only the external Budgeting and Variances source lacks a local Markdown copy.
 
 ## Generated coverage
 
 36 original study questions: 6 equity method, 6 impairment, 6 analytical procedures versus tests of details, 6 acquisition accounting, and 12 deferred tax. Each area mixes recognition, short applications and multi-step reasoning. Difficulty is an estimated study rating; generated questions have no official marks. Recent learner successes did not remove any topic. Tax distractors distinguish the temporary difference, the rate-adjusted amount, asset/liability direction and balance versus movement.
 
-## Validation performed
+## Earlier validation performed
 
 - Read the bank wording and relevant Week 1–3 lesson sections. Student answers were never used as the key. No separate official exam solution bank was available.
 - Reviewed every scored option for one defensible answer under the displayed assumptions. All 161 scored questions have exactly one stable correct option ID, a rule explanation, and specific option feedback/misconception tags.
@@ -32,6 +32,16 @@ Imported all 51 questions from the requested Management Accounting file, retaini
 46 additions are scored, with explanations, calculations and option-specific diagnostic feedback. Five are excluded below. The 41 new numerical results were independently recomputed using Decimal-based cost-flow, CVP, allocation, markup and target-cost models. Whole-unit tax targets also check that one fewer unit fails the target. Course evidence is Week 4's lecture summary and underlying transcripts for cost classifications, manufacturing cost flows, CVP, job costing and pricing. Supplied answers and displayed Ecoreps solutions were treated as claims to check, not as authoritative keys. This was an author review with an independent calculation implementation, not an external examiner review.
 
 Documented clarifications include Kyle's malformed option E range; Café Baer's target-volume context for contribution margin; gross profit with separately listed sales salaries; minimum whole-unit quantities; pre-tax versus after-tax target terminology; rounding and relevant-range assumptions. Terra's six components sum to CHF 4,340,000, conflicting with the source total of CHF 4,335,000. The practice table uses the component sum and explicitly states this assumption; the original table is preserved. Terra's stray company name “Wilde’s” is also corrected with a change record.
+
+## Capital budgeting and performance management, 25 October 2026
+
+Imported all 30 exercises in the two local exam-bank files. Source excerpts, original options, source line numbers and marks are retained. The Flexxon question carries four marks, correcting the draft import’s three. The 224 previously committed question records are unchanged.
+
+Seventeen numerical results are independently recomputed with Decimal arithmetic: ARR, payback, NPV, WACC, return on sales and EVA. Checks follow each exercise’s specified rounding, including rounded discount factors and Fritz Arlton’s four-decimal WACC. The two Fritz variants retain different Bali asset figures. The supplied bank’s answer keys are the basis for conceptual questions; this update does not claim a fresh review of the external Ecoreps pages.
+
+Seven questions present cash flows or profit-center figures in tables. All original table rows are retained. Authored cash-flow tables show the same source amounts and timing, with presentation changes recorded in each question. Tables use row/column headers, right-aligned numeric columns and a keyboard-focusable horizontal scrolling region. Shared scenarios also appear in learning history.
+
+The content gate passes with 254 records, 218 source imports, 36 generated questions, 106 independent numeric recomputations, 236 scored questions and 18 excluded questions. Source comparisons skip only the external Budgeting and Variances file.
 
 ## Unresolved source questions — excluded from scoring
 

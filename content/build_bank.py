@@ -3,6 +3,7 @@ from pathlib import Path
 import re, json
 from management_accounting import import_management, SOURCE as MANAGEMENT_SOURCE
 from budgeting_variances import import_budgeting_variances, SOURCE as BUDGETING_VARIANCES_SOURCE
+from capital_performance import import_capital_performance, SOURCES as CAPITAL_PERFORMANCE_SOURCES
 ROOT = Path(__file__).resolve().parents[2]
 if (ROOT / 'ACA').is_dir():
  ROOT = ROOT / 'ACA'
@@ -333,6 +334,8 @@ questions.extend(import_management(ROOT))
 BANKS['ma'] = MANAGEMENT_SOURCE
 questions.extend(import_budgeting_variances(ROOT))
 BANKS['budgeting-variances'] = BUDGETING_VARIANCES_SOURCE
+questions.extend(import_capital_performance(ROOT))
+BANKS.update(CAPITAL_PERFORMANCE_SOURCES)
 
 # Give original distractors a relevant generated follow-up pool without repeating source numbers.
 for q in questions:
@@ -346,7 +349,7 @@ for q in questions:
  q['targets']=[t.replace('impairment-v i u-only','impairment-viu-only') for t in q['targets']]
 
 if __name__ == '__main__':
- bank={'schemaVersion':1,'bankVersion':'2026-10-12.1','difficultyNote':'Estimated study rating, not an official exam classification. Generated questions have no official marks.',
+ bank={'schemaVersion':1,'bankVersion':'2026-10-25.1','difficultyNote':'Estimated study rating, not an official exam classification. Generated questions have no official marks.',
        'validationNote':'Validated against the supplied lessons and identified standards. Source answers are unverified student responses. Explicit study clarifications are documented per question.',
        'sourceInventory':[{'path':v,'count':sum(q['source']['path']==v for q in questions)} for v in BANKS.values()], 'questions':questions}
  (OUT/'questions.json').write_text(json.dumps(bank,ensure_ascii=False,indent=2)+'\n')

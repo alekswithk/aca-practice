@@ -77,6 +77,24 @@ def solve(c):
  if k=='unit-cost-base': return x['price']-x['profit']/x['quantity']
  if k=='finished-goods': return x['beginning']+x['cogm']-x['ending']
  if k=='price-reduction': return x['quantity']*(x['price']*(1-x['reduction'])-sum(D(v) for v in x['variableCosts']))-x['fixed']
+ if k=='arr':
+  income=sum(D(v) for v in x['flows'])-(x['cost']-x['residual'])
+  return (100*income/len(x['flows'])/x['cost']).quantize(D('.1'),rounding=ROUND_HALF_UP)
+ if k=='payback': return (x['cost']/x['annual']).quantize(D('.1'),rounding=ROUND_HALF_UP)
+ if k=='npv':
+  values=[]
+  for year,flow in enumerate(x['flows'],1):
+   factor=1/(1+x['rate'])**year
+   if x.get('roundedFactors'): factor=factor.quantize(D('.001'),rounding=ROUND_HALF_UP)
+   value=D(flow)*factor
+   values.append(cents(value) if x.get('roundInterim') else value)
+  return (sum(values)-x['initial']).quantize(D(1),rounding=ROUND_HALF_UP)
+ if k in ('wacc','eva'):
+  rate=(x['debt']*x['debtRate']*(1-x['tax'])+x['equity']*x['equityRate'])/(x['debt']+x['equity'])
+  if k=='wacc': return (100*rate).quantize(D('.01'),rounding=ROUND_HALF_UP)
+  if x.get('roundedWacc'): rate=rate.quantize(D('.0001'),rounding=ROUND_HALF_UP)
+  return (x['ebit']*(1-x['tax'])-(x['assets']-x['liabilities'])*rate).quantize(D(1),rounding=ROUND_HALF_UP)
+ if k=='ros': return (x['ebit']/x['ros']).quantize(D(1),rounding=ROUND_HALF_UP)
  raise AssertionError(k)
 
 def run():
@@ -92,6 +110,7 @@ def run():
   assert q['evidence'] and q['source']['path'] and q['prompt'],q['id']
   if q['origin']=='original':
    source_path=path.parents[2]/q['source']['path']
+   if not source_path.exists(): source_path=path.parents[2]/'ACA'/q['source']['path']
    if source_path.exists():
     assert q['original']['raw'] in source_path.read_text(),q['id']
    else:
@@ -110,7 +129,7 @@ def run():
    check=q['calculationCheck']; actual=solve(check);expected=check['expected']
    expected_decimal=[D(v) for v in expected] if isinstance(expected,list) else D(expected)
    assert actual==expected_decimal,(q['id'],actual,expected)
-   assert q['workedCalculation'] and check['unit'] in ('CHF','MCHF','units','percent','currency units'),q['id']
+   assert q['workedCalculation'] and check['unit'] in ('CHF','MCHF','units','percent','currency units','years'),q['id']
    correct=next(o for o in q['options'] if o['id']==q['correctOptionId'])
    numbers=re.findall(r'(?<!\w)(\d{1,3}(?:[,’]\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?!\w)',correct['text'])
    if numbers:

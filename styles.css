@@ -397,6 +397,13 @@ html.dark .exam-banner { background: #0c1622; border: 1px solid var(--line); }
 table { width: 100%; border-collapse: collapse; background: var(--surface); font-size: .83rem; }
 th, td { padding: .85rem; text-align: left; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 th { color: var(--muted); font-weight: 600; }
+.exercise-table { border: 1px solid var(--line); margin-block: 1rem; white-space: normal; overflow-wrap: normal; }
+.exercise-table table { font-size: .9rem; font-weight: 400; letter-spacing: normal; }
+.exercise-table thead { background: var(--paper); }
+.exercise-table th, .exercise-table td { padding: .75rem; }
+.exercise-table th[scope="row"] { color: var(--ink); font-weight: 500; }
+.exercise-table .numeric { text-align: right; white-space: nowrap; }
+.exercise-table tbody tr:last-child > * { border-bottom: 0; }
 .dashboard-section { margin: 2rem 0; }
 .history-item { padding: 1rem 1.3rem; margin: 1rem 0; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; box-shadow: var(--shadow); }
 .snapshot { white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.7; background: var(--paper); padding: 1rem; border-radius: 8px; }

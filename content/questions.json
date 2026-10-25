@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "bankVersion": "2026-10-12.1",
+  "bankVersion": "2026-10-25.1",
   "difficultyNote": "Estimated study rating, not an official exam classification. Generated questions have no official marks.",
   "validationNote": "Validated against the supplied lessons and identified standards. Source answers are unverified student responses. Explicit study clarifications are documented per question.",
   "sourceInventory": [
@@ -23,6 +23,14 @@
     {
       "path": "Ecoreps ACA / Exams by Topic / Budgeting and Variances",
       "count": 45
+    },
+    {
+      "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+      "count": 14
+    },
+    {
+      "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+      "count": 16
     }
   ],
   "questions": [
@@ -20205,6 +20213,3096 @@
         "scenario": "Djoker budgets 8,000 units, 24,000 machine-hours and CHF 288,000 variable overhead. Actual output is 8,500 units, actual hours 25,500 and actual variable overhead CHF 250,000.",
         "recordedStudentAnswer": null,
         "answerProvenance": "Verified from the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cap-ss26-7.1",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Accounting rate of return",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Compute the accounting rate of return on initial investment.",
+      "scenario": "Proposal A costs CHF 90,000, lasts three years and has no terminal value. Straight-line depreciation applies.\n\n| Year | Cash-flow increase (CHF) |\n|---|---:|\n| 1 | 80,000 |\n| 2 | 10,000 |\n| 3 | 45,000 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "25.7%",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "9.4%",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "15.3%",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "16.7%",
+          "explanation": "Average annual accounting income divided by the initial investment gives 16.7%.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Average annual accounting income divided by the initial investment gives 16.7%.",
+      "workedCalculation": "Depreciation = 90,000/3 = 30,000. Average cash flow = (80,000+10,000+45,000)/3 = 45,000. Average income = 45,000−30,000 = 15,000. ARR = 15,000/90,000 = 16.7%.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.1 — Accounting rate of return (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved.",
+        "Presented the supplied exercise data as a table; cash-flow amounts and timing are unchanged."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.1 — Accounting rate of return (2 points)",
+        "number": "7.1",
+        "line": 7
+      },
+      "original": {
+        "wording": "FinanceIT evaluates Proposal A, which costs CHF 90,000, lasts three years, has no terminal value, and generates cash-flow increases of CHF 80,000, CHF 10,000 and CHF 45,000 over the three years. Straight-line depreciation is used. What is the accounting rate of return on the initial investment?",
+        "options": [
+          {
+            "id": "a",
+            "text": "25.7%"
+          },
+          {
+            "id": "b",
+            "text": "9.4%"
+          },
+          {
+            "id": "c",
+            "text": "15.3%"
+          },
+          {
+            "id": "d",
+            "text": "16.7%"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.1 — Accounting rate of return (2 points)\nFinanceIT evaluates Proposal A, which costs CHF 90,000, lasts three years, has no terminal value, and generates cash-flow increases of CHF 80,000, CHF 10,000 and CHF 45,000 over the three years. Straight-line depreciation is used. What is the accounting rate of return on the initial investment?\n- A) 25.7%\n- B) 9.4%\n- C) 15.3%\n- D) 16.7%\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "arr",
+        "expected": 16.7,
+        "unit": "percent",
+        "inputs": {
+          "cost": 90000,
+          "flows": [
+            80000,
+            10000,
+            45000
+          ],
+          "residual": 0
+        }
+      }
+    },
+    {
+      "id": "cap-ss26-7.2",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Static payback period",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Calculate the static payback period, rounded to one decimal place.",
+      "scenario": "Net investment CHF 3,100,000; annual cash inflows CHF 500,000; useful life 10 years.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "5.8 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "10.0 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "7.4 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "6.2 years",
+          "explanation": "Divide the net investment by annual cash inflows. The useful life is not needed for static payback.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Divide the net investment by annual cash inflows. The useful life is not needed for static payback.",
+      "workedCalculation": "3,100,000/500,000 = 6.2 years.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.2 — Static payback period (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.2 — Static payback period (2 points)",
+        "number": "7.2",
+        "line": 15
+      },
+      "original": {
+        "wording": "A machine requires a net investment of CHF 3,100,000 and produces annual cash inflows of CHF 500,000. Its useful life is 10 years. What is the static payback period, rounded to one decimal place?",
+        "options": [
+          {
+            "id": "a",
+            "text": "5.8 years"
+          },
+          {
+            "id": "b",
+            "text": "10.0 years"
+          },
+          {
+            "id": "c",
+            "text": "7.4 years"
+          },
+          {
+            "id": "d",
+            "text": "6.2 years"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.2 — Static payback period (2 points)\nA machine requires a net investment of CHF 3,100,000 and produces annual cash inflows of CHF 500,000. Its useful life is 10 years. What is the static payback period, rounded to one decimal place?\n- A) 5.8 years\n- B) 10.0 years\n- C) 7.4 years\n- D) 6.2 years\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "payback",
+        "expected": 6.2,
+        "unit": "years",
+        "inputs": {
+          "cost": 3100000,
+          "annual": 500000
+        }
+      }
+    },
+    {
+      "id": "cap-ss26-7.3",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Accounting rate of return limitations",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which of the following is a limitation of the AARR method?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "It ignores the time value of money.",
+          "explanation": "The expanded solution confirms A: AARR uses average annual net income without discounting, so it ignores time value of money.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "Comparing projects is difficult because AARR is expressed in dollars rather than percentage terms.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "It does not track initial investment.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "It does not consider income earned throughout a project’s expected useful life.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The expanded solution confirms A: AARR uses average annual net income without discounting, so it ignores time value of money.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.3 — Limitation of accounting rate of return (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.3 — Limitation of accounting rate of return (1 point)",
+        "number": "7.3",
+        "line": 23
+      },
+      "original": {
+        "wording": "Which of the following is a limitation of the AARR method?",
+        "options": [
+          {
+            "id": "a",
+            "text": "It ignores the time value of money."
+          },
+          {
+            "id": "b",
+            "text": "Comparing projects is difficult because AARR is expressed in dollars rather than percentage terms."
+          },
+          {
+            "id": "c",
+            "text": "It does not track initial investment."
+          },
+          {
+            "id": "d",
+            "text": "It does not consider income earned throughout a project’s expected useful life."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.3 — Limitation of accounting rate of return (1 point)\nWhich of the following is a limitation of the AARR method?\n- A) It ignores the time value of money.\n- B) Comparing projects is difficult because AARR is expressed in dollars rather than percentage terms.\n- C) It does not track initial investment.\n- D) It does not consider income earned throughout a project’s expected useful life.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cap-as25-7.1",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Static payback period",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Calculate the static payback period.",
+      "scenario": "A machine costs CHF 340,480 and saves CHF 89,600 annually for six years, with no terminal value or tax.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "3.8 years",
+          "explanation": "The net investment is recovered in 3.8 years at the stated annual savings.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "4.7 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "5.0 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "3.1 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "The net investment is recovered in 3.8 years at the stated annual savings.",
+      "workedCalculation": "340,480/89,600 = 3.8 years.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.1 — Payback period (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.1 — Payback period (2 points)",
+        "number": "7.1",
+        "line": 33
+      },
+      "original": {
+        "wording": "A machine costs CHF 340,480 and is expected to save CHF 89,600 per year for six years, with no terminal value or tax. What is the static payback period?",
+        "options": [
+          {
+            "id": "a",
+            "text": "3.8 years"
+          },
+          {
+            "id": "b",
+            "text": "4.7 years"
+          },
+          {
+            "id": "c",
+            "text": "5.0 years"
+          },
+          {
+            "id": "d",
+            "text": "3.1 years"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.1 — Payback period (2 points)\nA machine costs CHF 340,480 and is expected to save CHF 89,600 per year for six years, with no terminal value or tax. What is the static payback period?\n- A) 3.8 years\n- B) 4.7 years\n- C) 5.0 years\n- D) 3.1 years\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "payback",
+        "expected": 3.8,
+        "unit": "years",
+        "inputs": {
+          "cost": 340480,
+          "annual": 89600
+        }
+      }
+    },
+    {
+      "id": "cpm-ss26-8.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which question belongs to the learning-and-growth perspective?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "How can employees be enabled to develop and contribute?",
+          "explanation": "Learning and growth concerns employee development and organizational capability.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "How can the company increase profit?",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Which processes create customer value?",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "How can costs be reduced?",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Learning and growth concerns employee development and organizational capability.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.1 — Balanced scorecard: learning and growth (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.1 — Balanced scorecard: learning and growth (1 point)",
+        "number": "8.1",
+        "line": 7
+      },
+      "original": {
+        "wording": "Which question belongs to the learning-and-growth perspective?",
+        "options": [
+          {
+            "id": "a",
+            "text": "How can employees be enabled to develop and contribute?"
+          },
+          {
+            "id": "b",
+            "text": "How can the company increase profit?"
+          },
+          {
+            "id": "c",
+            "text": "Which processes create customer value?"
+          },
+          {
+            "id": "d",
+            "text": "How can costs be reduced?"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.1 — Balanced scorecard: learning and growth (1 point)\nWhich question belongs to the learning-and-growth perspective?\n- A) How can employees be enabled to develop and contribute?\n- B) How can the company increase profit?\n- C) Which processes create customer value?\n- D) How can costs be reduced?\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-ss26-8.2",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard implementation",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which statement about implementing a balanced scorecard is correct?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Management accountants should have no role in choosing measures.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "External auditors should design and implement the scorecard.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "The scorecard should be withheld from employees.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Only top management should form the scorecard.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "The expanded solution states that the listed A–D claims are incorrect; scorecard development involves internal stakeholders and communication.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "The expanded solution states that the listed A–D claims are incorrect; scorecard development involves internal stakeholders and communication.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.2 — Balanced scorecard implementation (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.2 — Balanced scorecard implementation (1 point)",
+        "number": "8.2",
+        "line": 15
+      },
+      "original": {
+        "wording": "Which statement about implementing a balanced scorecard is correct?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Management accountants should have no role in choosing measures."
+          },
+          {
+            "id": "b",
+            "text": "External auditors should design and implement the scorecard."
+          },
+          {
+            "id": "c",
+            "text": "The scorecard should be withheld from employees."
+          },
+          {
+            "id": "d",
+            "text": "Only top management should form the scorecard."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.2 — Balanced scorecard implementation (1 point)\nWhich statement about implementing a balanced scorecard is correct?\n- A) Management accountants should have no role in choosing measures.\n- B) External auditors should design and implement the scorecard.\n- C) The scorecard should be withheld from employees.\n- D) Only top management should form the scorecard.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-ss26-9.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Weighted average cost of capital",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Calculate WACC using market-value weights.",
+      "scenario": "Debt market value CHF 32m at 10%; equity market value CHF 18m at a 15% required return; tax rate 30%.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "8.60%",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "12.12%",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "9.88%",
+          "explanation": "Apply the after-tax cost of debt and market-value capital weights.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "9.22%",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Apply the after-tax cost of debt and market-value capital weights.",
+      "workedCalculation": "(32/50×10%×(1−30%)) + (18/50×15%) = 9.88%.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 9.1 — Weighted average cost of capital (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "9.1 — Weighted average cost of capital (2 points)",
+        "number": "9.1",
+        "line": 23
+      },
+      "original": {
+        "wording": "Copt(er)magic has CHF 32 million of debt at 10% and CHF 18 million of equity with a 15% required return. The tax rate is 30%. Using market-value weights, calculate WACC.",
+        "options": [
+          {
+            "id": "a",
+            "text": "8.60%"
+          },
+          {
+            "id": "b",
+            "text": "12.12%"
+          },
+          {
+            "id": "c",
+            "text": "9.88%"
+          },
+          {
+            "id": "d",
+            "text": "9.22%"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 9.1 — Weighted average cost of capital (2 points)\nCopt(er)magic has CHF 32 million of debt at 10% and CHF 18 million of equity with a 15% required return. The tax rate is 30%. Using market-value weights, calculate WACC.\n- A) 8.60%\n- B) 12.12%\n- C) 9.88%\n- D) 9.22%\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "wacc",
+        "expected": 9.88,
+        "unit": "percent",
+        "inputs": {
+          "debt": 32000000,
+          "equity": 18000000,
+          "debtRate": 0.1,
+          "equityRate": 0.15,
+          "tax": 0.3
+        }
+      }
+    },
+    {
+      "id": "cpm-ss26-9.2",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Return on sales",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Calculate the division’s revenue.",
+      "scenario": "The Acoustic division reports EBIT CHF 7,930,800 and return on sales of 15%.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 43,254,600",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 65,500,789",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 52,872,000",
+          "explanation": "Revenue equals EBIT divided by return on sales.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 49,567,500",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Revenue equals EBIT divided by return on sales.",
+      "workedCalculation": "7,930,800/0.15 = CHF 52,872,000.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 9.2 — Division revenue from return on sales (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "9.2 — Division revenue from return on sales (2 points)",
+        "number": "9.2",
+        "line": 31
+      },
+      "original": {
+        "wording": "RiffHero’s Acoustic division reports EBIT of CHF 7,930,800 and return on sales of 15%. What is its revenue?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 43,254,600"
+          },
+          {
+            "id": "b",
+            "text": "CHF 65,500,789"
+          },
+          {
+            "id": "c",
+            "text": "CHF 52,872,000"
+          },
+          {
+            "id": "d",
+            "text": "CHF 49,567,500"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 9.2 — Division revenue from return on sales (2 points)\nRiffHero’s Acoustic division reports EBIT of CHF 7,930,800 and return on sales of 15%. What is its revenue?\n- A) CHF 43,254,600\n- B) CHF 65,500,789\n- C) CHF 52,872,000\n- D) CHF 49,567,500\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "ros",
+        "expected": 52872000,
+        "unit": "CHF",
+        "inputs": {
+          "ebit": 7930800,
+          "ros": 0.15
+        }
+      }
+    },
+    {
+      "id": "cpm-as25-8.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard measures",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which is a customer-perspective performance measure?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Process-improvement rate",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "Number of new customers acquired",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Defect rate",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Customer complaints",
+          "explanation": "Customer complaints measure customer experience; customer acquisition is a strategic objective rather than a customer-outcome measure.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Customer complaints measure customer experience; customer acquisition is a strategic objective rather than a customer-outcome measure.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.1 — Balanced scorecard customer measure (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.1 — Balanced scorecard customer measure (1 point)",
+        "number": "8.1",
+        "line": 41
+      },
+      "original": {
+        "wording": "Which is a customer-perspective performance measure?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Process-improvement rate"
+          },
+          {
+            "id": "b",
+            "text": "Number of new customers acquired"
+          },
+          {
+            "id": "c",
+            "text": "Defect rate"
+          },
+          {
+            "id": "d",
+            "text": "Customer complaints"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.1 — Balanced scorecard customer measure (1 point)\nWhich is a customer-perspective performance measure?\n- A) Process-improvement rate\n- B) Number of new customers acquired\n- C) Defect rate\n- D) Customer complaints\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-as25-9.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Return on sales",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Calculate its revenue.",
+      "scenario": "A division earns EBIT CHF 4,800,000 at a return on sales of 12%.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 65,000,000",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 12,500,564",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 31,733,333",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 51,500,923",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "Revenue is CHF 40,000,000, which is not among A–D.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "Revenue is CHF 40,000,000, which is not among A–D.",
+      "workedCalculation": "4,800,000/0.12 = CHF 40,000,000; select E.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 9.1 — Revenue from return on sales (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "9.1 — Revenue from return on sales (2 points)",
+        "number": "9.1",
+        "line": 49
+      },
+      "original": {
+        "wording": "A division earns EBIT of CHF 4,800,000 at a return on sales of 12%. What revenue does that imply?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 65,000,000"
+          },
+          {
+            "id": "b",
+            "text": "CHF 12,500,564"
+          },
+          {
+            "id": "c",
+            "text": "CHF 31,733,333"
+          },
+          {
+            "id": "d",
+            "text": "CHF 51,500,923"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 9.1 — Revenue from return on sales (2 points)\nA division earns EBIT of CHF 4,800,000 at a return on sales of 12%. What revenue does that imply?\n- A) CHF 65,000,000\n- B) CHF 12,500,564\n- C) CHF 31,733,333\n- D) CHF 51,500,923\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "ros",
+        "expected": 40000000,
+        "unit": "CHF",
+        "inputs": {
+          "ebit": 4800000,
+          "ros": 0.12
+        }
+      }
+    },
+    {
+      "id": "cpm-as25-9.2",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Economic value added",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "Calculate EVA.",
+      "scenario": "Debt CHF 4m at 5%, market equity CHF 8m at 15%, tax 25%; division EBIT CHF 480,000, assets CHF 2m and current liabilities CHF 140,000.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 150,750",
+          "explanation": "EVA equals NOPAT less the capital charge on invested capital.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 191,580",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 175,116",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 360,000",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "EVA equals NOPAT less the capital charge on invested capital.",
+      "workedCalculation": "WACC = (8/12×15%) + (4/12×5%×(1−25%)) = 11.25%. Invested capital = 2,000,000−140,000 = 1,860,000. NOPAT = 480,000×75% = 360,000. EVA = 360,000−1,860,000×11.25% = CHF 150,750.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 9.2 — Economic value added (3 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "9.2 — Economic value added (3 points)",
+        "number": "9.2",
+        "line": 57
+      },
+      "original": {
+        "wording": "BROS4EVA has CHF 4 million debt at 5%, CHF 8 million market-value equity with a 15% cost, and a 25% tax rate. San Francisco reports EBIT CHF 480,000, assets CHF 2 million, and current liabilities CHF 140,000. Calculate EVA.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 150,750"
+          },
+          {
+            "id": "b",
+            "text": "CHF 191,580"
+          },
+          {
+            "id": "c",
+            "text": "CHF 175,116"
+          },
+          {
+            "id": "d",
+            "text": "CHF 360,000"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 9.2 — Economic value added (3 points)\nBROS4EVA has CHF 4 million debt at 5%, CHF 8 million market-value equity with a 15% cost, and a 25% tax rate. San Francisco reports EBIT CHF 480,000, assets CHF 2 million, and current liabilities CHF 140,000. Calculate EVA.\n- A) CHF 150,750\n- B) CHF 191,580\n- C) CHF 175,116\n- D) CHF 360,000\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "eva",
+        "expected": 150750,
+        "unit": "CHF",
+        "inputs": {
+          "debt": 4000000,
+          "equity": 8000000,
+          "debtRate": 0.05,
+          "equityRate": 0.15,
+          "tax": 0.25,
+          "ebit": 480000,
+          "assets": 2000000,
+          "liabilities": 140000
+        }
+      }
+    },
+    {
+      "id": "cpm-as24-8.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard purpose",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which statement best describes the balanced scorecard’s effect on performance management?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "It prioritizes short-run nonfinancial results.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "It weakens attention to long-run financial performance.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "It prioritizes short-run financial results.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "It reduces an exclusive focus on short-run financial performance.",
+          "explanation": "The balanced scorecard adds nonfinancial perspectives and counterbalances an exclusive short-run financial focus.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The balanced scorecard adds nonfinancial perspectives and counterbalances an exclusive short-run financial focus.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.1 — Balanced scorecard purpose (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.1 — Balanced scorecard purpose (1 point)",
+        "number": "8.1",
+        "line": 67
+      },
+      "original": {
+        "wording": "Which statement best describes the balanced scorecard’s effect on performance management?",
+        "options": [
+          {
+            "id": "a",
+            "text": "It prioritizes short-run nonfinancial results."
+          },
+          {
+            "id": "b",
+            "text": "It weakens attention to long-run financial performance."
+          },
+          {
+            "id": "c",
+            "text": "It prioritizes short-run financial results."
+          },
+          {
+            "id": "d",
+            "text": "It reduces an exclusive focus on short-run financial performance."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.1 — Balanced scorecard purpose (1 point)\nWhich statement best describes the balanced scorecard’s effect on performance management?\n- A) It prioritizes short-run nonfinancial results.\n- B) It weakens attention to long-run financial performance.\n- C) It prioritizes short-run financial results.\n- D) It reduces an exclusive focus on short-run financial performance.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-as24-8.2",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard implementation",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which statement about implementing a balanced scorecard is correct?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "External auditors should design and implement it.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "Management accountants should determine measures alone.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Only top management should develop it.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "It should never be communicated to employees.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "The displayed A–D choices are inconsistent with shared internal development and communication; none is correct.",
+          "misconception": null
+        }
+      ],
+      "correctOptionId": "e",
+      "explanation": "The displayed A–D choices are inconsistent with shared internal development and communication; none is correct.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.2 — Balanced scorecard implementation (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.2 — Balanced scorecard implementation (1 point)",
+        "number": "8.2",
+        "line": 75
+      },
+      "original": {
+        "wording": "Which statement about implementing a balanced scorecard is correct?",
+        "options": [
+          {
+            "id": "a",
+            "text": "External auditors should design and implement it."
+          },
+          {
+            "id": "b",
+            "text": "Management accountants should determine measures alone."
+          },
+          {
+            "id": "c",
+            "text": "Only top management should develop it."
+          },
+          {
+            "id": "d",
+            "text": "It should never be communicated to employees."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.2 — Balanced scorecard implementation (1 point)\nWhich statement about implementing a balanced scorecard is correct?\n- A) External auditors should design and implement it.\n- B) Management accountants should determine measures alone.\n- C) Only top management should develop it.\n- D) It should never be communicated to employees.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cap-screen-a-7.2",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Accounting rate of return limitations",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which of the following is a limitation of the AARR method?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "It does not consider the time value of money.",
+          "explanation": "AARR uses average annual net income without discounting it, so it does not account for time value of money.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "It is difficult to compare projects because the result is expressed in dollars rather than percentage terms.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "It does not track the initial investment.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "It does not consider income earned throughout a project’s expected useful life.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "AARR uses average annual net income without discounting it, so it does not account for time value of money.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.2 — AARR limitation (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.2 — AARR limitation (1 point)",
+        "number": "7.2",
+        "line": 43
+      },
+      "original": {
+        "wording": "Which of the following is a limitation of the AARR method?",
+        "options": [
+          {
+            "id": "a",
+            "text": "It does not consider the time value of money."
+          },
+          {
+            "id": "b",
+            "text": "It is difficult to compare projects because the result is expressed in dollars rather than percentage terms."
+          },
+          {
+            "id": "c",
+            "text": "It does not track the initial investment."
+          },
+          {
+            "id": "d",
+            "text": "It does not consider income earned throughout a project’s expected useful life."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.2 — AARR limitation (1 point)\nWhich of the following is a limitation of the AARR method?\n- A) It does not consider the time value of money.\n- B) It is difficult to compare projects because the result is expressed in dollars rather than percentage terms.\n- C) It does not track the initial investment.\n- D) It does not consider income earned throughout a project’s expected useful life.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cap-screen-a-7.3",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Net present value",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "Calculate the net present value of Proposal B.",
+      "scenario": "TechFlow Proposal B has no disposal value. Required return is 20%; round present-value factors to three decimals.\n\n| Time | Cash flow (CHF) |\n|---|---:|\n| Initial investment | −60,000 |\n| End of year 1 | 45,000 |\n| End of year 2 | 45,000 |\n| End of year 3 | 0 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 18,225",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 8,715",
+          "explanation": "Using the specified rounded discount factors, the NPV is CHF 8,715.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "CHF 11,700",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 20,945",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Using the specified rounded discount factors, the NPV is CHF 8,715.",
+      "workedCalculation": "−60,000 + 45,000×0.833 + 45,000×0.694 = CHF 8,715.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.3 — Net present value, Proposal B (3 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved.",
+        "Presented the supplied exercise data as a table; cash-flow amounts and timing are unchanged."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.3 — Net present value, Proposal B (3 points)",
+        "number": "7.3",
+        "line": 51
+      },
+      "original": {
+        "wording": "TechFlow is comparing three IT-network proposals. Proposal B requires CHF 60,000 initially and generates cash inflows of CHF 45,000 in each of years 1 and 2, with no inflow in year 3 or disposal proceeds. The required return is 20%. Round present-value factors to three decimals. What is Proposal B’s NPV?",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 18,225"
+          },
+          {
+            "id": "b",
+            "text": "CHF 8,715"
+          },
+          {
+            "id": "c",
+            "text": "CHF 11,700"
+          },
+          {
+            "id": "d",
+            "text": "CHF 20,945"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.3 — Net present value, Proposal B (3 points)\nTechFlow is comparing three IT-network proposals. Proposal B requires CHF 60,000 initially and generates cash inflows of CHF 45,000 in each of years 1 and 2, with no inflow in year 3 or disposal proceeds. The required return is 20%. Round present-value factors to three decimals. What is Proposal B’s NPV?\n- A) CHF 18,225\n- B) CHF 8,715\n- C) CHF 11,700\n- D) CHF 20,945\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "npv",
+        "expected": 8715,
+        "unit": "CHF",
+        "inputs": {
+          "initial": 60000,
+          "flows": [
+            45000,
+            45000,
+            0
+          ],
+          "rate": 0.2,
+          "roundedFactors": true
+        }
+      }
+    },
+    {
+      "id": "cap-mississippi-7.1",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Payback period",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "Calculate the payback period, rounded to one decimal place.",
+      "scenario": "A specially equipped van costs CHF 146,800 and generates additional annual cash inflows of CHF 44,400 for six years.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "2.0 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "1.8 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "3.3 years",
+          "explanation": "Divide investment by annual cash inflow and round to one decimal.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "5.6 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "Divide investment by annual cash inflow and round to one decimal.",
+      "workedCalculation": "146,800/44,400 = 3.306… = 3.3 years.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.1 — Payback period (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.1 — Payback period (2 points)",
+        "number": "7.1",
+        "line": 61
+      },
+      "original": {
+        "wording": "Mississippi Company is considering a specially equipped delivery van costing CHF 146,800. It has a six-year life and is expected to generate additional annual cash inflows of CHF 44,400. What is the payback period, rounded to one decimal place?",
+        "options": [
+          {
+            "id": "a",
+            "text": "2.0 years"
+          },
+          {
+            "id": "b",
+            "text": "1.8 years"
+          },
+          {
+            "id": "c",
+            "text": "3.3 years"
+          },
+          {
+            "id": "d",
+            "text": "5.6 years"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.1 — Payback period (2 points)\nMississippi Company is considering a specially equipped delivery van costing CHF 146,800. It has a six-year life and is expected to generate additional annual cash inflows of CHF 44,400. What is the payback period, rounded to one decimal place?\n- A) 2.0 years\n- B) 1.8 years\n- C) 3.3 years\n- D) 5.6 years\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "payback",
+        "expected": 3.3,
+        "unit": "years",
+        "inputs": {
+          "cost": 146800,
+          "annual": 44400
+        }
+      }
+    },
+    {
+      "id": "cap-flexxon-7.2",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Net present value",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 4,
+      "prompt": "Calculate the project NPV.",
+      "scenario": "Required return 14%. No tax effects. Year 3 includes the terminal disposal proceeds. Round interim present values to cents and the final NPV to a whole CHF.\n\n| Time / cash flow | Amount (CHF) |\n|---|---:|\n| New machine, now | −280,000 |\n| End of year 1 | 165,000 |\n| End of year 2 | 165,000 |\n| End of year 3 (including CHF 35,000 disposal proceeds) | 200,000 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 190,880",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF 87,750",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 103,130",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 126,693",
+          "explanation": "Discount each annual saving and the disposal proceeds in year 3.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Discount each annual saving and the disposal proceeds in year 3.",
+      "workedCalculation": "NPV = −280,000 + 165,000/1.14 + 165,000/1.14² + (165,000+35,000)/1.14³ = CHF 126,693 rounded.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 7.2 — Net present value of replacement investment (4 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved.",
+        "Presented the supplied exercise data as a table; cash-flow amounts and timing are unchanged."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "7.2 — Net present value of replacement investment (4 points)",
+        "number": "7.2",
+        "line": 71
+      },
+      "original": {
+        "wording": "Flexxon Corp. is considering a machine costing CHF 280,000. Annual cost savings are CHF 165,000 for three years, and terminal disposal value is CHF 35,000. There are no tax consequences. At a 14% required return, what is the net present value? Directly discount the cash flows; round interim results to two decimals and the final result to a whole number.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 190,880"
+          },
+          {
+            "id": "b",
+            "text": "CHF 87,750"
+          },
+          {
+            "id": "c",
+            "text": "CHF 103,130"
+          },
+          {
+            "id": "d",
+            "text": "CHF 126,693"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 7.2 — Net present value of replacement investment (4 points)\nFlexxon Corp. is considering a machine costing CHF 280,000. Annual cost savings are CHF 165,000 for three years, and terminal disposal value is CHF 35,000. There are no tax consequences. At a 14% required return, what is the net present value? Directly discount the cash flows; round interim results to two decimals and the final result to a whole number.\n- A) CHF 190,880\n- B) CHF 87,750\n- C) CHF 103,130\n- D) CHF 126,693\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "npv",
+        "expected": 126693,
+        "unit": "CHF",
+        "inputs": {
+          "initial": 280000,
+          "flows": [
+            165000,
+            165000,
+            200000
+          ],
+          "rate": 0.14,
+          "roundInterim": true
+        }
+      }
+    },
+    {
+      "id": "cap-process-4.1",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Capital budgeting process",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which option describes the first stage in the capital budgeting process?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Forecasting all potential cash flows attributable to alternative projects",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "Determining which investment yields the greatest benefit and least cost",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Obtaining financing and making the selected investments",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Identifying potential capital investments that agree with the organization’s strategy",
+          "explanation": "The process begins by identifying potential investments that agree with organizational strategy.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The process begins by identifying potential investments that agree with organizational strategy.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 4.1 — First stage of capital budgeting (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "4.1 — First stage of capital budgeting (1 point)",
+        "number": "4.1",
+        "line": 81
+      },
+      "original": {
+        "wording": "Which of the following describes the first stage in the capital budgeting process?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Forecasting all potential cash flows attributable to alternative projects"
+          },
+          {
+            "id": "b",
+            "text": "Determining which investment yields the greatest benefit and least cost"
+          },
+          {
+            "id": "c",
+            "text": "Obtaining financing and making the selected investments"
+          },
+          {
+            "id": "d",
+            "text": "Identifying potential capital investments that agree with the organization’s strategy"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 4.1 — First stage of capital budgeting (1 point)\nWhich of the following describes the first stage in the capital budgeting process?\n- A) Forecasting all potential cash flows attributable to alternative projects\n- B) Determining which investment yields the greatest benefit and least cost\n- C) Obtaining financing and making the selected investments\n- D) Identifying potential capital investments that agree with the organization’s strategy\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cap-cleansvc-4.2",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Net present value",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 4,
+      "prompt": "Calculate NPV and decide whether to buy on financial grounds.",
+      "scenario": "Required return 10%. No tax effects. No terminal value. Use discount factors rounded to three decimals.\n\n| Time / cash flow | Amount (CHF) |\n|---|---:|\n| New machine, now | −580,000 |\n| Old machine sale, now | 120,000 |\n| End of year 1 | 200,000 |\n| End of year 2 | 280,000 |\n| End of year 3 | 280,000 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 163,360; yes",
+          "explanation": "Net initial outlay is CHF 460,000. Rounded factors give a positive NPV, so the investment is desirable.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 210,368; yes",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "−CHF 210,368; no",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "−CHF 163,360; no",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Net initial outlay is CHF 460,000. Rounded factors give a positive NPV, so the investment is desirable.",
+      "workedCalculation": "−460,000 + 200,000×0.909 + 280,000×0.826 + 280,000×0.751 = CHF 163,360. Exact factors give CHF 163,591; the source keys the rounded-factor answer A.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 4.2 — Net present value of a replacement machine (4 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved.",
+        "Presented the supplied exercise data as a table; cash-flow amounts and timing are unchanged."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "4.2 — Net present value of a replacement machine (4 points)",
+        "number": "4.2",
+        "line": 89
+      },
+      "original": {
+        "wording": "Clean Service can sell its current machine now for CHF 120,000. A new machine costs CHF 580,000 and generates additional cash inflows of CHF 200,000 in year 1 and CHF 280,000 in each of years 2 and 3. Its useful life is three years and terminal value is zero. Ignore taxes. At a 10% required return, calculate NPV and state whether the company should buy the machine on financial grounds. The source solution selects the answer using discount factors rounded to three decimals.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 163,360; yes"
+          },
+          {
+            "id": "b",
+            "text": "CHF 210,368; yes"
+          },
+          {
+            "id": "c",
+            "text": "−CHF 210,368; no"
+          },
+          {
+            "id": "d",
+            "text": "−CHF 163,360; no"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 4.2 — Net present value of a replacement machine (4 points)\nClean Service can sell its current machine now for CHF 120,000. A new machine costs CHF 580,000 and generates additional cash inflows of CHF 200,000 in year 1 and CHF 280,000 in each of years 2 and 3. Its useful life is three years and terminal value is zero. Ignore taxes. At a 10% required return, calculate NPV and state whether the company should buy the machine on financial grounds. The source solution selects the answer using discount factors rounded to three decimals.\n- A) CHF 163,360; yes\n- B) CHF 210,368; yes\n- C) −CHF 210,368; no\n- D) −CHF 163,360; no\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "npv",
+        "expected": 163360,
+        "unit": "CHF",
+        "inputs": {
+          "initial": 460000,
+          "flows": [
+            200000,
+            280000,
+            280000
+          ],
+          "rate": 0.1,
+          "roundedFactors": true
+        }
+      }
+    },
+    {
+      "id": "cap-aar-irr-4.3",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "AARR and IRR",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which statement about Accrual Accounting Rate of Return (AARR) and Internal Rate of Return (IRR) is true?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "AARR calculates return in absolute figures, while IRR expresses it as a percentage.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "AARR uses operating income after accruals and taxes, whereas IRR uses after-tax cash flows and accounts for time value of money.",
+          "explanation": "AARR is based on accrual accounting income; IRR is a discounted cash-flow measure.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "AARR accounts for time value of money, whereas IRR does not.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "AARR uses cash flows, whereas IRR uses operating income.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "AARR is based on accrual accounting income; IRR is a discounted cash-flow measure.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; 4.3 — AARR compared with IRR (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "4.3 — AARR compared with IRR (1 point)",
+        "number": "4.3",
+        "line": 97
+      },
+      "original": {
+        "wording": "Which statement about the Accrual Accounting Rate of Return (AARR) and Internal Rate of Return (IRR) methods is true?",
+        "options": [
+          {
+            "id": "a",
+            "text": "AARR calculates return in absolute figures, while IRR expresses it as a percentage."
+          },
+          {
+            "id": "b",
+            "text": "AARR uses operating income after accruals and taxes, whereas IRR uses after-tax cash flows and accounts for time value of money."
+          },
+          {
+            "id": "c",
+            "text": "AARR accounts for time value of money, whereas IRR does not."
+          },
+          {
+            "id": "d",
+            "text": "AARR uses cash flows, whereas IRR uses operating income."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 4.3 — AARR compared with IRR (1 point)\nWhich statement about the Accrual Accounting Rate of Return (AARR) and Internal Rate of Return (IRR) methods is true?\n- A) AARR calculates return in absolute figures, while IRR expresses it as a percentage.\n- B) AARR uses operating income after accruals and taxes, whereas IRR uses after-tax cash flows and accounts for time value of money.\n- C) AARR accounts for time value of money, whereas IRR does not.\n- D) AARR uses cash flows, whereas IRR uses operating income.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cap-qilti-7.1",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Payback period",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the payback period, rounded to one decimal place?",
+      "scenario": "Investment CHF 159,000; annual savings CHF 55,000; six-year life; zero terminal value; no tax effects.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "1.9 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "2.9 years",
+          "explanation": "Payback is investment divided by annual cost savings.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "5.8 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "6.0 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Payback is investment divided by annual cost savings.",
+      "workedCalculation": "159,000/55,000 = 2.8909… = 2.9 years.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; Qilti Corp. 7.1 — Payback period (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "Qilti Corp. 7.1 — Payback period (2 points)",
+        "number": "7.1",
+        "line": 123
+      },
+      "original": {
+        "wording": "Qilti Corp. plans a machine investment of CHF 159,000. Annual cost savings are CHF 55,000 for a six-year life, with zero terminal value and no tax consequences. Its required return is 14%. What is the payback period, rounded to one decimal place?",
+        "options": [
+          {
+            "id": "a",
+            "text": "1.9 years"
+          },
+          {
+            "id": "b",
+            "text": "2.9 years"
+          },
+          {
+            "id": "c",
+            "text": "5.8 years"
+          },
+          {
+            "id": "d",
+            "text": "6.0 years"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### Qilti Corp. 7.1 — Payback period (2 points)\nQilti Corp. plans a machine investment of CHF 159,000. Annual cost savings are CHF 55,000 for a six-year life, with zero terminal value and no tax consequences. Its required return is 14%. What is the payback period, rounded to one decimal place?\n- A) 1.9 years\n- B) 2.9 years\n- C) 5.8 years\n- D) 6.0 years\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "payback",
+        "expected": 2.9,
+        "unit": "years",
+        "inputs": {
+          "cost": 159000,
+          "annual": 55000
+        }
+      }
+    },
+    {
+      "id": "cap-difiend-6.1",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Net present value and working capital",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 4,
+      "prompt": "Calculate NPV and decide whether to buy. The source solution rounds discount factors to three decimals.",
+      "scenario": "Required return 9%. No tax effects. No terminal value. Use discount factors rounded to three decimals.\n\n| Time / cash flow | Amount (CHF) |\n|---|---:|\n| New machine, now | −430,000 |\n| Working capital, now (not recovered) | −100,000 |\n| Old machine sale, now | 100,000 |\n| End of year 1 | 140,000 |\n| End of year 2 | 270,000 |\n| End of year 3 | 270,000 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF −208,440; yes",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "CHF −134,160; no",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 134,160; yes",
+          "explanation": "The net initial investment is CHF 430,000 after including working capital and sale proceeds. Rounded discount factors yield positive NPV.",
+          "misconception": null
+        },
+        {
+          "id": "d",
+          "text": "CHF 208,440; no",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "c",
+      "explanation": "The net initial investment is CHF 430,000 after including working capital and sale proceeds. Rounded discount factors yield positive NPV.",
+      "workedCalculation": "Initial = 430,000+100,000−100,000 = CHF 430,000. NPV using .917, .842 and .772 = −430,000 + 140,000×.917 + 270,000×.842 + 270,000×.772 = CHF 134,160. Exact-factor NPV is CHF 134,183.50.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; Difiend Cleaners 6.1 — NPV including working capital (4 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved.",
+        "Presented the supplied exercise data as a table; cash-flow amounts and timing are unchanged."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "Difiend Cleaners 6.1 — NPV including working capital (4 points)",
+        "number": "6.1",
+        "line": 131
+      },
+      "original": {
+        "wording": "Difiend Cleaners can sell its existing machine now for CHF 100,000. A replacement costs CHF 430,000 and requires CHF 100,000 additional working capital, which is not recovered. The replacement generates additional cash inflows of CHF 140,000 in year 1 and CHF 270,000 in years 2 and 3. It has no terminal value; ignore taxes. At a 9% required return, calculate NPV and decide whether to buy. Round interim results to three decimals.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF −208,440; yes"
+          },
+          {
+            "id": "b",
+            "text": "CHF −134,160; no"
+          },
+          {
+            "id": "c",
+            "text": "CHF 134,160; yes"
+          },
+          {
+            "id": "d",
+            "text": "CHF 208,440; no"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### Difiend Cleaners 6.1 — NPV including working capital (4 points)\nDifiend Cleaners can sell its existing machine now for CHF 100,000. A replacement costs CHF 430,000 and requires CHF 100,000 additional working capital, which is not recovered. The replacement generates additional cash inflows of CHF 140,000 in year 1 and CHF 270,000 in years 2 and 3. It has no terminal value; ignore taxes. At a 9% required return, calculate NPV and decide whether to buy. Round interim results to three decimals.\n- A) CHF −208,440; yes\n- B) CHF −134,160; no\n- C) CHF 134,160; yes\n- D) CHF 208,440; no\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "npv",
+        "expected": 134160,
+        "unit": "CHF",
+        "inputs": {
+          "initial": 430000,
+          "flows": [
+            140000,
+            270000,
+            270000
+          ],
+          "rate": 0.09,
+          "roundedFactors": true
+        }
+      }
+    },
+    {
+      "id": "cap-malive-6.2",
+      "origin": "original",
+      "topic": "Capital Budgeting",
+      "subtopic": "Payback period",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 2,
+      "prompt": "What is the payback period?",
+      "scenario": "Machine costs CHF 179,000 and saves CHF 35,000 annually; ten-year life, no terminal value or tax consequences.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "4.1 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "b",
+          "text": "5.1 years",
+          "explanation": "Payback is initial investment divided by annual savings.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "10.0 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "d",
+          "text": "10.2 years",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "capital budgeting-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Payback is initial investment divided by annual savings.",
+      "workedCalculation": "179,000/35,000 = 5.1143… = 5.1 years.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+          "section": "Answer key and worked solutions; Malive Park 6.2 — Payback period (2 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "capital budgeting-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Capital Budgeting/Capital Budgeting Exam Bank.md",
+        "heading": "Malive Park 6.2 — Payback period (2 points)",
+        "number": "6.2",
+        "line": 139
+      },
+      "original": {
+        "wording": "Malive Park plans a machine investment of CHF 179,000. Annual cost savings are CHF 35,000 for a ten-year useful life; terminal disposal value is zero and there are no tax consequences. The required return is 14%. What is the payback period?",
+        "options": [
+          {
+            "id": "a",
+            "text": "4.1 years"
+          },
+          {
+            "id": "b",
+            "text": "5.1 years"
+          },
+          {
+            "id": "c",
+            "text": "10.0 years"
+          },
+          {
+            "id": "d",
+            "text": "10.2 years"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### Malive Park 6.2 — Payback period (2 points)\nMalive Park plans a machine investment of CHF 179,000. Annual cost savings are CHF 35,000 for a ten-year useful life; terminal disposal value is zero and there are no tax consequences. The required return is 14%. What is the payback period?\n- A) 4.1 years\n- B) 5.1 years\n- C) 10.0 years\n- D) 10.2 years\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "payback",
+        "expected": 5.1,
+        "unit": "years",
+        "inputs": {
+          "cost": 179000,
+          "annual": 35000
+        }
+      }
+    },
+    {
+      "id": "cpm-screen-3.4",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard perspectives",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which option is a performance measure of the financial perspective of the Balanced Scorecard?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Operating income",
+          "explanation": "Operating income is financial; service response time, defect rates and new patents represent internal-process measures.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "Service response time",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Defect rates",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Number of new patents",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Operating income is financial; service response time, defect rates and new patents represent internal-process measures.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 3.4 — Balanced scorecard: financial measure (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "3.4 — Balanced scorecard: financial measure (1 point)",
+        "number": "3.4",
+        "line": 103
+      },
+      "original": {
+        "wording": "Which is a performance measure of the financial perspective of the Balanced Scorecard?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Operating income"
+          },
+          {
+            "id": "b",
+            "text": "Service response time"
+          },
+          {
+            "id": "c",
+            "text": "Defect rates"
+          },
+          {
+            "id": "d",
+            "text": "Number of new patents"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 3.4 — Balanced scorecard: financial measure (1 point)\nWhich is a performance measure of the financial perspective of the Balanced Scorecard?\n- A) Operating income\n- B) Service response time\n- C) Defect rates\n- D) Number of new patents\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-screen-3.5",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard perspectives",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which question best describes the learning-and-growth perspective of the Balanced Scorecard?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "How do we reduce costs?",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "How do we empower our employees?",
+          "explanation": "Learning and growth focuses on employee learning, capability and empowerment.",
+          "misconception": null
+        },
+        {
+          "id": "c",
+          "text": "Which processes will increase value for customers?",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "How can we achieve higher profits?",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "b",
+      "explanation": "Learning and growth focuses on employee learning, capability and empowerment.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 3.5 — Balanced scorecard: learning and growth (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "3.5 — Balanced scorecard: learning and growth (1 point)",
+        "number": "3.5",
+        "line": 111
+      },
+      "original": {
+        "wording": "Which question best describes the learning-and-growth perspective?",
+        "options": [
+          {
+            "id": "a",
+            "text": "How do we reduce costs?"
+          },
+          {
+            "id": "b",
+            "text": "How do we empower our employees?"
+          },
+          {
+            "id": "c",
+            "text": "Which processes will increase value for customers?"
+          },
+          {
+            "id": "d",
+            "text": "How can we achieve higher profits?"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 3.5 — Balanced scorecard: learning and growth (1 point)\nWhich question best describes the learning-and-growth perspective?\n- A) How do we reduce costs?\n- B) How do we empower our employees?\n- C) Which processes will increase value for customers?\n- D) How can we achieve higher profits?\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-screen-8.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard purpose",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which statement about the Balanced Scorecard is true?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Its primary goal is to sustain short-run nonfinancial performance.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "It reduces managers’ emphasis on long-run financial performance.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Its primary goal is to sustain short-run financial performance.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "It reduces managers’ emphasis on short-run financial performance.",
+          "explanation": "The scorecard broadens attention across financial and nonfinancial measures and reduces exclusive focus on short-run financial results.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "The scorecard broadens attention across financial and nonfinancial measures and reduces exclusive focus on short-run financial results.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.1 — Balanced scorecard purpose (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.1 — Balanced scorecard purpose (1 point)",
+        "number": "8.1",
+        "line": 119
+      },
+      "original": {
+        "wording": "Which statement about the Balanced Scorecard is true?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Its primary goal is to sustain short-run nonfinancial performance."
+          },
+          {
+            "id": "b",
+            "text": "It reduces managers’ emphasis on long-run financial performance."
+          },
+          {
+            "id": "c",
+            "text": "Its primary goal is to sustain short-run financial performance."
+          },
+          {
+            "id": "d",
+            "text": "It reduces managers’ emphasis on short-run financial performance."
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.1 — Balanced scorecard purpose (1 point)\nWhich statement about the Balanced Scorecard is true?\n- A) Its primary goal is to sustain short-run nonfinancial performance.\n- B) It reduces managers’ emphasis on long-run financial performance.\n- C) Its primary goal is to sustain short-run financial performance.\n- D) It reduces managers’ emphasis on short-run financial performance.\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-screen-8.2",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Balanced scorecard perspectives",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 1,
+      "prompt": "Which option measures the customer perspective of the Balanced Scorecard?",
+      "scenario": "",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "Number of process improvements",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "b",
+          "text": "Revenue growth",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "Defect rates",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "Number of client complaints",
+          "explanation": "Client complaints directly measure customer experience; the other choices are process or financial measures.",
+          "misconception": null
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "d",
+      "explanation": "Client complaints directly measure customer experience; the other choices are process or financial measures.",
+      "workedCalculation": "",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; 8.2 — Balanced scorecard: customer measure (1 point)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "8.2 — Balanced scorecard: customer measure (1 point)",
+        "number": "8.2",
+        "line": 127
+      },
+      "original": {
+        "wording": "Which is a measure of the Balanced Scorecard’s customer perspective?",
+        "options": [
+          {
+            "id": "a",
+            "text": "Number of process improvements"
+          },
+          {
+            "id": "b",
+            "text": "Revenue growth"
+          },
+          {
+            "id": "c",
+            "text": "Defect rates"
+          },
+          {
+            "id": "d",
+            "text": "Number of client complaints"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### 8.2 — Balanced scorecard: customer measure (1 point)\nWhich is a measure of the Balanced Scorecard’s customer perspective?\n- A) Number of process improvements\n- B) Revenue growth\n- C) Defect rates\n- D) Number of client complaints\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      }
+    },
+    {
+      "id": "cpm-mike-9.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Return on sales",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "What were Clothing division revenues? Round to a whole CHF.",
+      "scenario": "The Clothing division reports EBIT CHF 1,600,000 and EBIT-based return on sales of 12%.",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 13,333,333",
+          "explanation": "Return on sales = EBIT/revenue, so revenue = EBIT/return on sales.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 12,307,692",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 1,733,333",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 1,476,923",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "Return on sales = EBIT/revenue, so revenue = EBIT/return on sales.",
+      "workedCalculation": "1,600,000/0.12 = CHF 13,333,333.33 ≈ CHF 13,333,333.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; Mike Inc. 9.1 — Division revenue from return on sales (3 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "Mike Inc. 9.1 — Division revenue from return on sales (3 points)",
+        "number": "9.1",
+        "line": 135
+      },
+      "original": {
+        "wording": "Mike Inc. has three divisions. The Clothing division reports EBIT of CHF 1,600,000 and EBIT-based return on sales of 12%. What were its revenues? Round to a whole CHF.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 13,333,333"
+          },
+          {
+            "id": "b",
+            "text": "CHF 12,307,692"
+          },
+          {
+            "id": "c",
+            "text": "CHF 1,733,333"
+          },
+          {
+            "id": "d",
+            "text": "CHF 1,476,923"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### Mike Inc. 9.1 — Division revenue from return on sales (3 points)\nMike Inc. has three divisions. The Clothing division reports EBIT of CHF 1,600,000 and EBIT-based return on sales of 12%. What were its revenues? Round to a whole CHF.\n- A) CHF 13,333,333\n- B) CHF 12,307,692\n- C) CHF 1,733,333\n- D) CHF 1,476,923\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "ros",
+        "expected": 13333333,
+        "unit": "CHF",
+        "inputs": {
+          "ebit": 1600000,
+          "ros": 0.12
+        }
+      }
+    },
+    {
+      "id": "cpm-fritz-9.1",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Economic value added",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "Calculate San Francisco EVA. Round interim ratios to four decimals and final value to a whole CHF.",
+      "scenario": "Fritz Arlton has debt of CHF 5,500,000 at 12% and market equity of CHF 4,200,000 (book value CHF 2,500,000), with a 12% cost of equity and 25% tax rate. Its profit centers report:\n\n| Location | EBIT | Assets | Current liabilities |\n|---|---:|---:|---:|\n| San Francisco | CHF 480,000 | CHF 2,000,000 | CHF 140,000 |\n| Geneva | CHF 600,000 | CHF 4,000,000 | CHF 300,000 |\n| Bali | CHF 1,020,000 | CHF 6,000,000 | CHF 600,000 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 168,420",
+          "explanation": "First calculate WACC, after-tax operating income and invested capital, then subtract the capital charge.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 191,580",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 175,116",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 360,000",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "First calculate WACC, after-tax operating income and invested capital, then subtract the capital charge.",
+      "workedCalculation": "WACC = [4.2m×.12 + 5.5m×.12×(1−.25)]/9.7m = .1030. NOPAT = 480,000×.75 = 360,000. Capital = 2,000,000−140,000 = 1,860,000. EVA = 360,000−.1030×1,860,000 = CHF 168,420.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; Fritz Arlton 9.1 — Economic value added (3 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "Fritz Arlton 9.1 — Economic value added (3 points)",
+        "number": "9.1",
+        "line": 143
+      },
+      "original": {
+        "wording": "Fritz Arlton has debt of CHF 5,500,000 at 12% and market equity of CHF 4,200,000 (book value CHF 2,500,000), with a 12% cost of equity and 25% tax rate. Its profit centers report:\n\n| Location | EBIT | Assets | Current liabilities |\n|---|---:|---:|---:|\n| San Francisco | CHF 480,000 | CHF 2,000,000 | CHF 140,000 |\n| Geneva | CHF 600,000 | CHF 4,000,000 | CHF 300,000 |\n| Bali | CHF 1,020,000 | CHF 6,000,000 | CHF 600,000 |\n\nCalculate San Francisco EVA, rounding interim ratios to four decimals and the final value to a whole CHF.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 168,420"
+          },
+          {
+            "id": "b",
+            "text": "CHF 191,580"
+          },
+          {
+            "id": "c",
+            "text": "CHF 175,116"
+          },
+          {
+            "id": "d",
+            "text": "CHF 360,000"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### Fritz Arlton 9.1 — Economic value added (3 points)\nFritz Arlton has debt of CHF 5,500,000 at 12% and market equity of CHF 4,200,000 (book value CHF 2,500,000), with a 12% cost of equity and 25% tax rate. Its profit centers report:\n\n| Location | EBIT | Assets | Current liabilities |\n|---|---:|---:|---:|\n| San Francisco | CHF 480,000 | CHF 2,000,000 | CHF 140,000 |\n| Geneva | CHF 600,000 | CHF 4,000,000 | CHF 300,000 |\n| Bali | CHF 1,020,000 | CHF 6,000,000 | CHF 600,000 |\n\nCalculate San Francisco EVA, rounding interim ratios to four decimals and the final value to a whole CHF.\n- A) CHF 168,420\n- B) CHF 191,580\n- C) CHF 175,116\n- D) CHF 360,000\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "eva",
+        "expected": 168420,
+        "unit": "CHF",
+        "inputs": {
+          "debt": 5500000,
+          "equity": 4200000,
+          "debtRate": 0.12,
+          "equityRate": 0.12,
+          "tax": 0.25,
+          "ebit": 480000,
+          "assets": 2000000,
+          "liabilities": 140000,
+          "roundedWacc": true
+        }
+      }
+    },
+    {
+      "id": "cpm-fritz-9.2",
+      "origin": "original",
+      "topic": "Cost and Performance Management",
+      "subtopic": "Economic value added",
+      "difficulty": "Medium",
+      "type": "single-choice",
+      "marks": 3,
+      "prompt": "Calculate San Francisco EVA. Round interim ratios to four decimals and final value to a whole CHF.",
+      "scenario": "Fritz Arlton has debt of CHF 5,500,000 at 12% and market equity of CHF 4,200,000 (book value CHF 2,500,000), with a 12% cost of equity and 25% tax rate. Its profit centers report:\n\n| Location | EBIT | Assets | Current liabilities |\n|---|---:|---:|---:|\n| San Francisco | CHF 480,000 | CHF 2,000,000 | CHF 140,000 |\n| Geneva | CHF 600,000 | CHF 4,000,000 | CHF 300,000 |\n| Bali | CHF 1,020,000 | CHF 5,000,000 | CHF 600,000 |",
+      "assumptions": [],
+      "options": [
+        {
+          "id": "a",
+          "text": "CHF 168,420",
+          "explanation": "First calculate WACC, after-tax operating income and invested capital, then subtract the capital charge.",
+          "misconception": null
+        },
+        {
+          "id": "b",
+          "text": "CHF 191,580",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "c",
+          "text": "CHF 175,116",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "d",
+          "text": "CHF 360,000",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        },
+        {
+          "id": "e",
+          "text": "None of A–D.",
+          "explanation": "This does not match the source data or accounting method.",
+          "misconception": "cost and performance management-calculation"
+        }
+      ],
+      "correctOptionId": "a",
+      "explanation": "First calculate WACC, after-tax operating income and invested capital, then subtract the capital charge.",
+      "workedCalculation": "WACC = [4.2m×.12 + 5.5m×.12×(1−.25)]/9.7m = .1030. NOPAT = 480,000×.75 = 360,000. Capital = 2,000,000−140,000 = 1,860,000. EVA = 360,000−.1030×1,860,000 = CHF 168,420.",
+      "evidence": [
+        {
+          "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+          "section": "Answer key and worked solutions; Fritz Arlton 9.2 — Economic value added (3 points)"
+        }
+      ],
+      "status": "validated",
+      "reviewReason": "",
+      "changes": [
+        "Shortened the exercise wording for practice; the full source exercise and options are preserved."
+      ],
+      "targets": [
+        "cost and performance management-calculation"
+      ],
+      "source": {
+        "path": "Exam by topic/Cost and Performance Management/Cost and Performance Management Exam Bank.md",
+        "heading": "Fritz Arlton 9.2 — Economic value added (3 points)",
+        "number": "9.2",
+        "line": 159
+      },
+      "original": {
+        "wording": "Fritz Arlton has debt of CHF 5,500,000 at 12% and market equity of CHF 4,200,000 (book value CHF 2,500,000), with a 12% cost of equity and 25% tax rate. Its profit centers report:\n\n| Location | EBIT | Assets | Current liabilities |\n|---|---:|---:|---:|\n| San Francisco | CHF 480,000 | CHF 2,000,000 | CHF 140,000 |\n| Geneva | CHF 600,000 | CHF 4,000,000 | CHF 300,000 |\n| Bali | CHF 1,020,000 | CHF 5,000,000 | CHF 600,000 |\n\nCalculate San Francisco EVA. Round interim ratios to four decimals and the final value to a whole CHF.",
+        "options": [
+          {
+            "id": "a",
+            "text": "CHF 168,420"
+          },
+          {
+            "id": "b",
+            "text": "CHF 191,580"
+          },
+          {
+            "id": "c",
+            "text": "CHF 175,116"
+          },
+          {
+            "id": "d",
+            "text": "CHF 360,000"
+          },
+          {
+            "id": "e",
+            "text": "None of A–D."
+          }
+        ],
+        "raw": "### Fritz Arlton 9.2 — Economic value added (3 points)\nFritz Arlton has debt of CHF 5,500,000 at 12% and market equity of CHF 4,200,000 (book value CHF 2,500,000), with a 12% cost of equity and 25% tax rate. Its profit centers report:\n\n| Location | EBIT | Assets | Current liabilities |\n|---|---:|---:|---:|\n| San Francisco | CHF 480,000 | CHF 2,000,000 | CHF 140,000 |\n| Geneva | CHF 600,000 | CHF 4,000,000 | CHF 300,000 |\n| Bali | CHF 1,020,000 | CHF 5,000,000 | CHF 600,000 |\n\nCalculate San Francisco EVA. Round interim ratios to four decimals and the final value to a whole CHF.\n- A) CHF 168,420\n- B) CHF 191,580\n- C) CHF 175,116\n- D) CHF 360,000\n- E) None of A–D.",
+        "scenario": "",
+        "recordedStudentAnswer": null,
+        "answerProvenance": "Answer checked against the expanded Ecoreps solution in Dia."
+      },
+      "calculationCheck": {
+        "kind": "eva",
+        "expected": 168420,
+        "unit": "CHF",
+        "inputs": {
+          "debt": 5500000,
+          "equity": 4200000,
+          "debtRate": 0.12,
+          "equityRate": 0.12,
+          "tax": 0.25,
+          "ebit": 480000,
+          "assets": 2000000,
+          "liabilities": 140000,
+          "roundedWacc": true
+        }
       }
     }
   ]

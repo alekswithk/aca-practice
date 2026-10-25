@@ -1,6 +1,20 @@
 # Implementation checks
 
-Validated on 9 October 2026. All checks passed on the final implementation.
+Updated 25 October 2026.
+
+## Current content refresh
+
+- Content validation passes for 254 records, including all 30 additions. It independently recomputes 106 numerical results and compares every available local source excerpt. Only the external Budgeting and Variances source is unavailable for exact comparison.
+- Core tests pass, including grading after shuffling, backup validation and preservation of drafts and attempt history across bank versions. A direct comparison confirms all 224 previously committed question records are unchanged.
+- `tests/filter-regression.test.mjs` passes with 236 scored questions, including the existing Budgeting and Variances pools.
+- `tests/content-refresh.test.mjs` passes in Chromium. Both new topics are available in practice, focus filters, topic exams, controlling exams and full exams. All seven new exercise tables retain their rows and row headers, align numbers, fit within the page at 375, 768 and 1440 pixels, scroll horizontally on a phone and remain available in learning history. Correct submission of an EVA exercise also passes.
+- Desktop and mobile EVA screenshots were visually reviewed. No overlap or page overflow was found.
+
+The older `tests/browser.test.mjs` stops at its first assertion: it expects the removed source-review counter to contain `(18)`, while the current interface leaves that hidden counter empty. The committed app already has this behavior. That suite has not been rewritten in this content update, and its later checks were not rerun successfully. Current Safari, Firefox and physical-device checks were not performed. Publication is checked separately against the hosted files after deployment.
+
+## Previous verification, 9 October 2026
+
+The following records describe the earlier interface and are retained as historical verification.
 
 ## Content and core logic
 

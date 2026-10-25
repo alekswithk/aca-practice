@@ -1,6 +1,6 @@
 # ACA practice & notebook
 
-A local study tool with 143 imported exam-bank questions and 36 generated questions. There are 161 scored questions and 18 unresolved originals in **Source review**. The [content validation report](CONTENT_VALIDATION.md) identifies every unresolved question and explains the study clarifications.
+A local study tool with 218 imported exam-bank questions and 36 generated questions. There are 236 scored questions and 18 unresolved originals excluded from scored practice. The [content validation report](CONTENT_VALIDATION.md) identifies every unresolved question and explains the study clarifications.
 
 ## Launch
 
@@ -15,7 +15,11 @@ Open **http://127.0.0.1:8011**. Keep the terminal running; press Ctrl+C to stop 
 
 Use the same browser, address and port each time. `localhost` and `127.0.0.1` have separate browser storage, as do different ports. Private browsing may discard saved data when the browser closes.
 
-## What changed on 9 October 2026
+## What changed on 25 October 2026
+
+Added 30 questions from the local exam banks: 14 Capital Budgeting and 16 Cost and Performance Management. Both topics are available in practice, focus filters, topic exams, controlling exams and full exams. Seven exercises include data tables for cash-flow timing or profit-center figures. Tables align numeric columns, scroll within the question on narrow screens and remain visible in learning history. The source excerpts and answer options are retained. All 224 earlier question records and IDs are unchanged.
+
+## Earlier additions
 
 Added all 51 Management Accounting questions. 46 are scored; five need further source review. Cost flows, CVP, job costing and pricing are now available in the topic filter and home-page topic cards. The refresh adds a study overview, more space for calculations, compact mobile setup and short transitions. Reduced-motion preferences turn animations off. Existing question IDs, notes, snapshots and history remain compatible.
 
@@ -62,6 +66,7 @@ The app uses relative paths and ordinary HTML/CSS/JavaScript/JSON. The entry poi
 
 - `content/questions.json`: delivered question data, independent of interface code.
 - `content/management_accounting.py`: Management Accounting import and reviewed teaching feedback.
+- `content/capital_performance.py`: Capital Budgeting and Cost and Performance Management imports, source excerpts and exercise tables.
 - `content/build_bank.py`: source importer and authored definitions. Requires the original parent course folders to rebuild; it is not needed to run the app.
 - `content/validate_bank.py`: structure and independent numerical checks. Original-excerpt comparisons also run when the parent course-source files are present; a standalone clone reports those comparisons as skipped.
 - `core.mjs`: grading, filtering, follow-ups, statistics and backup validation.
@@ -78,7 +83,8 @@ node tests/core.test.mjs
 The browser check requires Playwright and Chromium for development only. It uses the existing local Playwright installation if available, or a package identified by `PLAYWRIGHT_MODULE`. With the local server running:
 
 ```sh
-node tests/browser.test.mjs
+node tests/content-refresh.test.mjs
+node tests/filter-regression.test.mjs
 ```
 
-`ACA_TEST_URL` can point to another server. `ACA_TEST_OUTPUT` changes the screenshot folder, which defaults to `aca-practice-check` in the system temporary directory. See [TEST_REPORT.md](TEST_REPORT.md) for the checks performed and remaining limits.
+`ACA_TEST_URL` can point to another server. `ACA_TEST_OUTPUT` changes the screenshot folder, which defaults to `aca-practice-check` in the system temporary directory. See [TEST_REPORT.md](TEST_REPORT.md) for the checks performed and the older browser suite’s stale interface assertions.

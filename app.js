@@ -11,6 +11,7 @@ document.addEventListener('keydown',()=>{if(root.dataset.input!=='keyboard')root
 document.addEventListener('pointerdown',()=>{if(root.dataset.input!=='pointer')root.dataset.input='pointer';},{passive:true});
 
 const label={correct:'Correct',incorrect:'Incorrect',unknown:'I don’t know'};
+const controllingTopics=['Management Accounting','Budgeting','Variances','Capital Budgeting','Cost and Performance Management'];
 let bank,state,storageBlocked=false,unreadable=null,pendingImport=null,view='practice';
 let appMode='practice'; // 'practice' or 'exam'
 let examTimerInterval=null;
@@ -116,8 +117,9 @@ function format(text){
     if(lines[i].trim().startsWith('|')){
       flush();const rows=[];
       while(i<lines.length&&lines[i].trim().startsWith('|')){rows.push(lines[i].trim().slice(1,-1).split('|').map(x=>x.trim()));i++;}i--;
-      const header=rows.shift();if(rows[0]?.every(x=>/^:?-+:?$/.test(x)))rows.shift();
-      result+=`<div class="table-wrap"><table><thead><tr>${header.map(x=>`<th scope="col">${h(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map(x=>`<td>${h(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+      const header=rows.shift();const alignment=rows[0]?.every(x=>/^:?-+:?$/.test(x))?rows.shift():[];
+      const numeric=col=>alignment[col]?.endsWith(':')?' class="numeric"':'';
+      result+=`<div class="table-wrap exercise-table" role="region" aria-label="Exercise data" tabindex="0"><table><thead><tr>${header.map((x,col)=>`<th scope="col"${numeric(col)}>${h(x)}</th>`).join('')}</tr></thead><tbody>${rows.map(row=>`<tr>${row.map((x,col)=>col===0?`<th scope="row">${h(x)}</th>`:`<td${numeric(col)}>${h(x)}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
     }else plain.push(lines[i]);
   }flush();return result;
 }
@@ -353,7 +355,7 @@ function renderExamOverview(){
     description:'Full-length mock exam replicating official past ACA exam papers across all course modules.',
     modules:[
       {title:'Part 1: Accounting & Auditing (45m · 45 Marks)',desc:'30 exercises: Financial Reporting & Consolidation (30 marks) + Auditing (15 marks).'},
-      {title:'Part 2: Controlling (45m · 45 Marks)',desc:'20 exercises: Management Accounting, Cost Systems, Budgeting & Variances (45 marks).'}
+      {title:'Part 2: Controlling (45m · 45 Marks)',desc:'20 exercises across management accounting, budgeting, variances, capital budgeting and performance management.'}
     ]
   };
 
@@ -378,7 +380,7 @@ function renderExamOverview(){
       description:'Replication of Part 2 from official past ACA exam papers. Strictly 45 minutes.',
       modules:[
         {title:'Management Accounting & Cost Systems (30 Marks)',desc:'Absorption vs. variable costing, contribution margin, breakeven analysis & cost allocations.'},
-        {title:'Budgeting & Variances (15 Marks)',desc:'Operational & flexible budgeting, direct material, direct labor & overhead variance calculations.'}
+        {title:'Budgeting, Variances & Investment Decisions',desc:'Operating budgets, variance analysis, capital budgeting, balanced scorecards and performance measures.'}
       ]
     };
   }else if(selectedPart==='topic'){
@@ -468,7 +470,7 @@ function launchExam(part,topic){
   if(part==='full'){
     const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
     const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
-    const controlling=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20);
+    const controlling=shuffle(bank.questions.filter(q=>q.status==='validated'&&controllingTopics.includes(q.topic))).slice(0,20);
     pool=[...acct,...audit,...controlling].map(q=>q.id);
     durationSeconds=90*60;
     modeName='exam-full';
@@ -479,7 +481,7 @@ function launchExam(part,topic){
     durationSeconds=45*60;
     modeName='exam-part1';
   }else if(part==='part2'){
-    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Management Accounting'||q.topic==='Budgeting'||q.topic==='Variances'))).slice(0,20).map(q=>q.id);
+    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&controllingTopics.includes(q.topic))).slice(0,20).map(q=>q.id);
     durationSeconds=45*60;
     modeName='exam-part2';
   }else if(part==='topic'){
@@ -814,6 +816,7 @@ function renderHistory(){
         const rows=state.attempts.filter(a=>a.questionId===q.id).slice().reverse();
         return `<details class="history-item">
           <summary>${h(q.topic)} — ${rows.length} attempt${rows.length===1?'':'s'}</summary>
+          ${q.scenario?`<div class="scenario">${format(q.scenario)}</div>`:''}
           <div class="scenario">${format(q.prompt)}</div>
           ${notes(q,true)}
           <button data-retry="${h(q.id)}">Retry as new attempt</button>
@@ -860,7 +863,15 @@ async function init(){
 
     // Populate topics
     const topics=[...new Set(bank.questions.filter(q=>q.status==='validated').map(q=>q.topic))].sort();
-    topics.forEach(t=>{if(![...$('#topic').options].some(o=>o.value===t))$('#topic').add(new Option(t,t));});
+    topics.forEach(t=>{
+      for(const select of [$('#topic'),$('#exam-topic-select')]){
+        if(![...select.options].some(o=>o.value===t))select.add(new Option(t,t));
+      }
+      if(!preciseSubtopics[t])preciseSubtopics[t]=[
+        {val:'',text:`All ${t} areas`},
+        ...[...new Set(bank.questions.filter(q=>q.status==='validated'&&q.topic===t).map(q=>q.subtopic))].sort().map(s=>({val:s,text:s}))
+      ];
+    });
     populateSubtopics(state.preferences.topic||'');
 
     for(const key of ['topic','difficulty']){
