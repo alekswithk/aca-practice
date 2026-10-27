@@ -79,7 +79,7 @@ export function validateBackup(value,bank){
       Object.assign(session,{examFlags:{...flags},examInitialDuration:initial,examTimeRemaining:remaining,examTopic:s.examTopic??null});
     }
   }
-  if(!['practice','history','review'].includes(value.view))fail();
+  if(!['home','practice','history','review'].includes(value.view))fail();
   return {...emptyState(bank.bankVersion),drafts,attempts,preferences,session,view:value.view};
 }
 export function mergeBackups(local,incoming){

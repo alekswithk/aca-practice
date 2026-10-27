@@ -23,6 +23,7 @@ assert.equal(available(questions,{topic:'Financial Reporting',subtopic:'Deferred
 const next=followup(q,wrong,questions,state.attempts);assert.notEqual(next.id,q.id);assert.ok(next.targets.includes('tax-rate-omitted'));
 state.session={queue:[q.id],index:0,order:shuffle(q.options.map(o=>o.id)),mode:'retry',attemptId:unknown.id,attemptIds:[unknown.id]};
 const restored=validateBackup(JSON.parse(JSON.stringify(state)),bank);assert.deepEqual(restored,state);
+assert.deepEqual(validateBackup({...structuredClone(state),view:'home'},bank),{...state,view:'home'},'Home backups must preserve the current session and learning data');
 assert.deepEqual(mergeBackups(state,restored),state);
 const fresh=mergeBackups(emptyState(bank.bankVersion),restored);assert.deepEqual(fresh.attempts,state.attempts);assert.deepEqual(fresh.drafts,state.drafts);assert.deepEqual(fresh.session,state.session);
 const correct=makeAttempt(q,q.correctOptionId,'4,800 liability','2026-09-30T12:03:00.000Z','attempt-3',bank.bankVersion);state.attempts.push(correct);

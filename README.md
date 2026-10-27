@@ -17,6 +17,8 @@ Use the same browser, address and port each time. `localhost` and `127.0.0.1` ha
 
 ## What changed on 27 October 2026
 
+Home and the ACA logo open the topic picker for focused revision. Returning Home preserves the current session, answers and notes; Resume session returns to it. The exam timer pauses while away from the study view. Active sessions use a wider question panel and collapse setup controls, with focus moving to the current question on start, navigation and reload.
+
 Practice places the worked explanation beside the question on wide screens. Optional calculations and notes sit below both panels. Previous returns to an earlier question with its answer, feedback, notes and option order intact. Returning to a submitted question does not add another attempt. After checking, only the submitted choice is highlighted: green when correct, red when incorrect. Skip leaves all choices neutral. The session-length slider has one question-count display and moves in steps of five.
 
 Exams keep answers hidden until submission, use Next and Finish buttons, and show a yellow flag beside questions marked for review. Flags, answers, notes and the countdown restore after reloading. Card instructions have been removed; save status and save-failure warnings remain.

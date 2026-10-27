@@ -16,7 +16,8 @@ try{
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
   page.on('dialog',dialog=>dialog.accept());
   await page.addInitScript(()=>{Math.random=()=>.5;});
-  const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor();};
+  const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
+  const openSetup=async()=>{if(!await page.locator('#session-settings').evaluate(el=>el.open))await page.locator('#session-settings > summary').click();};
   const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
   await load();
   for(const [topic,count] of [['Capital Budgeting',14],['Cost and Performance Management',16]]){
@@ -70,8 +71,10 @@ try{
 
   await page.setViewportSize({width:1440,height:1000});
   await page.locator('#nav-study').click();
+  await openSetup();
   await page.locator('#tab-mode-exam').click();
   for(const topic of ['Capital Budgeting','Cost and Performance Management']){
+    await openSetup();
     await page.locator('input[name=exam-part][value=topic]').check();
     await page.selectOption('#exam-topic-select',topic);
     await page.locator('#start-exam').click();
@@ -87,6 +90,7 @@ try{
     }else await page.locator('#btn-exam-cancel').click();
   }
   for(const part of ['part2','full']){
+    await openSetup();
     await page.locator(`input[name=exam-part][value=${part}]`).check();
     await page.locator('#start-exam').click();
     const topics=(await saved()).session.queue.map(id=>bank.questions.find(q=>q.id===id).topic);

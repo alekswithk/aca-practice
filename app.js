@@ -180,10 +180,27 @@ function updateAvailable(){
 }
 
 function setView(next,focus=true){
-  view=next;state.view=next;save();render();if(focus)$('#main').focus();
+  view=next;state.view=next;
+  if(next==='practice'&&appMode==='exam'&&state.session?.mode.startsWith('exam'))startExamTimer();
+  else stopExamTimer();
+  save();render();
+  if(focus){$('#main').focus();if(next==='home')window.scrollTo(0,0);}
 }
 
-function setAppMode(mode){
+function focusQuestion(){
+  const target=$('.question');
+  if(!target)return;
+  $('#session-settings').open=false;
+  const top=$('.masthead').offsetHeight+16;
+  const main=$('#main');
+  const fits=target.getBoundingClientRect().bottom-main.getBoundingClientRect().top<=innerHeight-top-16;
+  const scrollTarget=fits?main:target;
+  scrollTarget.style.scrollMarginTop=`${top}px`;
+  target.focus({preventScroll:true});
+  scrollTarget.scrollIntoView({block:'start'});
+}
+
+function setAppMode(mode,show=true){
   appMode=mode;
   $('#tab-mode-practice').classList.toggle('active',mode==='practice');
   $('#tab-mode-practice').setAttribute('aria-selected',String(mode==='practice'));
@@ -203,17 +220,16 @@ function setAppMode(mode){
         });
       }
       save();
-      renderExamOverview();
     }
-  }else if(mode==='practice'&&state.session&&state.session.mode.startsWith('exam')){
-    stopExamTimer();
-    renderPractice();
   }
+  if(show)setView('practice');
 }
 
 function render(){
-  $$('[data-view]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.view===view)));
-  if(view==='history')renderHistory();
+  const activeView=view==='practice'&&!state.session&&appMode==='practice'?'home':view;
+  $$('[data-view]').forEach(el=>el.setAttribute('aria-pressed',String(el.dataset.view===activeView)));
+  if(view==='home')renderHome();
+  else if(view==='history')renderHistory();
   else if(appMode==='exam'&&state.session&&state.session.mode.startsWith('exam'))renderExamActive();
   else if(appMode==='exam'&&(!state.session||!state.session.mode.startsWith('exam')))renderExamOverview();
   else renderPractice();
@@ -225,25 +241,29 @@ function startSession(ids,mode){
   stopExamTimer();
   const q=question(ids[0]);
   state.session={queue:ids,index:0,order:shuffle(q.options.map(o=>o.id)),mode,attemptId:null,attemptIds:[],examFlags:{}};
-  setView('practice');
+  setAppMode('practice',false);
+  setView('practice',false);
+  focusQuestion();
 }
 
 function retry(id){startSession([id],'retry');}
 
 // =================== PRACTICE MODE ===================
-function renderPractice(){
-  const session=state.session;
-  if(!session){
+function renderHome(){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
     const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length;
     $('#main').innerHTML=`<section class="welcome study-hero"><span class="eyebrow">YOUR STUDY SPACE</span><h2>Think it through.<br>Build your confidence.</h2><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practising':'Start practising'} <span aria-hidden="true">→</span></button><button id="welcome-exam">Launch Exam Mode ⏱️</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">0${index+1}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span><span class="topic-arrow" aria-hidden="true">→</span></button>`;}).join('')}</div></section>`;
-    $('#welcome-start').onclick=()=>$('#setup').requestSubmit();
+    if(state.session)$('#welcome-start').textContent='Resume session →';
+    $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
     $$('[data-topic]').forEach(el=>el.onclick=()=>{
       $('#topic').value=el.dataset.topic;populateSubtopics(el.dataset.topic);$('#subtopic').value='';$('#difficulty').value='';$('#setup').requestSubmit();
     });
-    return;
-  }
+}
+
+function renderPractice(){
+  const session=state.session;
+  if(!session){renderHome();return;}
 
   const q=question(session.queue[session.index]);
   const attempt=state.attempts.find(a=>a.id===session.attemptId);
@@ -260,7 +280,7 @@ function renderPractice(){
     </div>
     <progress max="${session.queue.length}" value="${session.index+(attempt?1:0)}" aria-label="Session progress"></progress>
     <div class="question-layout">
-      <article class="question">
+      <article class="question" tabindex="-1" aria-label="Current question">
         ${q.scenario?`<div class="scenario">${format(q.scenario)}</div>`:''}
         <div class="prompt" id="question-prompt">${format(q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,''))}</div>
         ${q.assumptions.length?`<details class="assumptions"><summary>Assumptions for this question</summary>${q.assumptions.map(s=>`<p>${h(s)}</p>`).join('')}</details>`:''}
@@ -372,7 +392,7 @@ function goToQuestion(index){
   const id=s.queue[index];
   s.attemptId=state.attempts.find(a=>a.questionId===id&&s.attemptIds.includes(a.id))?.id||null;
   s.order=s.questionOrders[id]||shuffle(question(id).options.map(o=>o.id));
-  save();render();$('#main').focus();
+  save();render();focusQuestion();
 }
 
 // =================== EXAM MODE ===================
@@ -518,9 +538,8 @@ function launchExam(part,topic){
     examTimeRemaining:durationSeconds,
     examFlags:{}
   };
-  save();
-  startExamTimer();
-  render();
+  setView('practice',false);
+  focusQuestion();
 }
 
 function startExamTimer(){
@@ -618,7 +637,7 @@ function renderExamActive(){
       </div>
     </div>
     <div class="question-layout exam-question-layout">
-      <article class="question">
+      <article class="question" tabindex="-1" aria-label="Current question">
         <div class="exam-exercise-head">
           <div class="exam-exercise-title">
             <span class="exam-badge">Exercise ${s.index+1}</span>
@@ -674,15 +693,15 @@ function renderExamActive(){
   $$('[data-jump]').forEach(btn=>btn.onclick=()=>{
     s.index=Number(btn.dataset.jump);
     s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));
-    save();render();
+    save();render();focusQuestion();
   });
 
   $('#btn-exam-prev').onclick=()=>{
-    if(s.index>0){s.index--;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));save();render();}
+    if(s.index>0){s.index--;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));save();render();focusQuestion();}
   };
 
   $('#btn-exam-next').onclick=()=>{
-    if(s.index+1<s.queue.length){s.index++;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));save();render();}
+    if(s.index+1<s.queue.length){s.index++;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));save();render();focusQuestion();}
     else finishExam();
   };
 
@@ -957,7 +976,12 @@ async function init(){
     };
 
     // Navigation
-    $('#nav-study').onclick=()=>setView('practice');
+    $('#nav-home').onclick=()=>setView('home');
+    $('#brand-home').onclick=()=>setView('home');
+    $('#nav-study').onclick=()=>{
+      if(state.session)setAppMode(state.session.mode.startsWith('exam')?'exam':'practice',false);
+      setView('practice',!state.session);focusQuestion();
+    };
     $('#nav-history').onclick=()=>setView('history');
 
     // Export/import
@@ -992,8 +1016,9 @@ async function init(){
       }
     };
 
-    if(state.session?.mode.startsWith('exam')){setAppMode('exam');startExamTimer();}
+    if(state.session?.mode.startsWith('exam')){setAppMode('exam',false);if(view==='practice')startExamTimer();}
     render();
+    focusQuestion();
     if(!storageBlocked)save();
   }catch(error){
     $('#main').innerHTML=`<h2>Unable to launch practice</h2><p>${h(error.message)}</p>`;
