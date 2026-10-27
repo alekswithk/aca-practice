@@ -93,9 +93,10 @@ label { font-weight: 600; }
   .masthead { background: color-mix(in srgb, var(--surface) 92%, transparent); backdrop-filter: blur(20px) saturate(150%); }
 }
 .identity { display: flex; gap: .9rem; align-items: center; }
+.brand-home { display: inline-flex; align-items: center; flex-shrink: 0; padding: .35rem .1rem; border: 0; border-radius: 0; background: transparent; color: var(--green); }
+.brand-home:not(:disabled):hover { background: transparent; }
+.aca-logo { display: block; width: 88px; height: 32px; }
 .identity p { font-size: .74rem; color: var(--muted); margin: 0; }
-.mark { font-size: 1.5rem; font-weight: 500; color: var(--ink); padding: .6rem 0; letter-spacing: -.06em; white-space: nowrap; }
-.mark-dot { position: absolute; width: 6px; height: 6px; background: #a9dcc6; border-radius: 50%; top: 9px; right: 8px; }
 
 .masthead-controls { display: flex; align-items: center; gap: 1rem; }
 nav { display: flex; gap: .25rem; flex-wrap: wrap; padding: .25rem; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; }
@@ -140,6 +141,10 @@ html.dark .theme-switch-thumb {
 /* Layout & Sidebar */
 .layout { display: grid; grid-template-columns: 290px minmax(0, 1fr); gap: 2rem; max-width: 1440px; margin: auto; padding: 2rem; align-items: start; }
 .sidebar { padding: 1.3rem; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); box-shadow: var(--shadow); }
+.layout:has(.question-layout) { max-width: 1600px; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
+.layout:has(.question-layout) .sidebar { display: flex; flex-wrap: wrap; gap: .5rem 2rem; padding: .4rem 1rem; margin-bottom: 0; }
+.layout:has(.question-layout) .sidebar > details[open] { flex-basis: 100%; }
+.layout:has(.question-layout) .storage { border: 0; padding: 0; margin: 0; }
 html.dark .sidebar { background: var(--surface); }
 #session-settings > summary { font-size: .9rem; font-weight: 600; margin-bottom: 1rem; }
 
@@ -242,9 +247,9 @@ progress::-webkit-progress-value { background: var(--green); border-radius: 6px;
 progress::-moz-progress-bar { background: var(--green); border-radius: 6px; }
 
 /* Question Layout & Clean Prompt */
-.question-layout { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(280px, 1fr); gap: 1.3rem; align-items: start; }
+.question-layout { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(280px, 1fr); gap: 1.3rem; align-items: start; }
 .exam-question-layout { grid-template-columns: minmax(0, 1fr); }
-.question { padding: 1.7rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); min-width: 0; box-shadow: var(--shadow); }
+.question { padding: 1.3rem; background: var(--surface); border-radius: var(--radius); border: 1px solid var(--line); min-width: 0; box-shadow: var(--shadow); }
 
 /* Categories above questions are completely hidden/removed */
 .metadata { display: none !important; }
@@ -439,6 +444,7 @@ dialog .danger { background: var(--error); color: white; border-color: var(--err
 }
 
 @media (max-width:760px) {
+  .aca-logo { width: 72px; height: 28px; }
   .masthead { flex-direction: column; align-items: stretch; gap: 1rem; padding: 1rem; }
   .masthead-controls { justify-content: space-between; }
   .layout { display: block; padding: 1rem; }

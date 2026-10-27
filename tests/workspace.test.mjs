@@ -14,8 +14,30 @@ const browser=await playwright.chromium.launch({headless:true,executablePath:pro
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},colorScheme:'light',acceptDownloads:true});
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
- const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor();};
+ const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
  const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
+ const focusedQuestion=async()=>{
+  assert.equal(await page.locator('.question').evaluate(el=>el===document.activeElement),true,'The current question must receive focus');
+  assert.equal(await page.locator('#session-settings').getAttribute('open'),null,'Setup must collapse during a session');
+  assert.ok(await page.locator('.question').evaluate(el=>{const rect=el.getBoundingClientRect();return rect.top>=document.querySelector('.masthead').getBoundingClientRect().bottom && rect.top<innerHeight;}),'The question must be visible below navigation');
+ };
+ const homeAndResume=async()=>{
+  const before=await saved();
+  await page.locator('#nav-home').click();
+  assert.equal(await page.evaluate(()=>scrollY),0,'Home must open at the top of the page');
+  assert.equal(await page.locator('.question').count(),0);
+  assert.equal(await page.locator('[data-topic]').count(),new Set(bank.questions.filter(q=>q.status==='validated').map(q=>q.topic)).size);
+  assert.equal(await page.locator('#nav-home').getAttribute('aria-pressed'),'true');
+  assert.deepEqual((await saved()).drafts,before.drafts,'Home must preserve answers and notes');
+  assert.deepEqual((await saved()).attempts,before.attempts,'Home must preserve attempts');
+  assert.deepEqual((await saved()).session.queue,before.session.queue,'Home must preserve the session');
+  await load();
+  assert.equal(await page.locator('#nav-home').getAttribute('aria-pressed'),'true','Home must survive reload');
+  await page.getByRole('button',{name:'Resume session',exact:false}).click();
+  await focusedQuestion();
+  assert.equal((await saved()).session.index,before.session.index);
+  assert.deepEqual((await saved()).drafts,before.drafts);
+ };
  await load();
  assert.equal(await page.locator('.slider-ticks').count(),0);
  const slider=page.locator('#length-slider');await slider.focus();await slider.press('Home');
@@ -24,9 +46,14 @@ try{
  assert.equal(await page.locator('#slider-badge').textContent(),'25 questions');
  assert.equal((await page.locator('.slider-field').innerText()).match(/\d+/g).length,1);
  await page.locator('#start').click();assert.equal((await saved()).session.queue.length,25);
+ await focusedQuestion();
  const state=emptyState(bank.bankVersion),q=bank.questions.find(q=>q.id==='cs-10');
  state.session={queue:[q.id,'cs-11','cs-12'],index:0,order:q.options.map(o=>o.id),mode:'mixed',attemptId:null,attemptIds:[]};
  await page.evaluate(({key,state})=>localStorage.setItem(key,JSON.stringify(state)),{key:STORAGE_KEY,state});await load();
+ await focusedQuestion();
+ await page.setViewportSize({width:1440,height:900});
+ assert.ok(await page.locator('.question').evaluate(el=>el.getBoundingClientRect().width>800),'The question should use the freed sidebar space');
+ assert.ok(await page.locator('#btn-action').evaluate(el=>el.getBoundingClientRect().bottom<=innerHeight),'Question and answer controls should fit a laptop screen');
  assert.equal(await page.locator('#notebook').getAttribute('open'),null);
  assert.equal(await page.locator('.feedback').count(),0);
  assert.equal(await page.getByRole('button',{name:'Previous',exact:true}).isDisabled(),true);
@@ -50,11 +77,14 @@ try{
  await page.locator('textarea[data-notes]').fill('Revised after feedback.');await page.reload();await page.locator('.feedback').waitFor();
  assert.equal((await saved()).attempts[0].notesSnapshot,draft);
  assert.equal(await page.locator('textarea[data-notes]').inputValue(),'Revised after feedback.');
+ await homeAndResume();
  const order=(await saved()).session.order;
  await page.locator('#btn-action').click();
+ await focusedQuestion();
  await page.locator('input[name=answer][value=b]').check();
  await page.locator('#notebook > summary').click();await page.locator('textarea[data-notes]').fill('Second question draft.');
  await page.getByRole('button',{name:'Previous',exact:true}).click();
+ await focusedQuestion();
  assert.equal((await saved()).attempts.length,1);assert.equal(await page.locator('input[name=answer][value=c]').isChecked(),true);
  assert.deepEqual((await saved()).session.order,order);
  assert.equal(await page.locator('textarea[data-notes]').inputValue(),'Revised after feedback.');
@@ -85,6 +115,7 @@ try{
  await page.screenshot({path:join(output,'practice-dark.png'),fullPage:true});
  for(const width of [375,768,1024,1440]){
   await page.setViewportSize({width,height:1000});
+  await page.reload();await page.locator('.question').waitFor();await focusedQuestion();
   assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Practice overflow at ${width}`);
   const below=await page.locator('#notebook').evaluate(el=>el.getBoundingClientRect().top>=document.querySelector('#feedback').getBoundingClientRect().bottom);
   assert.ok(below,'Optional notes must follow the question and explanation');
@@ -99,16 +130,21 @@ try{
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.evaluate(()=>{document.startViewTransition=undefined;});await page.locator('#theme-toggle').click();
  assert.equal(await page.locator('#theme-toggle').getAttribute('aria-checked'),'true');
- await page.locator('#tab-mode-exam').click();await page.locator('#start-exam').click();await page.locator('#btn-flag').waitFor();
+ await page.locator('#session-settings > summary').click();await page.locator('#tab-mode-exam').click();await page.locator('#start-exam').click();await page.locator('#btn-flag').waitFor();
+ await focusedQuestion();
  const first=(await saved()).session.queue[0];
  await page.locator('#btn-flag').click();assert.equal(await page.locator('[data-jump="0"] .review-flag').count(),1);
  await page.locator('input[name=exam-answer]').first().check();
  assert.equal(await page.locator('.correct-option,.wrong-option').count(),0,'Exam solutions must stay hidden');
  await page.getByRole('button',{name:'Next',exact:true}).click();
+ await focusedQuestion();
  await page.locator('[data-jump="0"]').click();assert.equal(await page.locator('#btn-flag').getAttribute('aria-pressed'),'true');
+ await focusedQuestion();
  await page.locator('#notebook > summary').click();await page.locator('textarea[data-notes]').fill('Exam notes persist.');
+ await homeAndResume();
  const before=(await saved()).session.examTimeRemaining;
  await page.reload();await page.locator('#exam-timer').waitFor();
+ await focusedQuestion();
  assert.equal((await saved()).session.examFlags[first],true);
  assert.ok((await saved()).session.examTimeRemaining<=before && (await saved()).session.examTimeRemaining>before-5);
  assert.equal(await page.locator('input[name=exam-answer]:checked').count(),1);
@@ -116,6 +152,7 @@ try{
  await page.screenshot({path:join(output,'exam-dark.png'),fullPage:true});
  for(const width of [375,768,1024,1440]){
   await page.setViewportSize({width,height:1000});assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Exam overflow at ${width}`);
+  await page.reload();await page.locator('.question').waitFor();await focusedQuestion();
   if(width===375)await page.screenshot({path:join(output,'exam-mobile.png'),fullPage:true});
  }
  const download=page.waitForEvent('download');await page.locator('.storage > summary').click();await page.locator('#export').click();
@@ -130,7 +167,25 @@ try{
  assert.equal(await review.locator('.wrong-option').count(),firstAttempt.outcome==='incorrect'?1:0);
  const unanswered=page.locator('.history-item').nth(1);await unanswered.locator('summary').click();
  assert.equal(await unanswered.locator('.correct-option,.wrong-option').count(),0);
+ await page.locator('#brand-home').click();
+ assert.equal(await page.locator('#nav-home').getAttribute('aria-pressed'),'true','The ACA logo must open Home');
+ for(const width of [375,768,1440]){
+  await page.setViewportSize({width,height:900});
+  assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),`Home overflow at ${width}`);
+  assert.ok(await page.locator('#nav-home').isVisible());
+  await page.screenshot({path:join(output,`home-${width}.png`),fullPage:true});
+ }
+ for(const topic of new Set(bank.questions.filter(q=>q.status==='validated').map(q=>q.topic))){
+  await page.locator('#nav-home').click();
+  await page.locator(`[data-topic="${topic}"]`).click();
+  const current=await saved();
+  assert.ok(current.session.queue.length>0);
+  assert.ok(current.session.queue.every(id=>bank.questions.some(q=>q.id===id&&q.topic===topic&&q.status==='validated')),`${topic} must start focused revision`);
+  assert.equal(await page.locator('#tab-mode-practice').getAttribute('aria-selected'),'true');
+  await focusedQuestion();
+ }
  assert.deepEqual(errors,[]);
  console.log('PASS: practice Previous/Next, stable answer orders after reload, preserved drafts/attempts, Skip, selected-answer colours, concise cards/slider, unique follow-ups, theme fallbacks, exam persistence/export/submission and 375–1440px layouts.');
  console.log('Screenshots: '+output);
+ console.log('PASS: Home and ACA logo navigation, preserved practice/exam sessions after Home/reload/resume, all topic revision cards, and responsive Home layouts.');
 }finally{await browser.close();}
