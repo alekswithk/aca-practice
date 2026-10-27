@@ -63,6 +63,13 @@ export function validateBackup(value,bank){
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();
     session={queue:[...s.queue],index:s.index,order:[...s.order],mode:s.mode,attemptId:s.attemptId,attemptIds:[...s.attemptIds]};
+    if(s.questionOrders!==undefined){
+      if(!object(s.questionOrders))fail();
+      for(const [id,order] of Object.entries(s.questionOrders)){
+        if(!s.queue.includes(id)||!Array.isArray(order)||order.length!==qs.get(id).options.length||new Set(order).size!==order.length||!order.every(option=>qs.get(id).options.some(o=>o.id===option)))fail();
+      }
+      session.questionOrders=Object.fromEntries(Object.entries(s.questionOrders).map(([id,order])=>[id,[...order]]));
+    }
     if(s.mode.startsWith('exam')){
       const flags=s.examFlags??{};
       if(!object(flags)||Object.entries(flags).some(([id,flag])=>!s.queue.includes(id)||typeof flag!=='boolean'))fail();

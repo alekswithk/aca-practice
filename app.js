@@ -152,7 +152,7 @@ function bindNotes(){
 
 function notes(q,compact=false){
   const d=state.drafts[q.id];const ident=`notes-${q.id}`;
-  return `<div class="notes-panel"><label for="${ident}">Calculations / reasoning / notes</label><textarea id="${ident}" data-notes="${h(q.id)}" maxlength="1000000" ${compact?'class="review-notes"':''} placeholder="Write your formulas, steps and assumptions here…">${h(d?.notes||'')}</textarea><p class="save-status" role="status">${storageBlocked?'Not saved — export a backup':'Saved drafts stay in this browser'}</p><p class="notes-help">${q.status==='review'?'You can save a question note.':'Submitting saves a copy of these notes with the attempt.'}</p></div>`;
+  return `<div class="notes-panel"><label for="${ident}">Calculations / reasoning / notes</label><textarea id="${ident}" data-notes="${h(q.id)}" maxlength="1000000" ${compact?'class="review-notes"':''}>${h(d?.notes||'')}</textarea><p class="save-status" role="status">${storageBlocked?'Not saved — export a backup':'Saved'}</p></div>`;
 }
 
 function populateSubtopics(topic){
@@ -236,7 +236,7 @@ function renderPractice(){
   if(!session){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
     const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length;
-    $('#main').innerHTML=`<section class="welcome study-hero"><span class="eyebrow">YOUR STUDY SPACE</span><h2>Think it through.<br>Build your confidence.</h2><p>Work through scenarios, keep calculations in your notebook, and learn from step-by-step worked solutions.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practising':'Start practising'} <span aria-hidden="true">→</span></button><button id="welcome-exam">Launch Exam Mode ⏱️</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2><p class="muted">Choose a topic to jump straight in.</p></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">0${index+1}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span><span class="topic-arrow" aria-hidden="true">→</span></button>`;}).join('')}</div></section>`;
+    $('#main').innerHTML=`<section class="welcome study-hero"><span class="eyebrow">YOUR STUDY SPACE</span><h2>Think it through.<br>Build your confidence.</h2><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practising':'Start practising'} <span aria-hidden="true">→</span></button><button id="welcome-exam">Launch Exam Mode ⏱️</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">0${index+1}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span><span class="topic-arrow" aria-hidden="true">→</span></button>`;}).join('')}</div></section>`;
     $('#welcome-start').onclick=()=>$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
     $$('[data-topic]').forEach(el=>el.onclick=()=>{
@@ -270,18 +270,18 @@ function renderPractice(){
             ${session.order.map((id,idx)=>{
               const o=q.options.find(o=>o.id===id);
               const isChecked=(attempt?attempt.optionId:d?.selected)===id;
-              return `<label class="option ${attempt?(id===q.correctOptionId?'correct-option':'wrong-option'):''}">
+              return `<label class="option ${attempt&&isChecked?(id===q.correctOptionId?'correct-option':'wrong-option'):''}">
                 <input type="radio" name="answer" value="${h(id)}" ${isChecked?'checked':''}>
                 <span><strong>${h(shownLabel(session.order,id))}.</strong> ${h(optionText(o))}</span>
-                ${attempt?`<small class="answer-result">${id===q.correctOptionId?'Correct':'Incorrect'}</small>`:''}
+                ${attempt&&isChecked?`<small class="answer-result">${id===q.correctOptionId?'Correct':'Incorrect'}</small>`:''}
               </label>`;
             }).join('')}
           </fieldset>
           <p id="answer-error" class="danger" role="alert"></p>
           <div class="action-bar">
-            <span class="action-hint">${!attempt?'Select an answer, then press Enter or click Check.':'Press Enter to advance to the next question.'}</span>
+            <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
             <div class="action-buttons">
-              ${!attempt?`<button type="button" id="unknown" class="quiet">I don’t know / Skip</button>`:''}
+              ${!attempt?`<button type="button" id="unknown" class="quiet">Skip</button>`:''}
               <button class="primary" type="submit" id="btn-action" ${!attempt&&!d?.selected?'disabled':''}>
                 ${!attempt?'Check answer':(session.index+1<session.queue.length?'Next question →':'See results')}
               </button>
@@ -289,7 +289,7 @@ function renderPractice(){
           </div>
         </form>
       </article>
-      <aside id="feedback" class="explanation-panel" aria-label="Question explanation">${attempt?feedback(q,attempt):'<h3>Explanation</h3><p class="muted">Check your answer to see the worked solution and the reasoning behind each option.</p>'}</aside>
+      <aside id="feedback" class="explanation-panel" aria-label="Question explanation">${attempt?feedback(q,attempt):'<h3>Explanation</h3><p class="muted">Not checked</p>'}</aside>
       <details id="notebook" class="notes-panel optional-notes" ${d?.notes?'open':''}>
         <summary>Calculations & notes <span class="muted">Optional</span></summary>
         ${notes(q)}
@@ -308,7 +308,7 @@ function renderPractice(){
     e.preventDefault();
     if(!attempt){
       const selected=document.querySelector('input[name=answer]:checked');
-      if(!selected){$('#answer-error').textContent='Please choose an answer or use “I don’t know”.';return;}
+      if(!selected){$('#answer-error').textContent='Choose an answer or Skip.';return;}
       submit(q,selected.value);
     }else{
       advanceQuestion();
@@ -316,6 +316,7 @@ function renderPractice(){
   };
 
   $('#unknown')?.addEventListener('click',()=>submit(q,null));
+  $('#previous-question').onclick=()=>{if(session.index>0)goToQuestion(session.index-1);};
   $('#end-session').onclick=showResults;
   bindFeedback(q,attempt);
 }
@@ -351,15 +352,26 @@ function bindFeedback(q,attempt){
   if(!attempt)return;
   $('#followup')?.addEventListener('click',e=>{
     const id=e.currentTarget.dataset.question;const s=state.session;
-    s.queue=[...s.queue.slice(0,s.index+1),id,...s.queue.slice(s.index+1).filter(x=>x!==id)];
-    s.index++;s.attemptId=null;s.order=shuffle(question(id).options.map(o=>o.id));save();render();$('#main').focus();
+    const existing=s.queue.indexOf(id);
+    if(existing<0)s.queue.splice(s.index+1,0,id);
+    goToQuestion(existing<0?s.index+1:existing);
   });
 }
 
 function advanceQuestion(){
   const s=state.session;
   if(s.index+1>=s.queue.length){showResults();return;}
-  s.index++;s.attemptId=null;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));
+  goToQuestion(s.index+1);
+}
+
+function goToQuestion(index){
+  const s=state.session;
+  s.questionOrders=s.questionOrders||{};
+  s.questionOrders[s.queue[s.index]]=[...s.order];
+  s.index=index;
+  const id=s.queue[index];
+  s.attemptId=state.attempts.find(a=>a.questionId===id&&s.attemptIds.includes(a.id))?.id||null;
+  s.order=s.questionOrders[id]||shuffle(question(id).options.map(o=>o.id));
   save();render();$('#main').focus();
 }
 
@@ -424,14 +436,6 @@ function renderExamOverview(){
       <span class="eyebrow">CHOSEN EXAM CONFIGURATION</span>
       <h2>${h(config.title)}</h2>
       <p class="exam-lead">${h(config.description)}</p>
-      
-      <div class="exam-start-guidance">
-        <span class="guidance-icon" aria-hidden="true">👈</span>
-        <div>
-          <strong>Ready to start?</strong>
-          <p>Review the details below. When you are ready, click <strong>Start Exam Mode ⏱️</strong> in the left sidebar to begin. Your timer will start counting down immediately upon clicking.</p>
-        </div>
-      </div>
     </section>
 
     <div class="study-stats">
@@ -456,30 +460,7 @@ function renderExamOverview(){
       </div>
     </section>
 
-    <section class="exam-rules-section">
-      <div class="section-heading">
-        <h2>Exam Conditions & Mechanics</h2>
-        <p class="muted">How your exam sitting is graded and conducted.</p>
-      </div>
-      <div class="rules-grid">
-        <div class="rule-card">
-          <strong>Single Choice Questions</strong>
-          <p class="muted">Each exercise has only 1 correct answer. Incorrect answers receive 0 marks with no negative deductions.</p>
-        </div>
-        <div class="rule-card">
-          <strong>Exercise Matrix & Flagging</strong>
-          <p class="muted">Jump freely between exercises and flag questions to revisit before final submission.</p>
-        </div>
-        <div class="rule-card">
-          <strong>Timer Controls & Cancellation</strong>
-          <p class="muted">Pause or reset the timer at any time. You can also cancel the exam sitting to discard progress without logging attempts.</p>
-        </div>
-        <div class="rule-card">
-          <strong>Built-in Scratchpad Notebook</strong>
-          <p class="muted">Open the optional notebook below a question for calculations. Notes are saved with your exam attempt.</p>
-        </div>
-      </div>
-    </section>
+    <p class="muted">One correct answer per question. No deductions for incorrect answers.</p>
   `;
 }
 
@@ -766,7 +747,7 @@ function showExamResults(){
             <div class="prompt">${format(q.prompt)}</div>
             <p><strong>Your answer:</strong> ${chosenOpt?h(optionText(chosenOpt)):'Unanswered'}</p>
             <p><strong>Correct answer:</strong> ${h(optionText(correctOpt))}</p>
-            <div class="options" aria-label="Reviewed answer options">${q.options.map(o=>`<div class="option ${o.id===q.correctOptionId?'correct-option':'wrong-option'}"><span>${h(optionText(o))}${o.id===a.optionId?' (your answer)':''}</span><small class="answer-result">${o.id===q.correctOptionId?'Correct':'Incorrect'}</small></div>`).join('')}</div>
+            <div class="options" aria-label="Reviewed answer options">${q.options.map(o=>`<div class="option ${o.id===a.optionId?(o.id===q.correctOptionId?'correct-option':'wrong-option'):''}"><span>${h(optionText(o))}${o.id===a.optionId?' (your answer)':''}</span>${o.id===a.optionId?`<small class="answer-result">${o.id===q.correctOptionId?'Correct':'Incorrect'}</small>`:''}</div>`).join('')}</div>
             <p>${h(q.explanation)}</p>
             ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
           </details>
@@ -912,6 +893,7 @@ async function init(){
     $('#length-slider').oninput=e=>{
       const val=e.target.value;
       $('#slider-badge').textContent=`${val} questions`;
+      e.target.setAttribute('aria-valuetext',`${val} questions`);
       $('#length').value=val;
       updateAvailable();
     };

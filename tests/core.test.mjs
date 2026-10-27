@@ -50,3 +50,11 @@ for(const mutate of [s=>s.examFlags.missing=true,s=>s.examFlags[q.id]='true',s=>
  const bad=structuredClone(exam);mutate(bad.session);assert.throws(()=>validateBackup(bad,bank));
 }
 console.log('PASS: exam state round trip and invalid flag/timer/scope rejection.');
+
+const navigation=structuredClone(restored);
+navigation.session.questionOrders={[q.id]:q.options.map(o=>o.id)};
+assert.deepEqual(validateBackup(navigation,bank),navigation,'Practice answer order survives navigation and backups');
+for(const orders of [null,[],{missing:['a']},{[q.id]:['a','a','b','c']},{[q.id]:['missing']},{[q.id]:'abcd'}]){
+ const bad=structuredClone(navigation);bad.session.questionOrders=orders;assert.throws(()=>validateBackup(bad,bank));
+}
+console.log('PASS: practice navigation order round trip and invalid cached-order rejection.');

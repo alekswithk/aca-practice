@@ -2,6 +2,8 @@
 
 ## Workspace update, 27 October 2026
 
+Practice navigation checks now cover Previous/Next across submitted and unsubmitted questions, preservation of selections, drafts and option order after reload, and avoiding duplicate attempts or repeated follow-up questions. Core backup checks validate the saved option-order cache and reject malformed entries. The browser suite also checks Skip, selected-only answer highlighting in practice and exam review, removal of card instructions and slider tick labels, and a single question-count display with a step of five.
+
 The core tests, content validator, filter regression, content-refresh browser regression and new workspace browser regression passed in Chromium. The content bank still contains 254 records, with 236 scored and 18 excluded. The validator recomputed 106 numerical results. Three source-excerpt comparisons were skipped because the original files are outside this repository.
 
 `node tests/workspace.test.mjs` checks side-by-side explanations on desktop, optional notes below the study panels, green/red answer states, draft restoration and immutable submitted notes. Typing in notes does not trigger answer shortcuts. It also checks the circular theme change, reduced-motion and unsupported-browser fallbacks, exam navigation and flag markers, restored timers and answers, export of exam flags/notes, and final submission. Practice and exam layouts fit at 375, 768, 1024 and 1440 pixels; enlarged text also fits. No page errors were reported.
