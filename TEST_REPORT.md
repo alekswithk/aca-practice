@@ -1,5 +1,15 @@
 # Implementation checks
 
+## Workspace update, 27 October 2026
+
+The core tests, content validator, filter regression, content-refresh browser regression and new workspace browser regression passed in Chromium. The content bank still contains 254 records, with 236 scored and 18 excluded. The validator recomputed 106 numerical results. Three source-excerpt comparisons were skipped because the original files are outside this repository.
+
+`node tests/workspace.test.mjs` checks side-by-side explanations on desktop, optional notes below the study panels, green/red answer states, draft restoration and immutable submitted notes. Typing in notes does not trigger answer shortcuts. It also checks the circular theme change, reduced-motion and unsupported-browser fallbacks, exam navigation and flag markers, restored timers and answers, export of exam flags/notes, and final submission. Practice and exam layouts fit at 375, 768, 1024 and 1440 pixels; enlarged text also fits. No page errors were reported.
+
+Desktop and phone screenshots were inspected. The original `tests/browser.test.mjs` predates the current interface and remains a legacy suite with stale selectors and layout assumptions; the current workspace suite covers the changed interactions. Safari, Firefox and physical phones were not tested.
+
+## Earlier checks
+
 Updated 25 October 2026.
 
 ## Current content refresh

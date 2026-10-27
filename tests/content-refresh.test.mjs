@@ -10,7 +10,7 @@ try{playwright=require(process.env.PLAYWRIGHT_MODULE||'playwright');}catch{playw
 const bank=JSON.parse(readFileSync(new URL('../content/questions.json',import.meta.url)));
 const base=process.env.ACA_TEST_URL||'http://127.0.0.1:8011';
 const output=process.env.ACA_TEST_OUTPUT||join(tmpdir(),'aca-content-refresh');mkdirSync(output,{recursive:true});
-const browser=await playwright.chromium.launch({headless:true});
+const browser=await playwright.chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH});
 try{
   const page=await browser.newPage({viewport:{width:1440,height:1000}});
   const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -60,6 +60,7 @@ try{
   await table.evaluate(el=>{el.scrollLeft=el.scrollWidth;});
   assert.ok(await table.evaluate(el=>el.scrollLeft>0));
   await page.screenshot({path:join(output,'eva-mobile.png'),fullPage:true});
+  await page.locator('#notebook > summary').click();
   await page.locator('textarea[data-notes]').fill('NOPAT less the capital charge.');
   await page.locator('input[name=answer][value="a"]').check();
   await page.locator('#answer-form button[type=submit]').click();

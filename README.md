@@ -15,6 +15,12 @@ Open **http://127.0.0.1:8011**. Keep the terminal running; press Ctrl+C to stop 
 
 Use the same browser, address and port each time. `localhost` and `127.0.0.1` have separate browser storage, as do different ports. Private browsing may discard saved data when the browser closes.
 
+## What changed on 27 October 2026
+
+Practice now places the worked explanation beside the question on wide screens. Optional calculations and notes sit below both panels and stay collapsed until opened or a draft exists. After checking, correct answers turn green and other options turn red. Exams keep answers hidden until submission, use Next and Finish buttons, and show a yellow flag beside questions marked for review. Flags, answers, notes and the countdown restore after reloading.
+
+The interface uses neutral light and dark surfaces from the Ledger design preview. The existing theme switch reveals the new theme in a circle, inspired by [Lightswind Toggle Theme](https://lightswind.com/components/toggle-theme). Primary buttons use a short [ripple](https://lightswind.com/components/ripple-button). Both effects use browser APIs and CSS, with no new dependencies. Reduced motion disables them, and browsers without View Transitions switch themes immediately. Cards have no hover background animation.
+
 ## What changed on 25 October 2026
 
 Added 30 questions from the local exam banks: 14 Capital Budgeting and 16 Cost and Performance Management. Both topics are available in practice, focus filters, topic exams, controlling exams and full exams. Seven exercises include data tables for cash-flow timing or profit-center figures. Tables align numeric columns, scroll within the question on narrow screens and remain visible in learning history. The source excerpts and answer options are retained. All 224 earlier question records and IDs are unchanged.
@@ -27,12 +33,12 @@ Added all 51 Management Accounting questions. 46 are scored; five need further s
 
 The interface follows [apple-design](https://github.com/emilkowalski/skills/blob/main/skills/apple-design/SKILL.md) and [emil-design-eng](https://github.com/emilkowalski/skills/blob/main/skills/emil-design-eng/SKILL.md), reviewed at repository commit `e8a175d` on 9 October 2026.
 
-System typography, quiet surfaces and floating study navigation keep the question and notebook prominent. Press feedback starts on pointer-down; the action commits on release. Questions and keyboard actions update immediately. Feedback and dialogs use short, interruptible CSS transitions, with no delay before the next action. Hover styling follows pointer capabilities, and phone inputs use at least 16px text. Reduced-motion, reduced-transparency and increased-contrast preferences are supported. Native controls and CSS keep the app independent of UI libraries.
+System typography, quiet surfaces and floating study navigation keep the question and explanation prominent. Press feedback starts on pointer-down; the action commits on release. Questions and keyboard actions update immediately. Phone inputs use at least 16px text. Reduced-motion, reduced-transparency and increased-contrast preferences are supported. Native controls and CSS keep the app independent of UI libraries.
 
 ## Practice
 
 1. Choose mixed practice, a topic, or review of questions whose latest attempt was incorrect or "I don't know". Filters include topic, focus, estimated difficulty and question origin.
-2. Write in **Calculations / reasoning / notes**. Drafts and selected answers save as you work. Check the visible save status.
+2. Open **Calculations & notes** below the question if you want to record your working. Drafts and selected answers save as you work. Check the visible save status.
 3. Submit an answer or choose **I don't know**. Feedback explains the rule, calculation and distractors. After an error, a suggested follow-up uses a different scenario.
 4. Edit your draft after feedback if useful. The notes saved with the original attempt stay unchanged.
 5. Open **Learning history** for topic statistics, misconception tags, saved notes, past snapshots and retries. Each retry adds an attempt.
@@ -71,7 +77,7 @@ The app uses relative paths and ordinary HTML/CSS/JavaScript/JSON. The entry poi
 - `content/validate_bank.py`: structure and independent numerical checks. Original-excerpt comparisons also run when the parent course-source files are present; a standalone clone reports those comparisons as skipped.
 - `core.mjs`: grading, filtering, follow-ups, statistics and backup validation.
 - `app.js`, `index.html`, `styles.css`: interface and browser persistence.
-- `tests/core.test.mjs`, `tests/browser.test.mjs`: runnable regression checks.
+- `tests/core.test.mjs`, `tests/workspace.test.mjs`: grading, backups and current workspace regression checks.
 
 From this folder:
 
@@ -85,6 +91,7 @@ The browser check requires Playwright and Chromium for development only. It uses
 ```sh
 node tests/content-refresh.test.mjs
 node tests/filter-regression.test.mjs
+node tests/workspace.test.mjs
 ```
 
-`ACA_TEST_URL` can point to another server. `ACA_TEST_OUTPUT` changes the screenshot folder, which defaults to `aca-practice-check` in the system temporary directory. See [TEST_REPORT.md](TEST_REPORT.md) for the checks performed and the older browser suite’s stale interface assertions.
+`ACA_TEST_URL` can point to another server. `ACA_TEST_OUTPUT` changes the screenshot folder. `PLAYWRIGHT_EXECUTABLE_PATH` selects an existing Chromium executable if it is installed separately from Playwright. See [TEST_REPORT.md](TEST_REPORT.md) for the checks performed and the older browser suite's stale interface assertions.

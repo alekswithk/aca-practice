@@ -16,6 +16,7 @@ let bank,state,storageBlocked=false,unreadable=null,pendingImport=null,view='pra
 let appMode='practice'; // 'practice' or 'exam'
 let examTimerInterval=null;
 let examTimerPaused=false;
+let themeChanging=false;
 
 const now=()=>new Date().toISOString();
 const question=id=>bank.questions.find(q=>q.id===id);
@@ -84,10 +85,29 @@ function initTheme(){
   if(isDark)root.classList.add('dark');else root.classList.remove('dark');
   $('#theme-toggle').setAttribute('aria-checked',String(isDark));
 }
-function toggleTheme(){
-  const isDark=root.classList.toggle('dark');
-  localStorage.setItem('aca_theme',isDark?'dark':'light');
-  $('#theme-toggle').setAttribute('aria-checked',String(isDark));
+async function toggleTheme(){
+  if(themeChanging)return;
+  const update=()=>{
+    const isDark=root.classList.toggle('dark');
+    try{localStorage.setItem('aca_theme',isDark?'dark':'light');}catch{notify('Theme changed for this visit. Browser storage is unavailable.');}
+    $('#theme-toggle').setAttribute('aria-checked',String(isDark));
+  };
+  if(!document.startViewTransition||matchMedia('(prefers-reduced-motion: reduce)').matches){update();return;}
+  const rect=$('#theme-toggle').getBoundingClientRect();
+  const x=rect.left+rect.width/2,y=rect.top+rect.height/2;
+  const radius=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
+  themeChanging=true;root.classList.add('theme-changing');
+  const transition=document.startViewTransition(update);
+  try{
+    await transition.ready;
+    await root.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${radius}px at ${x}px ${y}px)`]},{duration:650,easing:'cubic-bezier(.22,1,.36,1)',pseudoElement:'::view-transition-new(root)'}).finished;
+  }catch{
+    // A skipped transition still applies its update callback.
+    await transition.updateCallbackDone.catch(()=>{});
+  }finally{
+    await transition.finished.catch(()=>{});
+    root.classList.remove('theme-changing');themeChanging=false;
+  }
 }
 
 function notify(message){
@@ -250,9 +270,10 @@ function renderPractice(){
             ${session.order.map((id,idx)=>{
               const o=q.options.find(o=>o.id===id);
               const isChecked=(attempt?attempt.optionId:d?.selected)===id;
-              return `<label class="option ${attempt&&id===q.correctOptionId?'correct-option':''} ${attempt?.outcome==='incorrect'&&id===attempt.optionId?'wrong-option':''}">
+              return `<label class="option ${attempt?(id===q.correctOptionId?'correct-option':'wrong-option'):''}">
                 <input type="radio" name="answer" value="${h(id)}" ${isChecked?'checked':''}>
                 <span><strong>${h(shownLabel(session.order,id))}.</strong> ${h(optionText(o))}</span>
+                ${attempt?`<small class="answer-result">${id===q.correctOptionId?'Correct':'Incorrect'}</small>`:''}
               </label>`;
             }).join('')}
           </fieldset>
@@ -267,12 +288,13 @@ function renderPractice(){
             </div>
           </div>
         </form>
-        <div id="feedback">${attempt?feedback(q,attempt):''}</div>
       </article>
-      <aside id="notebook" class="notes-panel" aria-label="Question notebook">
+      <aside id="feedback" class="explanation-panel" aria-label="Question explanation">${attempt?feedback(q,attempt):'<h3>Explanation</h3><p class="muted">Check your answer to see the worked solution and the reasoning behind each option.</p>'}</aside>
+      <details id="notebook" class="notes-panel optional-notes" ${d?.notes?'open':''}>
+        <summary>Calculations & notes <span class="muted">Optional</span></summary>
         ${notes(q)}
         ${attempt?`<details><summary>Notes saved with this attempt</summary><div class="snapshot">${h(attempt.notesSnapshot||'No notes at submission.')}</div><p class="muted">${h(new Date(attempt.timestamp).toLocaleString())}</p></details>`:''}
-      </aside>
+      </details>
     </div>
   `;
 
@@ -454,7 +476,7 @@ function renderExamOverview(){
         </div>
         <div class="rule-card">
           <strong>Built-in Scratchpad Notebook</strong>
-          <p class="muted">Use the side notebook for calculations; notes are saved with your exam attempt for later review.</p>
+          <p class="muted">Open the optional notebook below a question for calculations. Notes are saved with your exam attempt.</p>
         </div>
       </div>
     </section>
@@ -601,7 +623,7 @@ function renderExamActive(){
         <span>Exercise Matrix (${s.queue.length} exercises)</span>
         <div class="palette-legend">
           <span><span class="legend-dot" style="background:var(--green)"></span> Answered</span>
-          <span><span class="legend-dot" style="background:#fde047"></span> Flagged</span>
+          <span><span class="review-flag" aria-hidden="true">⚑</span> Flagged</span>
           <span><span class="legend-dot" style="background:var(--line)"></span> Unanswered</span>
         </div>
       </div>
@@ -610,18 +632,18 @@ function renderExamActive(){
           const ans=state.drafts[id]?.selected;
           const flg=s.examFlags?.[id];
           const cur=idx===s.index;
-          return `<button type="button" class="palette-btn ${ans?'answered':''} ${flg?'flagged':''} ${cur?'current':''}" data-jump="${idx}">${idx+1}</button>`;
+          return `<button type="button" class="palette-btn ${ans?'answered':''} ${cur?'current':''}" data-jump="${idx}" aria-label="Question ${idx+1}${flg?', flagged for review':''}${ans?', answered':''}" ${cur?'aria-current="step"':''}>${idx+1}${flg?'<span class="review-flag" aria-hidden="true">⚑</span>':''}</button>`;
         }).join('')}
       </div>
     </div>
-    <div class="question-layout">
+    <div class="question-layout exam-question-layout">
       <article class="question">
         <div class="exam-exercise-head">
           <div class="exam-exercise-title">
             <span class="exam-badge">Exercise ${s.index+1}</span>
             <span class="exam-marks">${q.marks?`(${q.marks} Marks)`:'(1–2 Marks)'}</span>
           </div>
-          <button type="button" id="btn-flag" class="flag-btn ${s.examFlags?.[q.id]?'flagged':''}">
+          <button type="button" id="btn-flag" class="flag-btn ${s.examFlags?.[q.id]?'flagged':''}" aria-pressed="${Boolean(s.examFlags?.[q.id])}">
             ${s.examFlags?.[q.id]?'Flagged for review ⚑':'Flag for review ⚑'}
           </button>
         </div>
@@ -645,13 +667,14 @@ function renderExamActive(){
           </div>
           <div class="exam-nav-right">
             <button type="button" id="btn-exam-finish" class="danger">End & Submit Exam</button>
-            <button type="button" id="btn-exam-next" class="primary">${s.index+1<s.queue.length?'Next exercise →':'Finish exam'}</button>
+            <button type="button" id="btn-exam-next" class="primary">${s.index+1<s.queue.length?'Next':'Finish'}</button>
           </div>
         </div>
       </article>
-      <aside id="notebook" class="notes-panel" aria-label="Exercise scratchpad">
+      <details id="notebook" class="notes-panel optional-notes" ${d?.notes?'open':''}>
+        <summary>Calculations & notes <span class="muted">Optional</span></summary>
         ${notes(q)}
-      </aside>
+      </details>
     </div>
   `;
 
@@ -738,11 +761,12 @@ function showExamResults(){
         const chosenOpt=q.options.find(o=>o.id===a.optionId);
         return `
           <details class="history-item">
-            <summary><strong>${label[a.outcome]}</strong> — ${h(q.topic)} · ${h(q.prompt.slice(0,90))}…</summary>
+            <summary><strong class="outcome-${h(a.outcome)}">${label[a.outcome]}</strong> — ${h(q.topic)} · ${h(q.prompt.slice(0,90))}…</summary>
             ${q.scenario?`<div class="scenario">${format(q.scenario)}</div>`:''}
             <div class="prompt">${format(q.prompt)}</div>
             <p><strong>Your answer:</strong> ${chosenOpt?h(optionText(chosenOpt)):'Unanswered'}</p>
             <p><strong>Correct answer:</strong> ${h(optionText(correctOpt))}</p>
+            <div class="options" aria-label="Reviewed answer options">${q.options.map(o=>`<div class="option ${o.id===q.correctOptionId?'correct-option':'wrong-option'}"><span>${h(optionText(o))}${o.id===a.optionId?' (your answer)':''}</span><small class="answer-result">${o.id===q.correctOptionId?'Correct':'Incorrect'}</small></div>`).join('')}</div>
             <p>${h(q.explanation)}</p>
             ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
           </details>
@@ -838,6 +862,7 @@ async function init(){
   try{
     initTheme();
     $('#theme-toggle').onclick=toggleTheme;
+    if(matchMedia('(max-width: 760px)').matches)$('#session-settings').open=false;
 
     const response=await fetch('./content/questions.json');
     if(!response.ok)throw new Error('Question data could not be loaded.');
@@ -985,6 +1010,7 @@ async function init(){
       }
     };
 
+    if(state.session?.mode.startsWith('exam')){setAppMode('exam');startExamTimer();}
     render();
     if(!storageBlocked)save();
   }catch(error){
@@ -993,7 +1019,17 @@ async function init(){
 }
 
 // Global keyboard shortcuts (Enter to check/advance, 1-5 / A-E to select)
+document.addEventListener('pointerdown',e=>{
+  const button=e.target.closest('button.primary:not(:disabled)');
+  if(!button||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const rect=button.getBoundingClientRect(),size=Math.max(rect.width,rect.height)*2;
+  const ripple=document.createElement('span');ripple.className='button-ripple';ripple.setAttribute('aria-hidden','true');
+  Object.assign(ripple.style,{width:`${size}px`,height:`${size}px`,left:`${e.clientX-rect.left}px`,top:`${e.clientY-rect.top}px`});
+  button.append(ripple);setTimeout(()=>ripple.remove(),550);
+},{passive:true});
+
 document.addEventListener('keydown',e=>{
+  if(e.defaultPrevented||e.target.closest('input,textarea,select,button,summary,[contenteditable="true"]'))return;
   if(view!=='practice'||!state.session)return;
   if(e.key==='Enter'){
     const btn=$('#btn-action');
