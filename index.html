@@ -12,15 +12,15 @@
 <body>
 <a class="skip" href="#main">Skip to study area</a>
 <header class="masthead">
-  <div class="identity"><span class="mark" aria-hidden="true">ACA<span class="mark-dot"></span></span><div><h1>Practice & Exam Mode</h1><p>Accounting · Controlling · Auditing</p></div></div>
+  <div class="identity"><span class="mark" aria-hidden="true">aca /</span><div><h1>Study workspace</h1><p>Accounting · Controlling · Auditing</p></div></div>
  <div class="masthead-controls">
   <nav aria-label="Study views">
    <button data-view="practice" id="nav-study" aria-pressed="true">Study & Exams</button>
    <button data-view="history" id="nav-history" aria-pressed="false">Learning history</button>
   </nav>
   <button id="theme-toggle" class="theme-switch-track" type="button" role="switch" aria-checked="false" aria-label="Toggle dark mode" title="Toggle dark mode">
-   <span class="theme-icon sun" aria-hidden="true">☀️</span>
-   <span class="theme-icon moon" aria-hidden="true">🌙</span>
+   <span class="theme-icon sun" aria-hidden="true">☀</span>
+   <span class="theme-icon moon" aria-hidden="true">☾</span>
    <span class="theme-switch-thumb" aria-hidden="true"></span>
   </button>
  </div>
@@ -28,6 +28,8 @@
 <div id="notice" class="notice" role="status" hidden></div>
 <div class="layout">
  <aside class="sidebar" aria-label="Practice setup">
+  <details id="session-settings" open>
+   <summary>Session setup</summary>
   <div class="mode-selector-wrap">
    <span class="eyebrow">MODE SELECTION</span>
    <div class="mode-pill-group" role="tablist">
@@ -127,6 +129,7 @@
     <button class="primary" type="button" id="start-exam">Start Exam Mode ⏱️</button>
    </form>
   </div>
+  </details>
   <details class="storage"><summary>Settings & backups</summary><p>Notes and attempts are saved in this browser. Export a backup to preserve them or move to another device.</p><p id="global-save" role="status">Saved in this browser</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
   <span id="review-count" class="visually-hidden"></span>
  </aside>

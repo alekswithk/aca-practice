@@ -42,3 +42,11 @@ assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).len
 assert.equal(questions.filter(q=>q.topic==='Management Accounting'&&q.status==='review').length,5);
 assert.equal(questions.filter(q=>q.topic==='Management Accounting').length,51);
 console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 46 scored and 5 excluded.');
+
+const exam=emptyState(bank.bankVersion);
+exam.session={queue:[q.id],index:0,order:q.options.map(o=>o.id),mode:'exam-topic',attemptId:null,attemptIds:[],examFlags:{[q.id]:true},examInitialDuration:2700,examTimeRemaining:1850,examTopic:q.topic};
+assert.deepEqual(validateBackup(structuredClone(exam),bank),exam,'Exam flags, countdown and scope survive a backup/reload');
+for(const mutate of [s=>s.examFlags.missing=true,s=>s.examFlags[q.id]='true',s=>s.examTimeRemaining=-1,s=>s.examTimeRemaining=2701,s=>s.examInitialDuration=0,s=>s.examTopic='Missing topic']){
+ const bad=structuredClone(exam);mutate(bad.session);assert.throws(()=>validateBackup(bad,bank));
+}
+console.log('PASS: exam state round trip and invalid flag/timer/scope rejection.');

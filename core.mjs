@@ -63,6 +63,14 @@ export function validateBackup(value,bank){
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();
     session={queue:[...s.queue],index:s.index,order:[...s.order],mode:s.mode,attemptId:s.attemptId,attemptIds:[...s.attemptIds]};
+    if(s.mode.startsWith('exam')){
+      const flags=s.examFlags??{};
+      if(!object(flags)||Object.entries(flags).some(([id,flag])=>!s.queue.includes(id)||typeof flag!=='boolean'))fail();
+      const initial=s.examInitialDuration??(s.mode==='exam-full'?5400:2700),remaining=s.examTimeRemaining??initial;
+      if(!Number.isInteger(initial)||initial<=0||!Number.isInteger(remaining)||remaining<0||remaining>initial)fail();
+      if(s.examTopic!=null&&(!str(s.examTopic)||!bank.questions.some(q=>q.topic===s.examTopic)))fail();
+      Object.assign(session,{examFlags:{...flags},examInitialDuration:initial,examTimeRemaining:remaining,examTopic:s.examTopic??null});
+    }
   }
   if(!['practice','history','review'].includes(value.view))fail();
   return {...emptyState(bank.bankVersion),drafts,attempts,preferences,session,view:value.view};

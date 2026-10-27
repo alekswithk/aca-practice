@@ -11,7 +11,7 @@ try{playwright=require(process.env.PLAYWRIGHT_MODULE||'playwright');}catch{playw
 const bank=JSON.parse(readFileSync(new URL('../content/questions.json',import.meta.url)));
 const base=process.env.ACA_TEST_URL||'http://127.0.0.1:8011';
 const count=topic=>bank.questions.filter(q=>q.status==='validated'&&(!topic||q.topic===topic)).length;
-const browser=await playwright.chromium.launch({headless:true});
+const browser=await playwright.chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH});
 
 try{
   const page=await browser.newPage();
