@@ -17,7 +17,9 @@ Use the same browser, address and port each time. `localhost` and `127.0.0.1` ha
 
 ## What changed on 27 October 2026
 
-Practice now places the worked explanation beside the question on wide screens. Optional calculations and notes sit below both panels and stay collapsed until opened or a draft exists. After checking, correct answers turn green and other options turn red. Exams keep answers hidden until submission, use Next and Finish buttons, and show a yellow flag beside questions marked for review. Flags, answers, notes and the countdown restore after reloading.
+Practice places the worked explanation beside the question on wide screens. Optional calculations and notes sit below both panels. Previous returns to an earlier question with its answer, feedback, notes and option order intact. Returning to a submitted question does not add another attempt. After checking, only the submitted choice is highlighted: green when correct, red when incorrect. Skip leaves all choices neutral. The session-length slider has one question-count display and moves in steps of five.
+
+Exams keep answers hidden until submission, use Next and Finish buttons, and show a yellow flag beside questions marked for review. Flags, answers, notes and the countdown restore after reloading. Card instructions have been removed; save status and save-failure warnings remain.
 
 The interface uses neutral light and dark surfaces from the Ledger design preview. The existing theme switch reveals the new theme in a circle, inspired by [Lightswind Toggle Theme](https://lightswind.com/components/toggle-theme). Primary buttons use a short [ripple](https://lightswind.com/components/ripple-button). Both effects use browser APIs and CSS, with no new dependencies. Reduced motion disables them, and browsers without View Transitions switch themes immediately. Cards have no hover background animation.
 
@@ -39,7 +41,7 @@ System typography, quiet surfaces and floating study navigation keep the questio
 
 1. Choose mixed practice, a topic, or review of questions whose latest attempt was incorrect or "I don't know". Filters include topic, focus, estimated difficulty and question origin.
 2. Open **Calculations & notes** below the question if you want to record your working. Drafts and selected answers save as you work. Check the visible save status.
-3. Submit an answer or choose **I don't know**. Feedback explains the rule, calculation and distractors. After an error, a suggested follow-up uses a different scenario.
+3. Check an answer or choose **Skip**. Feedback explains the rule, calculation and distractors. After an error, a suggested follow-up uses a different scenario.
 4. Edit your draft after feedback if useful. The notes saved with the original attempt stay unchanged.
 5. Open **Learning history** for topic statistics, misconception tags, saved notes, past snapshots and retries. Each retry adds an attempt.
 

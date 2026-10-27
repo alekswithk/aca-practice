@@ -64,10 +64,9 @@
     <div class="slider-field">
      <div class="slider-header">
       <label for="length-slider">Session length</label>
-      <span id="slider-badge" class="slider-badge">15 questions</span>
+      <output id="slider-badge" class="slider-badge" for="length-slider">15 questions</output>
      </div>
-     <input type="range" id="length-slider" min="5" max="50" step="5" value="15">
-     <div class="slider-ticks"><span>5 q</span><span>20 q</span><span>35 q</span><span>50 q</span></div>
+     <input type="range" id="length-slider" min="5" max="50" step="5" value="15" aria-valuetext="15 questions">
      <select id="length" class="visually-hidden"><option value="15">15</option></select>
     </div>
     <p id="available" class="muted" aria-live="polite"></p>
