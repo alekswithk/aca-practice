@@ -49,6 +49,8 @@ html.dark {
 
 * { box-sizing: border-box; }
 body { margin: 0; transition: background-color .2s ease, color .2s ease; }
+#account-panel p { overflow-wrap: anywhere; }
+#cloud-status { margin-top: 1rem; font-size: .875rem; color: var(--muted); }
 button, input, select, textarea { font: inherit; }
 button, select, .file-button, summary { cursor: pointer; }
 button, .file-button, summary { touch-action: manipulation; user-select: none; -webkit-tap-highlight-color: transparent; }
@@ -144,7 +146,7 @@ html.dark .theme-switch-thumb {
 .layout:has(.question-layout) { max-width: 1600px; grid-template-columns: minmax(0, 1fr); gap: 1rem; }
 .layout:has(.question-layout) .sidebar { display: flex; flex-wrap: wrap; gap: .5rem 2rem; padding: .4rem 1rem; margin-bottom: 0; }
 .layout:has(.question-layout) .sidebar > details[open] { flex-basis: 100%; }
-.layout:has(.question-layout) .storage { border: 0; padding: 0; margin: 0; }
+.layout:has(.question-layout) :is(.storage,.account) { border: 0; padding: 0; margin: 0; }
 html.dark .sidebar { background: var(--surface); }
 #session-settings > summary { font-size: .9rem; font-weight: 600; margin-bottom: 1rem; }
 
@@ -223,9 +225,10 @@ html.dark .exam-info-card { background: rgba(251, 191, 36, 0.1); border-color: r
 .exam-part-card .part-topics { display: block; font-size: .7rem; color: var(--green); font-weight: 600; margin-top: .2rem; }
 
 /* Storage & Settings */
-.storage { border-top: 1px solid var(--line); padding-top: .8rem; margin-top: 1.2rem; }
-.storage summary { font-size: .82rem; }
+.storage,.account { border-top: 1px solid var(--line); padding-top: .8rem; margin-top: 1.2rem; }
+.storage summary,.account summary { font-size: .82rem; }
 .storage p { font-size: .73rem; color: var(--muted); line-height: 1.65; }
+.account p { font-size: .875rem; color: var(--muted); line-height: 1.65; }
 .backup-actions { display: flex; flex-wrap: wrap; gap: .4rem; }
 .backup-actions button, .file-button { font-size: .73rem; padding: .6rem .65rem; }
 .file-button { display: inline-flex; align-items: center; }
@@ -430,6 +433,18 @@ footer { max-width: 1440px; margin: auto; padding: 1.5rem 2rem; border-top: 1px 
 dialog { border: 1px solid var(--line); border-radius: var(--radius); padding: 2rem; max-width: 520px; width: calc(100% - 2rem); color: var(--ink); background: var(--surface); box-shadow: 0 16px 80px rgba(0,0,0,0.3); }
 dialog::backdrop { background: rgba(0,0,0,0.5); backdrop-filter: blur(3px); }
 dialog .danger { background: var(--error); color: white; border-color: var(--error); }
+#account-announcement { max-width: 536px; border: 0; padding: 0; border-radius: 16px; max-height: calc(100dvh - 2rem); box-shadow: none; }
+#account-announcement::backdrop { background: rgba(18,22,27,.48); backdrop-filter: none; }
+.announcement-content { padding: clamp(24px,5vw,40px); }
+.announcement-logo { display: block; width: 84px; height: 28px; color: var(--green); margin-bottom: 28px; }
+#announcement-title { font-size: clamp(26px,4vw,32px); line-height: 1.12; letter-spacing: -.035em; margin: 0 0 18px; }
+#announcement-description { font-size: 16px; line-height: 1.6; margin: 0 0 24px; }
+.announcement-existing { padding: 16px; border-radius: 8px; background: var(--paper); font-size: 14px; line-height: 1.6; margin: 0 0 28px; }
+.announcement-actions { display: flex; align-items: center; gap: 12px; }
+.announcement-actions .primary { flex: 1; }
+#announcement-dismiss { border-color: transparent; background: transparent; }
+#announcement-status { font-size: 14px; margin: 18px 0 0; color: var(--error); }
+@media (max-width:420px) { .announcement-actions { flex-direction: column; align-items: stretch; gap: 4px; } }
 
 @media (hover:hover) and (pointer:fine) {
   button:not(:disabled):hover, .file-button:hover { background: var(--pale); border-color: var(--green); }

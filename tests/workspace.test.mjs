@@ -13,6 +13,7 @@ const output=process.env.ACA_TEST_OUTPUT||join(tmpdir(),'aca-workspace');mkdirSy
 const browser=await playwright.chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH});
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},colorScheme:'light',acceptDownloads:true});
+ await page.addInitScript(()=>localStorage.setItem('aca-account-announcement-v1','seen'));
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
  const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);

@@ -55,9 +55,17 @@ Accuracy means correct / (correct + incorrect). Unknown responses are separate. 
 
 **Import JSON** validates a backup before asking to merge it. Distinct attempts are retained, duplicate attempts are ignored, and the more recently saved draft wins per question. An existing local session is kept. Invalid files or conflicting attempt IDs leave current data untouched.
 
-**Reset study data** requires confirmation. Export first if you want to retain your work. Data is local to this browser and can also be cleared in browser settings. Use one study tab at a time; changes from another tab pause saving to avoid overwriting either copy. If saving fails, export before closing. Unreadable stored data is protected and has a recovery download.
+**Reset study data** requires confirmation and resets guest progress in this browser. It is disabled while signed in. Export first if you want to retain your work. Use one study tab at a time. If saving fails, export before closing. Unreadable stored data is protected and has a recovery download.
 
 The backup format accepts the question IDs in this bank. A backup from a different question collection needs migration before import.
+
+## Account saving
+
+Open **Account & sync** and choose **Continue with Google**. Answers, attempts, notes and progress save locally first, then sync to your account. **Sync now** retries a failed cloud save. Each account has a separate browser copy; signing out returns to guest progress.
+
+A login reminder appears once per browser when a signed-out visitor first opens this version. **Not now** or Escape dismisses it. Clearing browser storage allows it to appear again.
+
+Choose **Add this browser's guest progress** after signing in to bring earlier local work into your account. Existing guest data is preserved. See [Supabase setup](SUPABASE_SETUP.md) for the database SQL, Google login, deployment steps, checks and sync limitations.
 
 ## Publish with GitHub Pages
 
@@ -70,7 +78,7 @@ Repository: [alekswithk/aca-practice](https://github.com/alekswithk/aca-practice
 
 The app uses relative paths and ordinary HTML/CSS/JavaScript/JSON. The entry point and `.nojekyll` are at the repository root; no build step is required. Pages is enabled for `main` at the repository root. [GitHub's publishing instructions](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site) describe these settings.
 
-[GitHub Pages hosts static files](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages). It can share the tool and question bank across devices; notes and attempts remain in each device's browser. Automatic cross-device history sync needs an additional storage/authentication design in that later phase. For now, export/import transfers the learning data. Export locally before moving to the hosted address, then import there.
+[GitHub Pages hosts static files](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages). Signed-in progress syncs through Supabase once the [dashboard setup](SUPABASE_SETUP.md) is complete and these files are deployed. Guest notes and attempts stay in each device's browser. Export locally before moving to the hosted address, then import there.
 
 ## Files and checks
 

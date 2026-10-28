@@ -131,11 +131,30 @@
   </div>
   </details>
   <details class="storage"><summary>Settings & backups</summary><p>Notes and attempts are saved in this browser. Export a backup to preserve them or move to another device.</p><p id="global-save" role="status">Saved in this browser</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
+  <details class="account" id="account-panel"><summary>Account & sync</summary>
+   <p id="account-user">Use an account to save progress across devices.</p>
+   <button type="button" id="google-login" disabled>Continue with Google</button>
+   <div id="account-actions" hidden>
+    <div class="backup-actions"><button id="sync-now">Sync now</button><button id="sign-out">Sign out</button></div>
+    <button id="merge-guest" class="quiet" type="button">Add this browser's guest progress</button>
+   </div>
+   <p id="cloud-status" role="status">Connecting…</p>
+  </details>
   <span id="review-count" class="visually-hidden"></span>
  </aside>
  <main id="main" tabindex="-1"><p>Loading validated questions…</p></main>
 </div>
 <footer>Study ratings are estimates. Practice results describe these attempts and do not establish mastery.</footer>
+<dialog id="account-announcement" aria-labelledby="announcement-title" aria-describedby="announcement-description">
+ <div class="announcement-content">
+  <svg class="announcement-logo" viewBox="0 0 132 42" fill="none" aria-label="ACA Study" role="img"><path d="M4 37 20 5 36 37M10 25H30M83 10C79 6 74 4 68 4 57 4 49 11 49 21S57 38 68 38C74 38 79 36 83 32M96 37 112 5 128 37M102 25H122" stroke="currentColor" stroke-width="5" stroke-linecap="square" stroke-linejoin="miter"/></svg>
+  <h2 id="announcement-title">Keep your progress.</h2>
+  <p id="announcement-description">Sign in with Google to save your answers, notes and learning history across devices.</p>
+  <p class="announcement-existing">Already practised here? You can add this browser's progress to your account after signing in.</p>
+  <div class="announcement-actions"><button id="announcement-login" class="primary" type="button">Continue with Google</button><button id="announcement-dismiss" type="button" autofocus>Not now</button></div>
+  <p id="announcement-status" role="status" hidden></p>
+ </div>
+</dialog>
 <dialog id="reset-dialog"><form method="dialog"><h2>Reset all study data?</h2><p>This removes saved drafts, answer selections and every attempt from this browser. Export a backup first if you want to keep them.</p><div class="actions"><button value="cancel" autofocus>Cancel</button><button value="confirm" class="danger">Reset all data</button></div></form></dialog>
 <dialog id="import-dialog"><form method="dialog"><h2>Merge this backup?</h2><p id="import-summary"></p><p>All distinct attempts are kept. For each draft, the more recently saved version is used. Your current session is kept if one exists.</p><div class="actions"><button value="cancel" autofocus>Cancel</button><button value="confirm" class="primary">Merge backup</button></div></form></dialog>
 </body>

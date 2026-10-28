@@ -1,4 +1,6 @@
 import {STORAGE_KEY,emptyState,shuffle,makeAttempt,grade,available,followup,topicStats,latestAttempts,validateBackup,mergeBackups} from './core.mjs';
+import {createProgressSync,progressKey} from './cloud.mjs';
+import {supabaseConfig} from './supabase-config.mjs';
 
 const $=s=>document.querySelector(s);
 const $$=s=>document.querySelectorAll(s);
@@ -17,6 +19,7 @@ let appMode='practice'; // 'practice' or 'exam'
 let examTimerInterval=null;
 let examTimerPaused=false;
 let themeChanging=false;
+let activeUser=null,cloud=null,storageKey=STORAGE_KEY;
 
 const now=()=>new Date().toISOString();
 const question=id=>bank.questions.find(q=>q.id===id);
@@ -115,18 +118,146 @@ function notify(message){
   if(unreadable&&storageBlocked){const button=document.createElement('button');button.textContent='Download unreadable data';button.onclick=()=>download(unreadable,'aca-recovery.json');$('#notice').append(' ',button);}
 }
 
-function save(){
+function save(sync=true){
   try{
     if(storageBlocked)throw new Error('Existing data needs recovery.');
-    localStorage.setItem(STORAGE_KEY,JSON.stringify(state));
+    localStorage.setItem(storageKey,JSON.stringify(state));
     $('#global-save').textContent='Saved in this browser';$('#global-save').classList.remove('failed');
     $$('.save-status').forEach(el=>{el.textContent='Saved in this browser';el.classList.remove('failed');});
+    if(sync)cloud?.schedule();
     return true;
   }catch(error){
     $('#global-save').textContent='Not saved — export a backup';$('#global-save').classList.add('failed');
     $$('.save-status').forEach(el=>{el.textContent='Not saved — export a backup';el.classList.add('failed');});
     notify('Browser saving is unavailable, full or paused. Keep this page open and export JSON to preserve your current work.');
     return false;
+  }
+}
+
+function loadProgress(){
+  state=emptyState(bank.bankVersion);storageBlocked=false;unreadable=null;
+  try{
+    const raw=localStorage.getItem(storageKey);
+    if(raw)state=validateBackup(JSON.parse(raw),bank);
+    return Boolean(raw);
+  }catch{
+    try{unreadable=localStorage.getItem(storageKey);}catch{}
+    storageBlocked=true;notify('Saved browser data could not be read. Export a recovery copy before resetting.');
+  }
+}
+
+function restoreProgressView(){
+  stopExamTimer();view=state.view;
+  state.preferences.origin='';$('#origin').value='';
+  $('#topic').value=state.preferences.topic;
+  populateSubtopics(state.preferences.topic);
+  $('#subtopic').value=state.preferences.subtopic;
+  $('#difficulty').value=state.preferences.difficulty;
+  setAppMode(state.session?.mode.startsWith('exam')?'exam':'practice',false);
+  if(state.session?.mode.startsWith('exam')&&view==='practice')startExamTimer();
+  render();
+}
+
+function showAccountAnnouncement(){
+  const key='aca-account-announcement-v1';
+  try{if(localStorage.getItem(key)||sessionStorage.getItem(key))return;}catch{}
+  if(!activeUser)$('#account-announcement').showModal();
+  try{localStorage.setItem(key,'seen');}catch{try{sessionStorage.setItem(key,'seen');}catch{}}
+}
+
+async function initCloud(){
+  const status=message=>{$('#cloud-status').textContent=message;};
+  try{
+    const {createClient}=await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0/+esm');
+    const client=createClient(supabaseConfig.url,supabaseConfig.publishableKey);
+    cloud=createProgressSync({client,getState:()=>state,validate:value=>validateBackup(value,bank),onStatus:status,
+      applyState(next){
+        const changed=JSON.stringify(next)!==JSON.stringify(state);
+        state=next;
+        if(!save(false))throw new Error('Browser saving is unavailable. Export a backup first.');
+        if(changed){
+          const focused=document.activeElement,notesId=focused?.dataset.notes;
+          const selection=notesId?[focused.selectionStart,focused.selectionEnd]:null;
+          restoreProgressView();
+          if(notesId){const field=$$('textarea[data-notes]').find(el=>el.dataset.notes===notesId);field?.focus();if(field)field.setSelectionRange(...selection);}
+        }
+      },
+    });
+    let initialized=false;
+    const changeUser=user=>{
+      const sameUser=activeUser?.id===user?.id;
+      if(initialized&&sameUser)return;
+      initialized=true;cloud.setUser(null);
+      activeUser=user;storageKey=progressKey(STORAGE_KEY,user?.id);
+      let cached=true;
+      if(!sameUser){cached=loadProgress();restoreProgressView();}
+      $('#account-user').textContent=user?`Signed in as ${user.email}`:'Use an account to save progress across devices.';
+      $('#google-login').hidden=Boolean(user);$('#account-actions').hidden=!user;
+      $('#reset').disabled=Boolean(user);
+      $('#reset').title=user?'Sign out to reset guest data. Account history is retained.':'';
+      cloud.setUser(user?.id??null,!cached);
+      status(user?'Loading account progress…':'Guest progress is saved in this browser.');
+      if(!storageBlocked){save(false);if(user)void cloud.flush();}
+      else status('Cloud sync paused. Export the unreadable browser copy before continuing.');
+    };
+    // Defer work outside the auth callback to avoid holding the SDK's auth lock.
+    client.auth.onAuthStateChange((_event,session)=>{
+      if(activeUser?.id!==session?.user?.id)cloud.setUser(null);
+      setTimeout(()=>changeUser(session?.user??null),0);
+    });
+    const {data,error}=await client.auth.getSession();
+    if(error)throw error;
+    changeUser(data.session?.user??null);
+    $('#google-login').disabled=false;
+    const signIn=async()=>{
+      $('#google-login').disabled=true;status('Opening Google sign-in…');
+      $('#announcement-login').disabled=true;
+      $('#announcement-status').hidden=true;
+      try{
+        const {error}=await client.auth.signInWithOAuth({provider:'google',options:{redirectTo:new URL('./',location.href).href}});
+        if(error)throw error;
+      }catch(error){
+        const message=`Sign-in failed. ${error.message}`;status(message);
+        $('#announcement-status').textContent=message;$('#announcement-status').hidden=false;
+      }
+      finally{$('#google-login').disabled=false;$('#announcement-login').disabled=false;}
+    };
+    $('#google-login').onclick=signIn;
+    $('#announcement-login').onclick=signIn;
+    $('#announcement-dismiss').onclick=()=>$('#account-announcement').close();
+    $('#sync-now').onclick=()=>{
+      if(storageBlocked){status('Cloud sync paused. Export a recovery copy first.');return;}
+      void cloud.flush();
+    };
+    $('#sign-out').onclick=async()=>{
+      $('#sign-out').disabled=true;
+      try{
+        const saved=!storageBlocked&&await cloud.flush();
+        if(!saved&&!confirm('Some progress has not synced. A browser copy will be kept for this account. Sign out anyway?'))return;
+        const {error}=await client.auth.signOut({scope:'local'});
+        if(error)throw error;
+        changeUser(null);
+      }catch(error){status(`Sign-out failed. ${error.message}`);}
+      finally{$('#sign-out').disabled=false;}
+    };
+    $('#merge-guest').onclick=()=>{
+      try{
+        if(storageBlocked)throw new Error('Export a recovery copy first.');
+        const raw=localStorage.getItem(STORAGE_KEY);
+        if(!raw){status('There is no guest progress to add.');return;}
+        state=mergeBackups(state,validateBackup(JSON.parse(raw),bank));
+        save();restoreProgressView();
+      }catch(error){status(error.message);}
+    };
+    addEventListener('online',()=>{if(!storageBlocked)void cloud.flush();});
+    addEventListener('focus',()=>{if(!storageBlocked)void cloud.flush();});
+    document.addEventListener('visibilitychange',()=>{
+      if(document.visibilityState==='hidden'&&!storageBlocked){save();void cloud.flush();}
+    });
+    showAccountAnnouncement();
+  }catch(error){
+    status(`Account connection unavailable. ${error.message} Guest saving still works.`);
+    $('#google-login').disabled=true;
   }
 }
 
@@ -869,14 +1000,7 @@ async function init(){
     bank=await response.json();
     state=emptyState(bank.bankVersion);
 
-    try{
-      const raw=localStorage.getItem(STORAGE_KEY);
-      if(raw)state=validateBackup(JSON.parse(raw),bank);
-    }catch(error){
-      try{unreadable=localStorage.getItem(STORAGE_KEY);}catch{}
-      storageBlocked=true;
-      notify('Saved browser data could not be read.');
-    }
+    loadProgress();
 
     // The source filter is no longer shown in the interface. Older saved
     // preferences could leave it set to "generated", silently hiding every
@@ -1010,7 +1134,8 @@ async function init(){
     $('#reset').onclick=()=>{$('#reset-dialog').returnValue='cancel';$('#reset-dialog').showModal();};
     $('#reset-dialog').onclose=()=>{
       if($('#reset-dialog').returnValue==='confirm'){
-        try{localStorage.removeItem(STORAGE_KEY);}catch{notify('Browser storage could not be reset.');return;}
+        if(activeUser){notify('Sign out to reset guest data. Account history is retained.');return;}
+        try{localStorage.removeItem(storageKey);}catch{notify('Browser storage could not be reset.');return;}
         state=emptyState(bank.bankVersion);storageBlocked=false;unreadable=null;view='practice';
         save();render();notify('Study data has been reset in this browser.');
       }
@@ -1020,6 +1145,7 @@ async function init(){
     render();
     focusQuestion();
     if(!storageBlocked)save();
+    void initCloud();
   }catch(error){
     $('#main').innerHTML=`<h2>Unable to launch practice</h2><p>${h(error.message)}</p>`;
   }

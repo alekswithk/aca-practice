@@ -15,6 +15,7 @@ const browser=await playwright.chromium.launch({headless:true,executablePath:pro
 
 try{
   const page=await browser.newPage();
+  await page.addInitScript(()=>localStorage.setItem('aca-account-announcement-v1','seen'));
   await page.goto(base);
   await page.locator('#start:not([disabled])').waitFor();
   await page.evaluate(key=>{
