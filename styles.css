@@ -97,8 +97,7 @@ label { font-weight: 600; }
 .identity { display: flex; gap: .9rem; align-items: center; }
 .brand-home { display: inline-flex; align-items: center; flex-shrink: 0; padding: .35rem .1rem; border: 0; border-radius: 0; background: transparent; color: var(--green); }
 .brand-home:not(:disabled):hover { background: transparent; }
-.aca-logo { display: block; width: 88px; height: 32px; }
-.identity p { font-size: .74rem; color: var(--muted); margin: 0; }
+.aca-logo { display: block; width: auto; height: 48px; }
 
 .masthead-controls { display: flex; align-items: center; gap: 1rem; }
 nav { display: flex; gap: .25rem; flex-wrap: wrap; padding: .25rem; background: var(--paper); border: 1px solid var(--line); border-radius: 12px; }
@@ -436,7 +435,7 @@ dialog .danger { background: var(--error); color: white; border-color: var(--err
 #account-announcement { max-width: 536px; border: 0; padding: 0; border-radius: 16px; max-height: calc(100dvh - 2rem); box-shadow: none; }
 #account-announcement::backdrop { background: rgba(18,22,27,.48); backdrop-filter: none; }
 .announcement-content { padding: clamp(24px,5vw,40px); }
-.announcement-logo { display: block; width: 84px; height: 28px; color: var(--green); margin-bottom: 28px; }
+.announcement-logo { display: block; width: auto; height: 64px; margin-bottom: 28px; }
 #announcement-title { font-size: clamp(26px,4vw,32px); line-height: 1.12; letter-spacing: -.035em; margin: 0 0 18px; }
 #announcement-description { font-size: 16px; line-height: 1.6; margin: 0 0 24px; }
 .announcement-existing { padding: 16px; border-radius: 8px; background: var(--paper); font-size: 14px; line-height: 1.6; margin: 0 0 28px; }
@@ -459,7 +458,7 @@ dialog .danger { background: var(--error); color: white; border-color: var(--err
 }
 
 @media (max-width:760px) {
-  .aca-logo { width: 72px; height: 28px; }
+  .aca-logo { height: 40px; }
   .masthead { flex-direction: column; align-items: stretch; gap: 1rem; padding: 1rem; }
   .masthead-controls { justify-content: space-between; }
   .layout { display: block; padding: 1rem; }
