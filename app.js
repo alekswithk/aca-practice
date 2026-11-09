@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue,topicBreakdown,flaggedIds} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -20,6 +20,8 @@ let examTimerInterval=null;
 let examTimerPaused=false;
 let themeChanging=false;
 let activeUser=null,cloud=null,storageKey=STORAGE_KEY;
+// Sure / Guessing choice for the open practice question, kept until it is checked.
+let confidence={id:null,value:'sure'};
 
 const now=()=>new Date().toISOString();
 const reduceMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -429,21 +431,38 @@ function sessionSubtitle(session,completed){
     if(session.scope.subtopic)parts.push(topic);
     if(session.scope.difficulty)parts.push(session.scope.difficulty);
   }else{
-    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='mixed'?'Mixed topics':'Practice mode');
+    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='review'?'Due for review':session.mode==='flagged'?'Flagged questions':session.mode==='mixed'?'Mixed topics':'Practice mode');
     if(session.mode==='mixed'&&session.scope?.difficulty)parts.push(session.scope.difficulty);
   }
   parts.push(`${completed} of ${session.queue.length} submitted`);
   return parts.join(' · ');
 }
 
+// "today at 14:30", "tomorrow at 9:05", "on Fri 13 Nov"
+function dueText(iso){
+  const at=new Date(iso),day=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();
+  const days=Math.round((day(at)-day(new Date()))/864e5),time=at.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  return days<=0?`today at ${time}`:days===1?`tomorrow at ${time}`:`on ${at.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'})}`;
+}
+function homeQueues(){
+  const review=reviewQueue(bank.questions,state.attempts,Date.now()),n=review.due.length,items=[];
+  if(n)items.push(`<div class="queue-item"><div><strong>Due for review</strong><span class="muted">${n===1?'1 question you missed, skipped or guessed is':`${n} questions you missed, skipped or guessed are`} ready for another try.</span></div><button type="button" id="review-due">Review ${n===1?'1 question':`${n} questions`}</button></div>`);
+  else if(review.nextAt)items.push(`<div class="queue-item"><div><strong>Due for review</strong><span class="muted">Nothing due right now. The next question comes back ${h(dueText(review.nextAt))}.</span></div></div>`);
+  const flagged=flaggedIds(bank.questions,state.flags);
+  if(flagged.length)items.push(`<div class="queue-item"><div><strong>Flagged (${flagged.length})</strong><span class="muted">Questions you marked to come back to. Unflag them on the question.</span></div><button type="button" id="review-flagged">Practice flagged</button></div>`);
+  return {html:items.length?`<section class="home-queues" aria-label="Review">${items.join('')}</section>`:'',review,flagged};
+}
+
 // =================== PRACTICE MODE ===================
 function renderHome(){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
-    const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length,stagger=freshScreen('home')?' stagger':'';
-    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid${stagger}">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}" style="--i:${index}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
+    const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length,queues=homeQueues(),stagger=freshScreen('home')?' stagger':'';
+    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div>${queues.html}<section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid${stagger}">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}" style="--i:${index}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
     if(state.session)$('#welcome-start').textContent='Resume session';
     $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
+    $('#review-due')?.addEventListener('click',()=>startSession(shuffle(queues.review.due),'review'));
+    $('#review-flagged')?.addEventListener('click',()=>startSession(shuffle(queues.flagged),'flagged'));
     // The clicked card's title morphs into the session heading, if that heading
     // ends up on screen (a long question scrolls it under the header: plain fade then).
     $$('[data-topic]').forEach(el=>el.onclick=()=>{el.classList.add('vt-source');pageTransition('topic',()=>{
@@ -463,9 +482,10 @@ function startTopicSession(topic){
 function recommendationCards(sessionAttempts,stagger=false){
   const scored=bank.questions.filter(q=>q.status==='validated');
   const {leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
-  const wrong=[...new Set(sessionAttempts.filter(a=>a.outcome==='incorrect').map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
+  const pick=test=>[...new Set(sessionAttempts.filter(test).map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
+  const wrong=pick(a=>a.outcome==='incorrect'),guessed=pick(isGuess).filter(id=>!wrong.includes(id)),ids=[...wrong,...guessed];
   const cards=[];
-  if(wrong.length)cards.push(`<div class="recommendation wrong-review"><p>Look again at your wrong answers</p><ol class="wrong-list${stagger?' stagger':''}">${wrong.map((id,i)=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li style="--i:${i}"><span class="muted">${h(q.topic)}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(wrong.join(','))}">Retry ${wrong.length===1?'this question':`these ${wrong.length} questions`}</button></div>`);
+  if(ids.length)cards.push(`<div class="recommendation wrong-review"><p>${guessed.length?'Look again at these':'Look again at your wrong answers'}</p><ol class="wrong-list${stagger?' stagger':''}">${ids.map((id,i)=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li style="--i:${i}"><span class="muted">${h(q.topic)}${guessed.includes(id)?' (guessed)':''}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(ids.join(','))}">Retry ${ids.length===1?'this question':`these ${ids.length} questions`}</button></div>`);
   if(leastCovered)cards.push(`<div class="recommendation"><p>Least covered: ${h(leastCovered)}</p><button type="button" data-recommend-topic="${h(leastCovered)}">Practice ${h(leastCovered)}</button></div>`);
   if(!cards.length)return '';
   return `<div class="recommendations">${cards.join('')}</div>`;
@@ -519,9 +539,13 @@ function renderPractice(){
               </label>`;
             }).join('')}
           </fieldset>
+          ${attempt?'':`<div class="confidence" role="radiogroup" aria-label="How sure are you?"><span class="muted" aria-hidden="true">How sure are you?</span><div class="confidence-pills">${[['sure','Sure'],['guess','Guessing']].map(([v,t])=>`<label><input type="radio" name="confidence" value="${v}" ${(confidence.id===q.id?confidence.value:'sure')===v?'checked':''}><span>${t}</span></label>`).join('')}</div></div>`}
           <p id="answer-error" class="danger" role="alert"></p>
           <div class="action-bar">
-            <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
+            <div class="action-left">
+              <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
+              ${flagButton(Boolean(state.flags[q.id]?.flagged))}
+            </div>
             <div class="action-buttons">
               ${!attempt?`<button type="button" id="unknown" class="quiet">Skip</button>`:''}
               <button class="primary" type="submit" id="btn-action" ${!attempt&&!selectedId?'disabled':''}>
@@ -557,15 +581,24 @@ function renderPractice(){
     }
   };
 
+  $$('input[name=confidence]').forEach(el=>el.addEventListener('change',()=>{confidence={id:q.id,value:el.value};}));
   $('#unknown')?.addEventListener('click',()=>submit(q,null));
+  const toggleFlag=()=>{
+    const on=!state.flags[q.id]?.flagged;state.flags[q.id]={flagged:on,updatedAt:now()};save();
+    $('#practice-flag').outerHTML=flagButton(on);$('#practice-flag').onclick=toggleFlag;$('#practice-flag').focus();
+  };
+  $('#practice-flag').onclick=toggleFlag;
   $('#previous-question').onclick=()=>{if(session.index>0)goToQuestion(session.index-1);};
   $('#end-session').onclick=showResults;
   bindFeedback(q,attempt);
 }
 
+const flagButton=on=>`<button type="button" id="practice-flag" class="flag-btn ${on?'flagged':''}" aria-pressed="${on}" title="${on?'Remove from your flagged questions':'Keep this question in your flagged list on Home'}">${on?'Flagged':'Flag'} <span aria-hidden="true">⚑</span></button>`;
+
 function submit(q,optionId){
   if(state.session.attemptId)return;
-  const attempt=makeAttempt(q,optionId,state.drafts[q.id]?.notes||'',now(),crypto.randomUUID(),bank.bankVersion);
+  const sure=confidence.id===q.id?confidence.value:'sure';confidence={id:null,value:'sure'};
+  const attempt=makeAttempt(q,optionId,state.drafts[q.id]?.notes||'',now(),crypto.randomUUID(),bank.bankVersion,sure);
   state.attempts.push(attempt);
   state.session.attemptId=attempt.id;
   state.session.attemptIds.push(attempt.id);
@@ -582,6 +615,7 @@ function feedback(q,a){
   return `
     <section class="feedback" data-outcome="${h(a.outcome)}">
       <h3 class="outcome-${h(a.outcome)}" id="feedback-heading" tabindex="-1">${label[a.outcome]}</h3>
+      ${isGuess(a)?'<p class="muted">You marked this as a guess, so it comes back for review tomorrow.</p>':''}
       <p><strong>Correct answer:</strong> ${h(shownLabel(order,correct.id))}. ${h(optionText(correct))}</p>
       <p>${h(q.explanation)}</p>
       ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
@@ -973,6 +1007,7 @@ function showExamResults(){
   const incorrect=rows.filter(a=>a.outcome==='incorrect').length;
   const unanswered=rows.length-correct-incorrect;
   const scorePct=rows.length?Math.round((correct/rows.length)*100):0;
+  const byTopic=topicBreakdown(bank.questions,rows);
   state.session=null;
   save();
 
@@ -985,6 +1020,7 @@ function showExamResults(){
         <div><strong>${incorrect}</strong>Incorrect</div>
         <div><strong>${unanswered}</strong>Unanswered</div>
       </div>
+      ${byTopic.length?`<h3>By topic</h3><div class="table-wrap exam-topics"><table class="topic-table"><caption class="visually-hidden">Exam score by topic, weakest first</caption><thead><tr><th scope="col">Topic</th><th scope="col">Correct</th><th scope="col">Share</th></tr></thead><tbody>${byTopic.map(t=>`<tr><th scope="row">${h(t.topic)}</th><td>${t.correct} / ${t.total}</td><td>${Math.round(100*t.correct/t.total)}%</td></tr>`).join('')}</tbody></table></div>`:''}
       <div class="actions">
         <button class="primary" id="btn-exam-again">Take another exam</button>
         <button id="btn-exam-history">View learning history</button>
