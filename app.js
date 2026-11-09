@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,makeAttempt,grade,available,followup,topicStats,latestAttempts,validateBackup,mergeBackups} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,topicStats,latestAttempts,validateBackup,mergeBackups} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -371,7 +371,7 @@ function render(){
 function startSession(ids,mode){
   stopExamTimer();
   const q=question(ids[0]);
-  state.session={queue:ids,index:0,order:shuffle(q.options.map(o=>o.id)),mode,attemptId:null,attemptIds:[],examFlags:{}};
+  state.session={queue:ids,index:0,order:shuffleOptions(q.options),mode,attemptId:null,attemptIds:[],examFlags:{}};
   setAppMode('practice',false);
   setView('practice',false);
   focusQuestion();
@@ -522,7 +522,7 @@ function goToQuestion(index){
   s.index=index;
   const id=s.queue[index];
   s.attemptId=state.attempts.find(a=>a.questionId===id&&s.attemptIds.includes(a.id))?.id||null;
-  s.order=s.questionOrders[id]||shuffle(question(id).options.map(o=>o.id));
+  s.order=s.questionOrders[id]?pinNoneLast(s.questionOrders[id],question(id).options):shuffleOptions(question(id).options);
   save();render();focusQuestion();
 }
 
@@ -660,7 +660,7 @@ function launchExam(part,topic){
   state.session={
     queue:pool,
     index:0,
-    order:shuffle(q.options.map(o=>o.id)),
+    order:shuffleOptions(q.options),
     mode:modeName,
     examTopic:examTopicName,
     attemptId:null,
@@ -823,16 +823,16 @@ function renderExamActive(){
 
   $$('[data-jump]').forEach(btn=>btn.onclick=()=>{
     s.index=Number(btn.dataset.jump);
-    s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));
+    s.order=shuffleOptions(question(s.queue[s.index]).options);
     save();render();focusQuestion();
   });
 
   $('#btn-exam-prev').onclick=()=>{
-    if(s.index>0){s.index--;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));save();render();focusQuestion();}
+    if(s.index>0){s.index--;s.order=shuffleOptions(question(s.queue[s.index]).options);save();render();focusQuestion();}
   };
 
   $('#btn-exam-next').onclick=()=>{
-    if(s.index+1<s.queue.length){s.index++;s.order=shuffle(question(s.queue[s.index]).options.map(o=>o.id));save();render();focusQuestion();}
+    if(s.index+1<s.queue.length){s.index++;s.order=shuffleOptions(question(s.queue[s.index]).options);save();render();focusQuestion();}
     else finishExam();
   };
 
