@@ -5,6 +5,17 @@ export function shuffle(items, random=Math.random) {
   for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}
   return result;
 }
+// "None of the others" style options always sit last, after shuffling.
+export const isNoneOption=o=>/^\s*none of\b/i.test(o.text);
+export function pinNoneLast(orderIds, options) {
+  const byId=new Map(options.map(o=>[o.id,o]));
+  const normal=orderIds.filter(id=>!isNoneOption(byId.get(id)));
+  const none=orderIds.filter(id=>isNoneOption(byId.get(id)));
+  return [...normal,...none];
+}
+export function shuffleOptions(options, random=Math.random) {
+  return pinNoneLast(shuffle(options.map(o=>o.id), random), options);
+}
 export function grade(q, optionId) {
   if(q.status!=='validated') throw new Error('This question is excluded from scoring.');
   if(optionId===null) return 'unknown';
@@ -62,13 +73,13 @@ export function validateBackup(value,bank){
     const q=qs.get(s.queue[s.index]);
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();
-    session={queue:[...s.queue],index:s.index,order:[...s.order],mode:s.mode,attemptId:s.attemptId,attemptIds:[...s.attemptIds]};
+    session={queue:[...s.queue],index:s.index,order:pinNoneLast(s.order,q.options),mode:s.mode,attemptId:s.attemptId,attemptIds:[...s.attemptIds]};
     if(s.questionOrders!==undefined){
       if(!object(s.questionOrders))fail();
       for(const [id,order] of Object.entries(s.questionOrders)){
         if(!s.queue.includes(id)||!Array.isArray(order)||order.length!==qs.get(id).options.length||new Set(order).size!==order.length||!order.every(option=>qs.get(id).options.some(o=>o.id===option)))fail();
       }
-      session.questionOrders=Object.fromEntries(Object.entries(s.questionOrders).map(([id,order])=>[id,[...order]]));
+      session.questionOrders=Object.fromEntries(Object.entries(s.questionOrders).map(([id,order])=>[id,pinNoneLast(order,qs.get(id).options)]));
     }
     if(s.mode.startsWith('exam')){
       const flags=s.examFlags??{};
