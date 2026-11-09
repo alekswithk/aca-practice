@@ -326,7 +326,7 @@ function focusQuestion(){
   const target=$('.question');
   if(!target)return;
   $('#session-settings').open=false;
-  const top=$('.masthead').offsetHeight+16;
+  const top=($('.masthead').offsetHeight||$('#header-show').offsetHeight)+16;
   const main=$('#main');
   const fits=target.getBoundingClientRect().bottom-main.getBoundingClientRect().top<=innerHeight-top-16;
   const scrollTarget=fits?main:target;
@@ -1049,6 +1049,21 @@ function download(text,name){
 // Options menu: a list of sections, one open at a time. The name attribute
 // does this natively; the listener covers browsers without it. Closing the
 // menu folds it back to the list.
+// The header can be hidden completely; a small tab at the top brings it back.
+function setHeaderCollapsed(collapsed,focus=false){
+  root.classList.toggle('header-collapsed',collapsed);
+  $('#header-show').hidden=!collapsed;
+  if(collapsed)$('.options-menu').open=false;
+  try{localStorage.setItem('aca_header',collapsed?'collapsed':'open');}catch{}
+  if(focus)(collapsed?$('#header-show'):$('#header-hide')).focus();
+}
+function bindHeaderToggle(){
+  let collapsed=false;try{collapsed=localStorage.getItem('aca_header')==='collapsed';}catch{}
+  setHeaderCollapsed(collapsed);
+  $('#header-hide').onclick=()=>setHeaderCollapsed(true,true);
+  $('#header-show').onclick=()=>setHeaderCollapsed(false,true);
+}
+
 function bindOptionsMenu(){
   const menu=$('.options-menu'),sections=$$('.options-section');
   sections.forEach(el=>el.addEventListener('toggle',()=>{
@@ -1061,7 +1076,7 @@ function bindOptionsMenu(){
 
 async function init(){
   try{
-    bindOptionsMenu();
+    bindOptionsMenu();bindHeaderToggle();
     initTheme();
     $('#theme-toggle').onclick=toggleTheme;
 
