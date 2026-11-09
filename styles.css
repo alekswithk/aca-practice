@@ -619,6 +619,8 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
   .action-bar { flex-direction: column; align-items: stretch; }
   .action-buttons { justify-content: space-between; width: 100%; }
   .action-buttons button.primary { flex: 1; }
+  .action-buttons { flex-wrap: wrap; }
+  .action-buttons .confidence, .action-buttons .confidence-pills { width: 100%; }
   .exam-banner { flex-direction: column; align-items: flex-start; }
   .exam-banner-controls, .exam-nav-bar, .exam-nav-left, .exam-nav-right, .palette-header { flex-wrap: wrap; }
   .exam-timer-box { flex-wrap: wrap; }
@@ -659,7 +661,7 @@ html[data-vt=question] .question-layout { view-transition-name: question-area; }
 }
 
 /* Sure / Guessing before checking a practice answer */
-.confidence { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin-top: 1rem; }
+.confidence { display: flex; align-items: center; }
 .confidence-pills { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
 .confidence-pills label { position: relative; min-height: 34px; display: grid; place-items: center; padding: .3rem .9rem; border: 1px solid transparent; border-radius: 7px; color: var(--muted); font-size: var(--fs-sm); font-weight: 600; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
 .confidence-pills input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }

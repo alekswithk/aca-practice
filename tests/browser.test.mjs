@@ -17,7 +17,7 @@ const browser=await playwright.chromium.launch(launch);
 const offline=async context=>{await context.route('https://cdn.jsdelivr.net/**',route=>route.abort());return context;};
 const newContext=options=>browser.newContext(options).then(offline);
 // Session setup and account/backups are exclusive sections of the header Options menu.
-const reveal=async(page,id)=>{for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
+const reveal=async(page,id)=>{await page.waitForFunction(()=>!document.querySelector('.options-menu.closing'),null,{timeout:2000});for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
 const setup=page=>reveal(page,'#session-settings'),account=page=>reveal(page,'#account-panel');
 const progress=(attempts,topic)=>topicProgress(bank.questions,attempts).find(r=>r.topic===topic);
 try{
@@ -43,7 +43,7 @@ try{
  assert.equal((await data()).attempts[0].misconception,wrong.misconception);
  await page.locator('textarea[data-notes]').fill('Revised after feedback: apply the tax rate.');
  await page.reload();await page.locator('.feedback').waitFor();state=await data();assert.equal(state.attempts.length,1);assert.equal(state.attempts[0].notesSnapshot,draft);assert.equal(state.drafts[firstId].notes,'Revised after feedback: apply the tax rate.');
- await page.locator('#followup').click();state=await data();assert.notEqual(state.session.queue[state.session.index],firstId);
+ await page.locator('#followup').click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});state=await data();assert.notEqual(state.session.queue[state.session.index],firstId);
  const follow=bank.questions.find(q=>q.id===state.session.queue[state.session.index]);assert.ok(follow.targets.includes(wrong.misconception));
  await page.getByRole('button',{name:'Skip',exact:true}).click();await page.locator('.feedback[data-outcome=unknown]').waitFor();assert.equal((await data()).attempts[1].outcome,'unknown');
  // Results list exactly the wrong answers with a retry button, plus the least covered topic.
@@ -79,7 +79,7 @@ try{
  // New topic cards route to validated Management Accounting questions, including five-option questions.
  const maContext=await newContext({viewport:{width:1440,height:1000}});const maPage=await maContext.newPage();await maPage.goto(base);await maPage.locator('[data-topic="Management Accounting"]').waitFor();
  await maPage.screenshot({path:output+'/welcome.png',fullPage:true,animations:'disabled'});await maPage.setViewportSize({width:375,height:900});await maPage.reload();await maPage.locator('.study-hero').waitFor();assert.equal(await maPage.locator('#session-settings').getAttribute('open'),null);assert.ok(await maPage.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await maPage.screenshot({path:output+'/welcome-mobile.png',fullPage:true,animations:'disabled'});await maPage.setViewportSize({width:1440,height:1000});
- await maPage.locator('[data-topic="Management Accounting"]').click();
+ await maPage.locator('[data-topic="Management Accounting"]').click();await maPage.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});
  const maState=await maPage.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
  assert.ok(maState.session.queue.every(id=>bank.questions.some(q=>q.id===id&&q.topic==='Management Accounting'&&q.status==='validated')));
  const maQuestion=bank.questions.find(q=>q.id===maState.session.queue[0]);assert.equal(await maPage.locator('input[name=answer]').count(),maQuestion.options.length);

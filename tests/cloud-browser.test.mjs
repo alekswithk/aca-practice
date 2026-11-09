@@ -29,7 +29,7 @@ try{
   await context.route('https://cdn.jsdelivr.net/**',route=>route.fulfill({contentType:'text/javascript',body:mock}));
   const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
   // Account and session setup are exclusive sections inside the header Options menu.
-  const reveal=async id=>{for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
+  const reveal=async id=>{await page.waitForFunction(()=>!document.querySelector('.options-menu.closing'),null,{timeout:2000});for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
   const saved=key=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
   const load=async()=>{await page.goto(process.env.ACA_TEST_URL||'http://127.0.0.1:8011/');await page.locator('#google-login:not([disabled])').waitFor({state:'attached'});};
   await load();

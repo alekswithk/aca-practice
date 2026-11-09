@@ -19,7 +19,7 @@ try{
   await page.addInitScript(()=>{Math.random=()=>.5;});
   const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
   // Session setup is an exclusive section inside the header Options menu.
-  const openSetup=async()=>{for(const s of ['.options-menu','#session-settings'])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
+  const openSetup=async()=>{await page.waitForFunction(()=>!document.querySelector('.options-menu.closing'),null,{timeout:2000});for(const s of ['.options-menu','#session-settings'])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
   const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
   await load();
   for(const [topic,count] of [['Capital Budgeting',13],['Cost and Performance Management',14]]){
@@ -28,8 +28,8 @@ try{
     assert.match(await page.locator('#available').textContent(),new RegExp(`^${count} matching`));
     assert.ok(await page.locator('#subtopic option').count()>1);
     assert.equal(await page.locator(`#exam-topic-select option[value="${topic}"]`).count(),1);
-    await page.keyboard.press('Escape');assert.equal(await page.locator('.options-menu').evaluate(el=>el.open),false,'Escape must close the Options menu');
-    await page.locator('[data-topic="'+topic+'"]').click();
+    await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.options-menu').open,null,{timeout:1000}).catch(()=>{});assert.equal(await page.locator('.options-menu').evaluate(el=>el.open),false,'Escape must close the Options menu (after its short exit animation)');
+    await page.locator('[data-topic="'+topic+'"]').click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});
     assert.ok((await saved()).session.queue.every(id=>bank.questions.find(q=>q.id===id).topic===topic));
     await page.evaluate(key=>localStorage.removeItem(key),STORAGE_KEY);
     await load();

@@ -13,13 +13,16 @@ const output=process.env.ACA_TEST_OUTPUT||join(tmpdir(),'aca-workspace');mkdirSy
 const browser=await playwright.chromium.launch({headless:true,executablePath:process.env.PLAYWRIGHT_EXECUTABLE_PATH});
 try{
  const page=await browser.newPage({viewport:{width:1440,height:1000},colorScheme:'light',acceptDownloads:true});
+ // This suite checks workflow and layout, not motion: run it without page transitions so state reads aren't racing them. browser.test.mjs runs with motion on.
+ await page.emulateMedia({reducedMotion:'reduce'});
  await page.addInitScript(()=>localStorage.setItem('aca-account-announcement-v1','seen'));
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
  // Session setup and account live in exclusive sections of the header Options menu.
- const reveal=async id=>{for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
+ const reveal=async id=>{await page.waitForFunction(()=>!document.querySelector('.options-menu.closing'),null,{timeout:2000});for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
  const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
  const focusedQuestion=async()=>{
+  await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});
   assert.equal(await page.locator('.question').evaluate(el=>el===document.activeElement),true,'The current question must receive focus');
   assert.equal(await page.locator('#session-settings').getAttribute('open'),null,'Setup must collapse during a session');
   assert.ok(await page.locator('.question').evaluate(el=>{const rect=el.getBoundingClientRect();return rect.top>=document.querySelector('.masthead').getBoundingClientRect().bottom && rect.top<innerHeight;}),'The question must be visible below navigation');
@@ -95,12 +98,12 @@ try{
  assert.equal((await saved()).attempts.length,1);assert.equal(await page.locator('input[name=answer][value=c]').isChecked(),true);
  assert.deepEqual((await saved()).session.order,order);
  assert.equal(await page.locator('textarea[data-notes]').inputValue(),'Revised after feedback.');
- await page.locator('#btn-action').click();
+ await page.locator('#btn-action').click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});
  assert.equal(await page.locator('input[name=answer][value=b]').isChecked(),true);
  assert.equal(await page.locator('textarea[data-notes]').inputValue(),'Second question draft.');
  const secondOrder=(await saved()).session.order;await page.reload();await page.locator('#btn-action').waitFor();
- await page.getByRole('button',{name:'Previous',exact:true}).click();assert.deepEqual((await saved()).session.order,order);
- await page.locator('#btn-action').click();assert.deepEqual((await saved()).session.order,secondOrder);
+ await page.getByRole('button',{name:'Previous',exact:true}).click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});assert.deepEqual((await saved()).session.order,order);
+ await page.locator('#btn-action').click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});assert.deepEqual((await saved()).session.order,secondOrder);
  await page.getByRole('button',{name:'Check answer',exact:true}).click();
  assert.equal(await page.locator('.correct-option').count(),1);assert.equal(await page.locator('.wrong-option').count(),0);
  assert.equal(await page.locator('.answer-result').count(),1);
@@ -184,7 +187,7 @@ try{
  }
  for(const topic of new Set(bank.questions.filter(q=>q.status==='validated').map(q=>q.topic))){
   await page.locator('#nav-home').click();
-  await page.locator(`[data-topic="${topic}"]`).click();
+  await page.locator(`[data-topic="${topic}"]`).click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});
   const current=await saved();
   assert.ok(current.session.queue.length>0);
   assert.ok(current.session.queue.every(id=>bank.questions.some(q=>q.id===id&&q.topic===topic&&q.status==='validated')),`${topic} must start focused revision`);

@@ -539,7 +539,6 @@ function renderPractice(){
               </label>`;
             }).join('')}
           </fieldset>
-          ${attempt?'':`<div class="confidence" role="radiogroup" aria-label="How sure are you?"><span class="muted" aria-hidden="true">How sure are you?</span><div class="confidence-pills">${[['sure','Sure'],['guess','Guessing']].map(([v,t])=>`<label><input type="radio" name="confidence" value="${v}" ${(confidence.id===q.id?confidence.value:'sure')===v?'checked':''}><span>${t}</span></label>`).join('')}</div></div>`}
           <p id="answer-error" class="danger" role="alert"></p>
           <div class="action-bar">
             <div class="action-left">
@@ -547,6 +546,7 @@ function renderPractice(){
               ${flagButton(Boolean(state.flags[q.id]?.flagged))}
             </div>
             <div class="action-buttons">
+              ${attempt?'':`<div class="confidence" role="radiogroup" aria-label="How sure are you?"><div class="confidence-pills">${[['sure','Sure'],['guess','Guessing']].map(([v,t])=>`<label><input type="radio" name="confidence" value="${v}" ${(confidence.id===q.id?confidence.value:'sure')===v?'checked':''}><span>${t}</span></label>`).join('')}</div></div>`}
               ${!attempt?`<button type="button" id="unknown" class="quiet">Skip</button>`:''}
               <button class="primary" type="submit" id="btn-action" ${!attempt&&!selectedId?'disabled':''}>
                 ${!attempt?'Check answer':(session.index+1<session.queue.length?'Next question':'See results')}
@@ -1144,8 +1144,9 @@ function bindOptionsMenu(){
     else if(menu.open){e.preventDefault();closeOptionsMenu();}
   });
   menu.querySelector('.options-panel').addEventListener('animationend',e=>{if(e.target===e.currentTarget&&menu.classList.contains('closing'))closeOptionsMenu(true);});
-  document.addEventListener('click',e=>{if(menu.open&&!menu.contains(e.target))closeOptionsMenu();});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){closeOptionsMenu();menu.querySelector('summary').focus();}});
+  // Dialogs opened from the menu (reset, import) handle their own clicks and Escape.
+  document.addEventListener('click',e=>{if(menu.open&&!menu.contains(e.target)&&!e.target.closest('dialog'))closeOptionsMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open&&!document.querySelector('dialog[open]')){closeOptionsMenu();menu.querySelector('summary').focus();}});
 }
 // Popover exit: shrinks back toward the trigger (.closing, 150ms), then closes.
 // instant skips the animation (reduced motion, hidden header, animation end).
