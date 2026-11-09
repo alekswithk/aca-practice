@@ -17,9 +17,124 @@
  <div class="masthead-controls">
   <nav aria-label="Study views">
    <button data-view="home" id="nav-home" aria-pressed="false">Home</button>
-   <button data-view="practice" id="nav-study" aria-pressed="true">Study & Exams</button>
+   <button data-view="practice" id="nav-study" aria-pressed="true">Study & exams</button>
    <button data-view="history" id="nav-history" aria-pressed="false">Learning history</button>
   </nav>
+  <details class="options-menu">
+   <summary>Options</summary>
+   <div class="options-panel">
+    <details id="session-settings" open>
+     <summary>Session setup</summary>
+     <div class="mode-selector-wrap">
+      <div class="mode-pill-group" role="tablist">
+       <button type="button" id="tab-mode-practice" class="mode-pill active" role="tab" aria-selected="true">Practice mode</button>
+       <button type="button" id="tab-mode-exam" class="mode-pill" role="tab" aria-selected="false">Exam mode</button>
+      </div>
+     </div>
+     <div id="practice-panel" class="setup-panel">
+      <form id="setup">
+       <label for="topic">Topic</label>
+       <select id="topic">
+        <option value="">All topics (Mixed)</option>
+        <option value="Financial Reporting">Financial Reporting</option>
+        <option value="Consolidated Statements">Consolidated Statements</option>
+        <option value="Auditing">Auditing</option>
+        <option value="Management Accounting">Management Accounting</option>
+       </select>
+       <label for="subtopic">Specific focus area</label>
+       <select id="subtopic">
+        <option value="">All specific focus areas</option>
+       </select>
+       <label for="difficulty">Estimated difficulty</label>
+       <select id="difficulty">
+        <option value="">All study ratings</option>
+        <option>Easy</option>
+        <option>Medium</option>
+        <option>Hard</option>
+       </select>
+       <!-- Hidden legacy compatibility hooks -->
+       <select id="origin" class="visually-hidden"><option value="">All</option><option value="original">Original</option><option value="generated">Generated</option></select>
+       <select id="mode" class="visually-hidden"><option value="mixed">Mixed</option><option value="topic">Topic</option><option value="missed">Missed</option></select>
+       <div class="slider-field">
+        <div class="slider-header">
+         <label for="length-slider">Session length</label>
+         <output id="slider-badge" class="slider-badge" for="length-slider">15 questions</output>
+        </div>
+        <input type="range" id="length-slider" min="5" max="50" step="5" value="15" aria-valuetext="15 questions">
+        <select id="length" class="visually-hidden"><option value="15">15</option></select>
+       </div>
+       <p id="available" class="muted" aria-live="polite"></p>
+       <button class="primary" type="submit" id="start" disabled>Start practice session</button>
+       <button id="tax-focus" type="button" class="visually-hidden">Focus on deferred taxes</button>
+      </form>
+     </div>
+     <div id="exam-panel" class="setup-panel hidden">
+      <div class="exam-info-card">
+       <strong>Simulate real ACA past exams:</strong>
+       <p class="muted">Structured identically to past course sittings with a <strong>45-minute countdown</strong> per part.</p>
+      </div>
+      <form id="exam-setup">
+       <p class="muted">Select exam scope or topic</p>
+       <div class="exam-part-options">
+        <label class="exam-part-card">
+         <input type="radio" name="exam-part" value="full">
+         <div>
+          <strong>Whole exam (both parts)</strong>
+          <span class="muted">90 minutes total · 50 exercises · 90 marks</span>
+          <span class="part-topics">Accounting, auditing & controlling</span>
+         </div>
+        </label>
+        <label class="exam-part-card">
+         <input type="radio" name="exam-part" value="part1" checked>
+         <div>
+          <strong>Part 1: Accounting & auditing</strong>
+          <span class="muted">45 minutes · 30 exercises · 45 marks</span>
+          <span class="part-topics">Accounting (30p) · Auditing (15p)</span>
+         </div>
+        </label>
+        <label class="exam-part-card">
+         <input type="radio" name="exam-part" value="part2">
+         <div>
+          <strong>Part 2: Controlling</strong>
+          <span class="muted">45 minutes · about 20 exercises · 45 marks</span>
+          <span class="part-topics">Management accounting, budgeting, variances, capital budgeting & performance management</span>
+         </div>
+        </label>
+        <label class="exam-part-card">
+         <input type="radio" name="exam-part" value="topic">
+         <div style="width: 100%;">
+          <strong>Specific topic exam</strong>
+          <span class="muted">45 minutes · 20 exercises · 45 marks</span>
+          <div id="exam-topic-select-wrap" class="hidden" style="margin-top: .5rem;">
+           <label for="exam-topic-select" class="visually-hidden">Choose exam topic</label>
+           <select id="exam-topic-select" style="width: 100%; font-size: .8rem; padding: .4rem .5rem;">
+            <option value="Financial Reporting">Financial Reporting</option>
+            <option value="Consolidated Statements">Consolidated Statements</option>
+            <option value="Auditing">Auditing</option>
+            <option value="Management Accounting">Management Accounting</option>
+            <option value="Budgeting">Budgeting</option>
+            <option value="Variances">Variances</option>
+           </select>
+          </div>
+         </div>
+        </label>
+       </div>
+       <button class="primary" type="button" id="start-exam">Start exam mode</button>
+      </form>
+     </div>
+    </details>
+    <details class="storage"><summary>Settings & backups</summary><p>Notes and attempts are saved in this browser. Export a backup to preserve them or move to another device.</p><p id="global-save" role="status">Saved in this browser</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
+    <details class="account" id="account-panel"><summary>Account & sync</summary>
+     <p id="account-user">Use an account to save progress across devices.</p>
+     <button type="button" id="google-login" disabled>Continue with Google</button>
+     <div id="account-actions" hidden>
+      <div class="backup-actions"><button id="sync-now">Sync now</button><button id="sign-out">Sign out</button></div>
+      <button id="merge-guest" class="quiet" type="button">Add this browser's guest progress</button>
+     </div>
+     <p id="cloud-status" role="status">Connecting…</p>
+    </details>
+   </div>
+  </details>
   <button id="theme-toggle" class="theme-switch-track" type="button" role="switch" aria-checked="false" aria-label="Toggle dark mode" title="Toggle dark mode">
    <span class="theme-icon sun" aria-hidden="true">☀</span>
    <span class="theme-icon moon" aria-hidden="true">☾</span>
@@ -29,120 +144,7 @@
 </header>
 <div id="notice" class="notice" role="status" hidden></div>
 <div class="layout">
- <aside class="sidebar" aria-label="Practice setup">
-  <details id="session-settings" open>
-   <summary>Session setup</summary>
-  <div class="mode-selector-wrap">
-   <span class="eyebrow">MODE SELECTION</span>
-   <div class="mode-pill-group" role="tablist">
-    <button type="button" id="tab-mode-practice" class="mode-pill active" role="tab" aria-selected="true">Practice Mode</button>
-    <button type="button" id="tab-mode-exam" class="mode-pill" role="tab" aria-selected="false">Exam Mode</button>
-   </div>
-  </div>
-  <div id="practice-panel" class="setup-panel">
-   <form id="setup">
-    <label for="topic">Topic</label>
-    <select id="topic">
-     <option value="">All topics (Mixed)</option>
-     <option value="Financial Reporting">Financial Reporting</option>
-     <option value="Consolidated Statements">Consolidated Statements</option>
-     <option value="Auditing">Auditing</option>
-     <option value="Management Accounting">Management Accounting</option>
-    </select>
-    <label for="subtopic">Specific Focus Area</label>
-    <select id="subtopic">
-     <option value="">All specific focus areas</option>
-    </select>
-    <label for="difficulty">Estimated difficulty</label>
-    <select id="difficulty">
-     <option value="">All study ratings</option>
-     <option>Easy</option>
-     <option>Medium</option>
-     <option>Hard</option>
-    </select>
-    <!-- Hidden legacy compatibility hooks -->
-    <select id="origin" class="visually-hidden"><option value="">All</option><option value="original">Original</option><option value="generated">Generated</option></select>
-    <select id="mode" class="visually-hidden"><option value="mixed">Mixed</option><option value="topic">Topic</option><option value="missed">Missed</option></select>
-    <div class="slider-field">
-     <div class="slider-header">
-      <label for="length-slider">Session length</label>
-      <output id="slider-badge" class="slider-badge" for="length-slider">15 questions</output>
-     </div>
-     <input type="range" id="length-slider" min="5" max="50" step="5" value="15" aria-valuetext="15 questions">
-     <select id="length" class="visually-hidden"><option value="15">15</option></select>
-    </div>
-    <p id="available" class="muted" aria-live="polite"></p>
-    <button class="primary" type="submit" id="start" disabled>Start practice session →</button>
-    <button id="tax-focus" type="button" class="visually-hidden">Focus on deferred taxes</button>
-   </form>
-  </div>
-  <div id="exam-panel" class="setup-panel hidden">
-   <div class="exam-info-card">
-    <strong>Simulate Real ACA Past Exams:</strong>
-    <p class="muted">Structured identically to past course sittings with a <strong>45-minute countdown</strong> per part.</p>
-   </div>
-   <form id="exam-setup">
-    <label class="eyebrow">SELECT EXAM SCOPE OR TOPIC</label>
-    <div class="exam-part-options">
-     <label class="exam-part-card">
-      <input type="radio" name="exam-part" value="full">
-      <div>
-       <strong>Whole Exam (Both Parts)</strong>
-       <span class="muted">90 Minutes total · 50 Exercises · 90 Marks</span>
-       <span class="part-topics">Accounting, Auditing & Controlling</span>
-      </div>
-     </label>
-     <label class="exam-part-card">
-      <input type="radio" name="exam-part" value="part1" checked>
-      <div>
-       <strong>Part 1: Accounting & Auditing</strong>
-       <span class="muted">45 Minutes · 30 Exercises · 45 Marks</span>
-       <span class="part-topics">Accounting (30p) · Auditing (15p)</span>
-      </div>
-     </label>
-     <label class="exam-part-card">
-      <input type="radio" name="exam-part" value="part2">
-      <div>
-       <strong>Part 2: Controlling</strong>
-       <span class="muted">45 Minutes · ~20 Exercises · 45 Marks</span>
-       <span class="part-topics">Management Accounting, Budgeting, Variances, Capital Budgeting & Performance Management</span>
-      </div>
-     </label>
-     <label class="exam-part-card">
-      <input type="radio" name="exam-part" value="topic">
-      <div style="width: 100%;">
-       <strong>Specific Topic Exam</strong>
-       <span class="muted">45 Minutes · 20 Exercises · 45 Marks</span>
-       <div id="exam-topic-select-wrap" class="hidden" style="margin-top: .5rem;">
-        <label for="exam-topic-select" class="visually-hidden">Choose exam topic</label>
-        <select id="exam-topic-select" style="width: 100%; font-size: .8rem; padding: .4rem .5rem;">
-         <option value="Financial Reporting">Financial Reporting</option>
-         <option value="Consolidated Statements">Consolidated Statements</option>
-         <option value="Auditing">Auditing</option>
-         <option value="Management Accounting">Management Accounting</option>
-         <option value="Budgeting">Budgeting</option>
-         <option value="Variances">Variances</option>
-        </select>
-       </div>
-      </div>
-     </label>
-    </div>
-    <button class="primary" type="button" id="start-exam">Start Exam Mode ⏱️</button>
-   </form>
-  </div>
-  </details>
-  <details class="storage"><summary>Settings & backups</summary><p>Notes and attempts are saved in this browser. Export a backup to preserve them or move to another device.</p><p id="global-save" role="status">Saved in this browser</p><div class="backup-actions"><button id="export">Export JSON</button><label class="file-button" for="import">Import JSON</label><input id="import" type="file" accept="application/json,.json" class="visually-hidden"></div><button id="reset" class="quiet danger">Reset study data</button></details>
-  <details class="account" id="account-panel"><summary>Account & sync</summary>
-   <p id="account-user">Use an account to save progress across devices.</p>
-   <button type="button" id="google-login" disabled>Continue with Google</button>
-   <div id="account-actions" hidden>
-    <div class="backup-actions"><button id="sync-now">Sync now</button><button id="sign-out">Sign out</button></div>
-    <button id="merge-guest" class="quiet" type="button">Add this browser's guest progress</button>
-   </div>
-   <p id="cloud-status" role="status">Connecting…</p>
-  </details>
-  <span id="review-count" class="visually-hidden"></span>
- </aside>
+ <span id="review-count" class="visually-hidden"></span>
  <main id="main" tabindex="-1"><p>Loading validated questions…</p></main>
 </div>
 <footer>Study ratings are estimates. Practice results describe these attempts and do not establish mastery.</footer>
@@ -151,7 +153,7 @@
   <img class="announcement-logo" src="assets/logo.png" width="512" height="401" alt="ACA Study">
   <h2 id="announcement-title">Keep your progress.</h2>
   <p id="announcement-description">Sign in with Google to save your answers, notes and learning history across devices.</p>
-  <p class="announcement-existing">Already practised here? You can add this browser's progress to your account after signing in.</p>
+  <p class="announcement-existing">Already practiced here? You can add this browser's progress to your account after signing in.</p>
   <div class="announcement-actions"><button id="announcement-login" class="primary" type="button">Continue with Google</button><button id="announcement-dismiss" type="button" autofocus>Not now</button></div>
   <p id="announcement-status" role="status" hidden></p>
  </div>

@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,topicStats,latestAttempts,validateBackup,mergeBackups} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -26,58 +26,58 @@ const question=id=>bank.questions.find(q=>q.id===id);
 
 const preciseSubtopics={
   "Financial Reporting":[
-    {val:"",text:"All Financial Reporting Areas"},
-    {val:"Deferred taxes",text:"Deferred Taxes (DTA/DTL & Temporary Differences)"},
-    {val:"Leases",text:"IFRS 16 Leases (PV, Carrying Amount & Split)"},
-    {val:"Impairment",text:"Impairment of Assets & Impairment Tests"},
-    {val:"Goodwill",text:"Goodwill Subsequent Measurement (IFRS vs FER)"},
-    {val:"Accounting frameworks",text:"Frameworks: Principle- vs Rule-based & Swiss CO"},
-    {val:"Pensions",text:"Employee Benefits & Defined-Benefit Pension Risk"}
+    {val:"",text:"All financial reporting areas"},
+    {val:"Deferred taxes",text:"Deferred taxes (DTA/DTL and temporary differences)"},
+    {val:"Leases",text:"IFRS 16 leases (PV, carrying amount and split)"},
+    {val:"Impairment",text:"Impairment of assets and impairment tests"},
+    {val:"Goodwill",text:"Goodwill subsequent measurement (IFRS vs FER)"},
+    {val:"Accounting frameworks",text:"Frameworks: principle- vs rule-based and Swiss CO"},
+    {val:"Pensions",text:"Employee benefits and defined-benefit pension risk"}
   ],
   "Consolidated Statements":[
-    {val:"",text:"All Consolidation Areas"},
-    {val:"Acquisition accounting",text:"Acquisition Mechanics, Reserves & Goodwill"},
-    {val:"Equity method",text:"Equity Method & Associate Roll-Forwards"},
-    {val:"Consolidation concepts",text:"Group Scope, Elimination Logic & NCI Concepts"},
-    {val:"Accounting frameworks",text:"Consolidation Frameworks & Swiss CO Overlay"}
+    {val:"",text:"All consolidation areas"},
+    {val:"Acquisition accounting",text:"Acquisition mechanics, reserves and goodwill"},
+    {val:"Equity method",text:"Equity method and associate roll-forwards"},
+    {val:"Consolidation concepts",text:"Group scope, elimination logic and NCI concepts"},
+    {val:"Accounting frameworks",text:"Consolidation frameworks and Swiss CO overlay"}
   ],
   "Auditing":[
-    {val:"",text:"All Auditing Areas"},
-    {val:"Audit procedures",text:"Substantive & Analytical Audit Procedures"},
-    {val:"Materiality",text:"Materiality Benchmarks & Misstatements"},
-    {val:"Audit purpose",text:"Audit Purpose, Objectives & Credibility"},
-    {val:"Audit scope",text:"Swiss OR Triggers: Ordinary vs Limited Audit"},
-    {val:"Assurance",text:"Levels of Assurance (Reasonable vs Limited)"},
-    {val:"Audit opinions",text:"Audit Opinions, Modifications & Reports"},
-    {val:"Key Audit Matters",text:"Key Audit Matters (KAMs) Purpose & Disclosures"},
-    {val:"Going concern",text:"Going Concern Assessment & Reporting"},
-    {val:"Expectation gap",text:"The Audit Expectation Gap"},
-    {val:"Internal controls",text:"Internal Control System (ICS) & Governance"}
+    {val:"",text:"All auditing areas"},
+    {val:"Audit procedures",text:"Substantive and analytical audit procedures"},
+    {val:"Materiality",text:"Materiality benchmarks and misstatements"},
+    {val:"Audit purpose",text:"Audit purpose, objectives and credibility"},
+    {val:"Audit scope",text:"Swiss OR triggers: ordinary vs limited audit"},
+    {val:"Assurance",text:"Levels of assurance (reasonable vs limited)"},
+    {val:"Audit opinions",text:"Audit opinions, modifications and reports"},
+    {val:"Key Audit Matters",text:"Key audit matters (KAMs): purpose and disclosures"},
+    {val:"Going concern",text:"Going concern assessment and reporting"},
+    {val:"Expectation gap",text:"The audit expectation gap"},
+    {val:"Internal controls",text:"Internal control system (ICS) and governance"}
   ],
   "Management Accounting":[
-    {val:"",text:"All Management Accounting Areas"},
-    {val:"CVP analysis",text:"Cost-Volume-Profit (CVP) & Breakeven Analysis"},
-    {val:"Manufacturing cost flows",text:"Manufacturing Cost Flows & COGM / COGS"},
-    {val:"Pricing and target costing",text:"Target Costing & Markup Pricing"},
-    {val:"Job costing",text:"Job Costing & Manufacturing Overhead Allocation"},
-    {val:"Cost concepts",text:"Direct vs Indirect & Fixed vs Variable Costs"}
+    {val:"",text:"All management accounting areas"},
+    {val:"CVP analysis",text:"Cost-volume-profit (CVP) and breakeven analysis"},
+    {val:"Manufacturing cost flows",text:"Manufacturing cost flows and COGM / COGS"},
+    {val:"Pricing and target costing",text:"Target costing and markup pricing"},
+    {val:"Job costing",text:"Job costing and manufacturing overhead allocation"},
+    {val:"Cost concepts",text:"Direct vs indirect and fixed vs variable costs"}
   ],
   "Budgeting":[
-    {val:"",text:"All Budgeting Areas"},
-    {val:"Cash collections",text:"Cash Collections & Cash Budgets"},
-    {val:"Activity-based budgeting",text:"Activity-Based Budgeting (ABB)"},
-    {val:"Production budget",text:"Production & Materials Budgets"},
-    {val:"Sales budget",text:"Sales Forecasting & Operating Budgets"},
-    {val:"Purchases budget",text:"Direct Materials Purchases Budget"},
-    {val:"Income statement budget",text:"Budgeted Income Statement & Master Budget"}
+    {val:"",text:"All budgeting areas"},
+    {val:"Cash collections",text:"Cash collections and cash budgets"},
+    {val:"Activity-based budgeting",text:"Activity-based budgeting (ABB)"},
+    {val:"Production budget",text:"Production and materials budgets"},
+    {val:"Sales budget",text:"Sales forecasting and operating budgets"},
+    {val:"Purchases budget",text:"Direct materials purchases budget"},
+    {val:"Income statement budget",text:"Budgeted income statement and master budget"}
   ],
   "Variances":[
-    {val:"",text:"All Variance Analysis Areas"},
-    {val:"Flexible budgets",text:"Flexible Budgets vs Static Budgets"},
-    {val:"Flexible-budget variance",text:"Flexible-Budget & Sales-Volume Variances"},
-    {val:"Direct material variances",text:"Direct Material Price & Efficiency Variances"},
-    {val:"Direct labor price variance",text:"Direct Labor Rate & Efficiency Variances"},
-    {val:"Fixed-overhead variances",text:"Fixed & Variable Overhead Variance Analysis"}
+    {val:"",text:"All variance analysis areas"},
+    {val:"Flexible budgets",text:"Flexible budgets vs static budgets"},
+    {val:"Flexible-budget variance",text:"Flexible-budget and sales-volume variances"},
+    {val:"Direct material variances",text:"Direct material price and efficiency variances"},
+    {val:"Direct labor price variance",text:"Direct labor rate and efficiency variances"},
+    {val:"Fixed-overhead variances",text:"Fixed and variable overhead variance analysis"}
   ]
 };
 
@@ -377,19 +377,33 @@ function startSession(ids,mode){
   focusQuestion();
 }
 
-function retry(id){startSession([id],'retry');}
-
 // =================== PRACTICE MODE ===================
 function renderHome(){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
     const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length;
-    $('#main').innerHTML=`<section class="welcome study-hero"><span class="eyebrow">YOUR STUDY SPACE</span><h2>Think it through.<br>Build your confidence.</h2><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practising':'Start practising'} <span aria-hidden="true">→</span></button><button id="welcome-exam">Launch Exam Mode ⏱️</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">0${index+1}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span><span class="topic-arrow" aria-hidden="true">→</span></button>`;}).join('')}</div></section>`;
-    if(state.session)$('#welcome-start').textContent='Resume session →';
+    $('#main').innerHTML=`<section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">0${index+1}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
+    if(state.session)$('#welcome-start').textContent='Resume session';
     $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
-    $$('[data-topic]').forEach(el=>el.onclick=()=>{
-      $('#topic').value=el.dataset.topic;populateSubtopics(el.dataset.topic);$('#subtopic').value='';$('#difficulty').value='';$('#setup').requestSubmit();
-    });
+    $$('[data-topic]').forEach(el=>el.onclick=()=>startTopicSession(el.dataset.topic));
+}
+
+// Starts a mixed-difficulty practice session limited to one topic.
+function startTopicSession(topic){
+  $('#topic').value=topic;populateSubtopics(topic);$('#subtopic').value='';$('#difficulty').value='';$('#setup').requestSubmit();
+}
+
+// Two cards at the end of a session; a null recommendation gets no card.
+function recommendationCards(sessionAttempts){
+  const scored=bank.questions.filter(q=>q.status==='validated');
+  const {mostMistakes,leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
+  const cards=[['Most mistakes',mostMistakes],['Least covered',leastCovered]].filter(([,topic])=>topic);
+  if(!cards.length)return '';
+  return `<div class="recommendations">${cards.map(([title,topic])=>`<div class="recommendation"><p>${title}: ${h(topic)}</p><button type="button" data-recommend-topic="${h(topic)}">Practice ${h(topic)}</button></div>`).join('')}</div>`;
+}
+
+function bindRecommendations(){
+  $$('[data-recommend-topic]').forEach(el=>el.onclick=()=>startTopicSession(el.dataset.recommendTopic));
 }
 
 function renderPractice(){
@@ -400,6 +414,11 @@ function renderPractice(){
   const attempt=state.attempts.find(a=>a.id===session.attemptId);
   const d=state.drafts[q.id];
   const completed=session.attemptIds.length;
+  // A question answered in an earlier session is not preselected. Its earlier
+  // answer is cleared from the draft, so only a new choice in this session is shown.
+  const earlier=attempt?null:state.attempts.filter(a=>a.questionId===q.id&&!session.attemptIds.includes(a.id)).sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)).at(-1)||null;
+  if(earlier&&d?.selected&&d.selected===earlier.optionId)state.drafts[q.id]={...d,selected:null};
+  const selectedId=earlier?null:d?.selected;
 
   $('#main').innerHTML=`
     <div class="session-head">
@@ -416,11 +435,12 @@ function renderPractice(){
         <div class="prompt" id="question-prompt">${format(q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,''))}</div>
         ${q.assumptions.length?`<details class="assumptions"><summary>Assumptions for this question</summary>${q.assumptions.map(s=>`<p>${h(s)}</p>`).join('')}</details>`:''}
         <form id="answer-form">
+          ${earlier?'<p class="muted repeat-hint">Repeat: answered before</p>':''}
           <fieldset class="options" ${attempt?'disabled':''}>
             <legend class="visually-hidden">Choose one answer</legend>
             ${session.order.map((id,idx)=>{
               const o=q.options.find(o=>o.id===id);
-              const isChecked=(attempt?attempt.optionId:d?.selected)===id;
+              const isChecked=(attempt?attempt.optionId:selectedId)===id;
               return `<label class="option ${attempt&&isChecked?(id===q.correctOptionId?'correct-option':'wrong-option'):''}">
                 <input type="radio" name="answer" value="${h(id)}" ${isChecked?'checked':''}>
                 <span><strong>${h(shownLabel(session.order,id))}.</strong> ${h(optionText(o))}</span>
@@ -433,8 +453,8 @@ function renderPractice(){
             <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
             <div class="action-buttons">
               ${!attempt?`<button type="button" id="unknown" class="quiet">Skip</button>`:''}
-              <button class="primary" type="submit" id="btn-action" ${!attempt&&!d?.selected?'disabled':''}>
-                ${!attempt?'Check answer':(session.index+1<session.queue.length?'Next question →':'See results')}
+              <button class="primary" type="submit" id="btn-action" ${!attempt&&!selectedId?'disabled':''}>
+                ${!attempt?'Check answer':(session.index+1<session.queue.length?'Next question':'See results')}
               </button>
             </div>
           </div>
@@ -533,27 +553,27 @@ function renderExamOverview(){
   const selectedTopic=$('#exam-topic-select')?.value||'Financial Reporting';
 
   let config={
-    title:'Whole Exam (Both Parts)',
+    title:'Whole exam (both parts)',
     duration:'90 minutes',
     exerciseCount:'50 exercises',
     marks:'90 marks total',
     description:'Full-length mock exam replicating official past ACA exam papers across all course modules.',
     modules:[
-      {title:'Part 1: Accounting & Auditing (45m · 45 Marks)',desc:'30 exercises: Financial Reporting & Consolidation (30 marks) + Auditing (15 marks).'},
-      {title:'Part 2: Controlling (45m · 45 Marks)',desc:'20 exercises across management accounting, budgeting, variances, capital budgeting and performance management.'}
+      {title:'Part 1: Accounting & auditing (45 min · 45 marks)',desc:'30 exercises: Financial Reporting & Consolidation (30 marks) + Auditing (15 marks).'},
+      {title:'Part 2: Controlling (45 min · 45 marks)',desc:'20 exercises across management accounting, budgeting, variances, capital budgeting and performance management.'}
     ]
   };
 
   if(selectedPart==='part1'){
     config={
-      title:'Part 1: Accounting & Auditing',
+      title:'Part 1: Accounting & auditing',
       duration:'45 minutes',
       exerciseCount:'30 exercises',
       marks:'45 marks total',
       description:'Replication of Part 1 from official past ACA exam papers. Strictly 45 minutes.',
       modules:[
-        {title:'Accounting (30 Marks · 20 Exercises)',desc:'Financial reporting standards, deferred taxes, leases, revenue recognition & consolidated balance sheets.'},
-        {title:'Auditing (15 Marks · 10 Exercises)',desc:'Audit risk assessment, internal controls, substantive testing procedures & audit opinion formulation.'}
+        {title:'Accounting (30 marks · 20 exercises)',desc:'Financial reporting standards, deferred taxes, leases, revenue recognition & consolidated balance sheets.'},
+        {title:'Auditing (15 marks · 10 exercises)',desc:'Audit risk assessment, internal controls, substantive testing procedures & audit opinion formulation.'}
       ]
     };
   }else if(selectedPart==='part2'){
@@ -564,27 +584,26 @@ function renderExamOverview(){
       marks:'45 marks total',
       description:'Replication of Part 2 from official past ACA exam papers. Strictly 45 minutes.',
       modules:[
-        {title:'Management Accounting & Cost Systems (30 Marks)',desc:'Absorption vs. variable costing, contribution margin, breakeven analysis & cost allocations.'},
+        {title:'Management accounting & cost systems (30 marks)',desc:'Absorption vs. variable costing, contribution margin, breakeven analysis & cost allocations.'},
         {title:'Budgeting, Variances & Investment Decisions',desc:'Operating budgets, variance analysis, capital budgeting, balanced scorecards and performance measures.'}
       ]
     };
   }else if(selectedPart==='topic'){
     const count=bank?bank.questions.filter(q=>q.status==='validated'&&q.topic===selectedTopic).length:0;
     config={
-      title:`Topic Focus Exam: ${selectedTopic}`,
+      title:`Topic focus exam: ${selectedTopic}`,
       duration:'45 minutes',
       exerciseCount:`${Math.min(20,count)} exercises`,
       marks:'45 marks total',
       description:`Intensive timed exam sitting focused exclusively on ${selectedTopic} under strict exam conditions.`,
       modules:[
-        {title:`${selectedTopic} Focus (${Math.min(20,count)} Exercises)`,desc:`Simulated exam pool selected exclusively from validated ${selectedTopic} question bank (${count} questions available).`}
+        {title:`${selectedTopic} focus (${Math.min(20,count)} exercises)`,desc:`Simulated exam pool selected exclusively from validated ${selectedTopic} question bank (${count} questions available).`}
       ]
     };
   }
 
   $('#main').innerHTML=`
     <section class="welcome study-hero">
-      <span class="eyebrow">CHOSEN EXAM CONFIGURATION</span>
       <h2>${h(config.title)}</h2>
       <p class="exam-lead">${h(config.description)}</p>
     </section>
@@ -597,13 +616,13 @@ function renderExamOverview(){
 
     <section class="topic-section">
       <div class="section-heading">
-        <h2>Syllabus Coverage for Selected Exam</h2>
+        <h2>Syllabus coverage for selected exam</h2>
         <p class="muted">Based directly on official past exam papers.</p>
       </div>
       <div class="topic-grid">
         ${config.modules.map((m,idx)=>`
           <div class="topic-card">
-            <span class="topic-number">SECTION 0${idx+1}</span>
+            <span class="topic-number">Section ${idx+1}</span>
             <span class="topic-title">${h(m.title)}</span>
             <span class="topic-count">${h(m.desc)}</span>
           </div>
@@ -700,7 +719,7 @@ function stopExamTimer(){
 function toggleExamTimer(){
   examTimerPaused=!examTimerPaused;
   const btn=$('#timer-toggle-btn');
-  if(btn)btn.textContent=examTimerPaused?'▶ Resume':'⏸ Pause';
+  if(btn)btn.textContent=examTimerPaused?'Resume':'Pause';
 }
 
 function resetExamTimer(){
@@ -737,21 +756,21 @@ function renderExamActive(){
   $('#main').innerHTML=`
     <div class="exam-banner">
       <div>
-        <h2>Exam Mode — ${h(examTitle)}</h2>
+        <h2>Exam mode — ${h(examTitle)}</h2>
         <p>Exercise ${s.index+1} of ${s.queue.length} · Single choice · No deduction for wrong answers</p>
       </div>
       <div class="exam-banner-controls">
         <div class="exam-timer-box">
           <span class="exam-timer-display" id="exam-timer">${String(m).padStart(2,'0')}:${String(sec).padStart(2,'0')}</span>
-          <button id="timer-toggle-btn" class="exam-timer-toggle" type="button" title="Pause or resume timer">${examTimerPaused?'▶ Resume':'⏸ Pause'}</button>
-          <button id="timer-reset-btn" class="exam-timer-toggle" type="button" title="Reset countdown timer">🔄 Reset Timer</button>
+          <button id="timer-toggle-btn" class="exam-timer-toggle" type="button" title="Pause or resume timer">${examTimerPaused?'Resume':'Pause'}</button>
+          <button id="timer-reset-btn" class="exam-timer-toggle" type="button" title="Reset countdown timer">Reset timer</button>
         </div>
-        <button type="button" id="btn-banner-cancel-exam" class="exam-cancel-btn" title="Cancel this exam sitting">Cancel Exam ✕</button>
+        <button type="button" id="btn-banner-cancel-exam" class="exam-cancel-btn" title="Cancel this exam sitting">Cancel exam</button>
       </div>
     </div>
     <div class="palette-card">
       <div class="palette-header">
-        <span>Exercise Matrix (${s.queue.length} exercises)</span>
+        <span>Exercise matrix (${s.queue.length} exercises)</span>
         <div class="palette-legend">
           <span><span class="legend-dot" style="background:var(--green)"></span> Answered</span>
           <span><span class="review-flag" aria-hidden="true">⚑</span> Flagged</span>
@@ -793,11 +812,11 @@ function renderExamActive(){
         </fieldset>
         <div class="exam-nav-bar">
           <div class="exam-nav-left">
-            <button type="button" id="btn-exam-prev" ${s.index===0?'disabled':''}>← Previous</button>
-            <button type="button" id="btn-exam-cancel" class="quiet danger">Cancel Exam ✕</button>
+            <button type="button" id="btn-exam-prev" ${s.index===0?'disabled':''}>Previous</button>
+            <button type="button" id="btn-exam-cancel" class="quiet danger">Cancel exam</button>
           </div>
           <div class="exam-nav-right">
-            <button type="button" id="btn-exam-finish" class="danger">End & Submit Exam</button>
+            <button type="button" id="btn-exam-finish" class="danger">End and submit exam</button>
             <button type="button" id="btn-exam-next" class="primary">${s.index+1<s.queue.length?'Next':'Finish'}</button>
           </div>
         </div>
@@ -871,8 +890,7 @@ function showExamResults(){
 
   $('#main').innerHTML=`
     <section class="welcome">
-      <span class="eyebrow">EXAM MODE RESULTS</span>
-      <h2>Exam Score: ${correct} / ${rows.length} (${scorePct}%)</h2>
+      <h2>Exam score: ${correct} / ${rows.length} (${scorePct}%)</h2>
       <p>Passing benchmark is typically 50%. Wrong answers incurred zero deductions.</p>
       <div class="result-grid">
         <div><strong>${correct}</strong>Correct marks</div>
@@ -880,12 +898,13 @@ function showExamResults(){
         <div><strong>${unanswered}</strong>Unanswered</div>
       </div>
       <div class="actions">
-        <button class="primary" id="btn-exam-again">Take Another Exam</button>
-        <button id="btn-exam-history">View Learning History</button>
+        <button class="primary" id="btn-exam-again">Take another exam</button>
+        <button id="btn-exam-history">View learning history</button>
       </div>
+      ${recommendationCards(rows)}
     </section>
     <section class="dashboard-section">
-      <h3>Review Exam Exercises</h3>
+      <h3>Review exam exercises</h3>
       ${rows.map(a=>{
         const q=question(a.questionId);
         const correctOpt=q.options.find(o=>o.id===q.correctOptionId);
@@ -907,6 +926,7 @@ function showExamResults(){
   `;
   $('#btn-exam-again').onclick=()=>setAppMode('exam');
   $('#btn-exam-history').onclick=()=>setView('history');
+  bindRecommendations();
 }
 
 // =================== RESULTS & HISTORY ===================
@@ -920,7 +940,7 @@ function showResults(){
   save();
   $('#main').innerHTML=`
     <section class="welcome">
-      <h2>Session Results</h2>
+      <h2>Session results</h2>
       <p>${rows.length} submitted of ${session.queue.length} questions.</p>
       <div class="result-grid">
         <div><strong>${correct}</strong>Correct</div>
@@ -929,58 +949,37 @@ function showResults(){
       </div>
       <p>Accuracy among answered attempts: <strong>${correct+incorrect?Math.round(100*correct/(correct+incorrect))+'%':'No answered attempts'}</strong>.</p>
       <div class="actions">
-        <button class="primary" id="again">Start Another Session</button>
-        <button id="results-history">See Learning History</button>
+        <button class="primary" id="again">Start another session</button>
+        <button id="results-history">See learning history</button>
       </div>
+      ${recommendationCards(rows)}
     </section>
   `;
   $('#again').onclick=()=>$('#setup').requestSubmit();
   $('#results-history').onclick=()=>setView('history');
+  bindRecommendations();
   $('#main').focus();
   updateAvailable();
 }
 
 function renderHistory(){
   stopExamTimer();
-  const latest=latestAttempts(state.attempts);
-  const retryable=bank.questions.filter(q=>q.status==='validated'&&latest.has(q.id)&&latest.get(q.id).outcome!=='correct');
-  const tags={};state.attempts.forEach(a=>{if(a.misconception)tags[a.misconception]=(tags[a.misconception]||0)+1;});
-  const touched=bank.questions.filter(q=>state.drafts[q.id]||state.attempts.some(a=>a.questionId===q.id));
+  const rows=topicProgress(bank.questions,state.attempts);
 
   $('#main').innerHTML=`
-    <h2>Learning History</h2>
-    <p class="muted">All submitted attempts are retained. Repeated attempts count separately and help reinforce difficult topics.</p>
-    <div class="table-wrap">
-      <table>
-        <caption>Attempts by Topic</caption>
+    <h2>Learning history</h2>
+    ${rows.length?`<div class="table-wrap">
+      <table class="topic-table">
+        <caption>Progress by topic</caption>
         <thead>
-          <tr><th scope="col">Topic</th><th scope="col">Attempts</th><th scope="col">Correct</th><th scope="col">Incorrect</th><th scope="col">Unknown</th><th scope="col">Accuracy</th></tr>
+          <tr><th scope="col">Topic</th><th scope="col">Answered</th><th scope="col">Questions missed</th></tr>
         </thead>
         <tbody>
-          ${topicStats(bank.questions,state.attempts).map(s=>`<tr><th scope="row">${h(s.topic)}</th><td>${s.total}</td><td>${s.correct}</td><td>${s.incorrect}</td><td>${s.unknown}</td><td>${s.accuracy===null?'—':s.accuracy+'%'}</td></tr>`).join('')}
+          ${rows.map(r=>`<tr><th scope="row">${h(r.topic)}</th><td>${r.percentAnswered}%</td><td>${r.wrongQuestions}</td></tr>`).join('')}
         </tbody>
       </table>
-    </div>
-    <section class="dashboard-section">
-      <h3>Questions to Revisit (${retryable.length})</h3>
-      ${retryable.length?retryable.map(q=>`<div class="history-item"><p><strong>${h(q.topic)} · ${h(q.prompt.slice(0,90))}…</strong> — ${label[latest.get(q.id).outcome]}</p><button data-retry="${h(q.id)}">Retry question</button></div>`).join(''):'<p class="empty">No outstanding missed questions. Great work!</p>'}
-    </section>
-    <section class="dashboard-section">
-      <h3>Saved Notes & Submissions (${touched.length} questions)</h3>
-      ${touched.length?touched.map(q=>{
-        const rows=state.attempts.filter(a=>a.questionId===q.id).slice().reverse();
-        return `<details class="history-item">
-          <summary>${h(q.topic)} — ${rows.length} attempt${rows.length===1?'':'s'}</summary>
-          ${q.scenario?`<div class="scenario">${format(q.scenario)}</div>`:''}
-          <div class="scenario">${format(q.prompt)}</div>
-          ${notes(q,true)}
-          <button data-retry="${h(q.id)}">Retry as new attempt</button>
-          ${rows.map(a=>`<details><summary>${label[a.outcome]} · ${h(new Date(a.timestamp).toLocaleString())}</summary><p>Selected: ${h(q.options.find(o=>o.id===a.optionId)?.text||'I don’t know')}</p><div class="snapshot">${h(a.notesSnapshot||'No notes at submission.')}</div></details>`).join('')}
-        </details>`;
-      }).join(''):'<p class="muted">Your question notes and submissions will appear here.</p>'}
-    </section>
+    </div>`:'<p class="muted">No validated questions yet.</p>'}
   `;
-  $$('[data-retry]').forEach(el=>el.onclick=()=>retry(el.dataset.retry));
 }
 
 function download(text,name){

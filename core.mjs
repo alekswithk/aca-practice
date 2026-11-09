@@ -44,6 +44,49 @@ export function topicStats(questions,attempts){
     return {topic,total:rows.length,correct,incorrect,unknown,accuracy:correct+incorrect?Math.round(100*correct/(correct+incorrect)):null};
   });
 }
+// Attempts on questions that are not scored are ignored throughout.
+const scoredById=questions=>new Map(questions.filter(q=>q.status==='validated').map(q=>[q.id,q]));
+const byText=(x,y)=>x<y?-1:x>y?1:0;
+// One entry per topic with scored questions, in first-seen order. Counts questions, not attempts.
+export function topicProgress(questions, attempts){
+  const scored=scoredById(questions);
+  const topics=new Map();
+  for(const q of scored.values()){
+    if(!topics.has(q.topic)) topics.set(q.topic,{topic:q.topic,ids:new Set(),answeredIds:new Set(),wrongIds:new Set()});
+    topics.get(q.topic).ids.add(q.id);
+  }
+  for(const a of attempts){
+    const q=scored.get(a.questionId);
+    if(!q) continue;
+    const t=topics.get(q.topic);
+    t.answeredIds.add(q.id);
+    if(a.outcome==='incorrect') t.wrongIds.add(q.id);
+  }
+  return [...topics.values()].map(({topic,ids,answeredIds,wrongIds})=>{
+    const scoredCount=ids.size, answered=answeredIds.size;
+    return {topic,scored:scoredCount,answered,percentAnswered:scoredCount?Math.round(100*answered/scoredCount):0,wrongQuestions:wrongIds.size};
+  });
+}
+// sessionAttempts drives mostMistakes; allAttempts (defaults to sessionAttempts) drives leastCovered.
+export function recommendTopics(questions, sessionAttempts, allAttempts=sessionAttempts){
+  const scored=scoredById(questions);
+  const session=new Map();
+  for(const a of sessionAttempts){
+    const q=scored.get(a.questionId);
+    if(!q) continue;
+    const s=session.get(q.topic)??{total:0,incorrect:0};
+    s.total++;
+    if(a.outcome==='incorrect') s.incorrect++;
+    session.set(q.topic,s);
+  }
+  const mistaken=[...session].filter(([,s])=>s.incorrect>0).sort(([ta,a],[tb,b])=>
+    (b.incorrect-a.incorrect)||(b.incorrect/b.total-a.incorrect/a.total)||byText(ta,tb));
+  const mostMistakes=mistaken.length?mistaken[0][0]:null;
+  const ranked=topicProgress(questions,allAttempts).sort((a,b)=>
+    (a.percentAnswered-b.percentAnswered)||(a.answered-b.answered)||byText(a.topic,b.topic));
+  const leastCovered=ranked.find(t=>t.topic!==mostMistakes)?.topic??null;
+  return {mostMistakes,leastCovered:ranked.length>1?leastCovered:null};
+}
 export function validateBackup(value,bank){
   const fail=()=>{throw new Error('Invalid or incompatible backup. Your current data has not been changed.');};
   const object=x=>x && typeof x==='object' && !Array.isArray(x);
