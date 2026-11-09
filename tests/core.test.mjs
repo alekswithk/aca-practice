@@ -39,10 +39,10 @@ console.log('PASS: shuffled grading for every scored question, snapshots, unknow
 // An existing browser profile upgrades the bank without losing drafts, attempts or option order.
 const legacy=structuredClone(restored);legacy.bankVersion='2026-09-30.1';legacy.attempts.forEach(a=>a.bankVersion=legacy.bankVersion);
 const upgraded=validateBackup(legacy,bank);assert.equal(upgraded.bankVersion,bank.bankVersion);assert.deepEqual(upgraded.attempts,legacy.attempts);assert.deepEqual(upgraded.drafts,legacy.drafts);assert.deepEqual(upgraded.session,legacy.session);
-assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,46);
-assert.equal(questions.filter(q=>q.topic==='Management Accounting'&&q.status==='review').length,5);
+assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,43);
+assert.equal(questions.filter(q=>q.topic==='Management Accounting'&&q.status==='review').length,8);
 assert.equal(questions.filter(q=>q.topic==='Management Accounting').length,51);
-console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 46 scored and 5 excluded.');
+console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 43 scored and 8 excluded.');
 
 const exam=emptyState(bank.bankVersion);
 exam.session={queue:[q.id],index:0,order:q.options.map(o=>o.id),mode:'exam-topic',attemptId:null,attemptIds:[],examFlags:{[q.id]:true},examInitialDuration:2700,examTimeRemaining:1850,examTopic:q.topic};

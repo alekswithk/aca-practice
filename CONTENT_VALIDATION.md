@@ -2,7 +2,7 @@
 
 Bank version: 2026-10-25.1. The original bank was validated on 30 September 2026.
 
-**254 questions imported/authored: 236 validated for scoring, 18 unresolved for review.** The six local Markdown banks contribute 173 source questions, including 14 Capital Budgeting and 16 Cost and Performance Management questions. Budgeting and variances contribute another 45. Batch headings mention some absent questions; absent bodies were not invented. The Financial Reporting bank places ABC questions 14–15 after AlphaTech; their ABC context is restored explicitly. All available local source excerpts are compared exactly. Only the external Budgeting and Variances source lacks a local Markdown copy.
+**254 questions imported/authored: 229 validated for scoring, 25 excluded from scoring (18 unresolved for review, 7 duplicates).** The six local Markdown banks contribute 173 source questions, including 14 Capital Budgeting and 16 Cost and Performance Management questions. Budgeting and variances contribute another 45. Batch headings mention some absent questions; absent bodies were not invented. The Financial Reporting bank places ABC questions 14–15 after AlphaTech; their ABC context is restored explicitly. All available local source excerpts are compared exactly. Only the external Budgeting and Variances source lacks a local Markdown copy.
 
 ## Generated coverage
 
@@ -41,7 +41,7 @@ Seventeen numerical results are independently recomputed with Decimal arithmetic
 
 Seven questions present cash flows or profit-center figures in tables. All original table rows are retained. Authored cash-flow tables show the same source amounts and timing, with presentation changes recorded in each question. Tables use row/column headers, right-aligned numeric columns and a keyboard-focusable horizontal scrolling region. Shared scenarios also appear in learning history.
 
-The content gate passes with 254 records, 218 source imports, 36 generated questions, 106 independent numeric recomputations, 236 scored questions and 18 excluded questions. Source comparisons skip only the external Budgeting and Variances file.
+The content gate passes with 254 records, 218 source imports, 36 generated questions, 106 independent numeric recomputations, 229 scored questions and 25 excluded questions: 18 unresolved and 7 duplicates of questions kept elsewhere in the bank, excluded so they are not counted twice. Source comparisons skip only the external Budgeting and Variances file.
 
 ## Unresolved source questions — excluded from scoring
 
