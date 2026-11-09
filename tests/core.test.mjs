@@ -59,3 +59,13 @@ for(const orders of [null,[],{missing:['a']},{[q.id]:['a','a','b','c']},{[q.id]:
  const bad=structuredClone(navigation);bad.session.questionOrders=orders;assert.throws(()=>validateBackup(bad,bank));
 }
 console.log('PASS: practice navigation order round trip and invalid cached-order rejection.');
+{
+ const {unexploredFirst}=await import('../core.mjs');
+ const attempts=[{questionId:'b'},{questionId:'d'}];
+ assert.deepEqual(unexploredFirst(['b','a','d','c'],attempts),['a','c','b','d'],'Unexplored questions come first, each group keeps its order');
+ assert.deepEqual(unexploredFirst(['a','b'],[]),['a','b']);
+ const scoped=structuredClone(navigation);scoped.session.scope={topic:'Financial Reporting',subtopic:'Deferred taxes',difficulty:''};
+ assert.deepEqual(validateBackup(scoped,bank).session.scope,scoped.session.scope,'Session scope survives backups');
+ const badScope=structuredClone(navigation);badScope.session.scope={topic:5};assert.throws(()=>validateBackup(badScope,bank));
+ console.log('PASS: unexplored-first ordering and session scope round trip.');
+}

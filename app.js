@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -305,9 +305,13 @@ function populateSubtopics(topic){
 function updateAvailable(){
   if(!bank)return;
   const prefs=Object.fromEntries(['topic','subtopic','difficulty','origin'].map(k=>[k,$('#'+k)?.value||'']));
-  const n=available(bank.questions,prefs,$('#mode').value,state.attempts).length;
-  $('#available').textContent=`${n} matching validated question${n===1?'':'s'}`;
+  const pool=available(bank.questions,prefs,$('#mode').value,state.attempts),n=pool.length;
+  const seen=new Set(state.attempts.map(a=>a.questionId)),fresh=pool.filter(q=>!seen.has(q.id)).length;
+  $('#available').textContent=`${n} matching validated question${n===1?'':'s'}`+(n?` · ${fresh} unexplored`:'');
   $('#start').disabled=!n;
+  const length=$('#length-slider')?.value||15;
+  const scope=prefs.subtopic||prefs.topic||'All topics';
+  $('#setup-hint').textContent=appMode==='exam'?'Exam mode':`Practice · ${scope} · ${length} questions`;
 }
 
 function setView(next,focus=true){
@@ -353,6 +357,7 @@ function setAppMode(mode,show=true){
       save();
     }
   }
+  updateAvailable();
   if(show)setView('practice');
 }
 
@@ -368,13 +373,46 @@ function render(){
   if($('#global-save').classList.contains('failed'))$$('.save-status').forEach(el=>{el.textContent='Not saved — export a backup';el.classList.add('failed');});
 }
 
-function startSession(ids,mode){
+function startSession(ids,mode,scope){
   stopExamTimer();
   const q=question(ids[0]);
   state.session={queue:ids,index:0,order:shuffleOptions(q.options),mode,attemptId:null,attemptIds:[],examFlags:{}};
+  if(scope)state.session.scope={topic:scope.topic||'',subtopic:scope.subtopic||'',difficulty:scope.difficulty||''};
   setAppMode('practice',false);
   setView('practice',false);
   focusQuestion();
+}
+
+// A topic session is titled by what it tests. A mixed session shows its
+// position and length instead.
+function subtopicLabel(topic,subtopic){
+  const lists=topic?[preciseSubtopics[topic]||[]]:Object.values(preciseSubtopics);
+  for(const list of lists){const hit=list.find(s=>s.val===subtopic);if(hit)return hit.text;}
+  return subtopic;
+}
+function sessionTopic(session){
+  const scope=session.scope;
+  if(scope?.topic)return scope.topic;
+  if(scope?.subtopic)return question(session.queue[0])?.topic||'';
+  return '';
+}
+function sessionTitle(session){
+  const topic=session.mode==='mixed'?sessionTopic(session):'';
+  if(!topic)return `Question ${session.index+1} of ${session.queue.length}`;
+  return session.scope.subtopic?subtopicLabel(topic,session.scope.subtopic):topic;
+}
+function sessionSubtitle(session,completed){
+  const topic=session.mode==='mixed'?sessionTopic(session):'';
+  const parts=[];
+  if(topic){
+    if(session.scope.subtopic)parts.push(topic);
+    if(session.scope.difficulty)parts.push(session.scope.difficulty);
+  }else{
+    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?'Retry':session.mode==='mixed'?'Mixed topics':'Practice mode');
+    if(session.mode==='mixed'&&session.scope?.difficulty)parts.push(session.scope.difficulty);
+  }
+  parts.push(`${completed} of ${session.queue.length} submitted`);
+  return parts.join(' · ');
 }
 
 // =================== PRACTICE MODE ===================
@@ -423,8 +461,8 @@ function renderPractice(){
   $('#main').innerHTML=`
     <div class="session-head">
       <div>
-        <h2>Question ${session.index+1} of ${session.queue.length}</h2>
-        <p class="muted">${h(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?'Retry':'Practice mode')} · ${completed} submitted in this session</p>
+        <h2>${h(sessionTitle(session))}</h2>
+        <p class="muted">${h(sessionSubtitle(session,completed))}</p>
       </div>
       <button id="end-session">End session & see results</button>
     </div>
@@ -1002,11 +1040,24 @@ function download(text,name){
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
+// Options menu: a list of sections, one open at a time. The name attribute
+// does this natively; the listener covers browsers without it. Closing the
+// menu folds it back to the list.
+function bindOptionsMenu(){
+  const menu=$('.options-menu'),sections=$$('.options-section');
+  sections.forEach(el=>el.addEventListener('toggle',()=>{
+    if(el.open)sections.forEach(other=>{if(other!==el)other.open=false;});
+  }));
+  menu.addEventListener('toggle',()=>{if(!menu.open)sections.forEach(el=>el.open=false);});
+  document.addEventListener('click',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false;});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}});
+}
+
 async function init(){
   try{
+    bindOptionsMenu();
     initTheme();
     $('#theme-toggle').onclick=toggleTheme;
-    if(matchMedia('(max-width: 760px)').matches)$('#session-settings').open=false;
 
     const response=await fetch('./content/questions.json');
     if(!response.ok)throw new Error('Question data could not be loaded.');
@@ -1076,10 +1127,10 @@ async function init(){
       e.preventDefault();
       const prefs=Object.fromEntries(['topic','subtopic','difficulty','origin'].map(k=>[k,$('#'+k)?.value||'']));
       state.preferences=prefs;
-      const pool=shuffle(available(bank.questions,prefs,'mixed',state.attempts)).map(q=>q.id);
+      const pool=unexploredFirst(shuffle(available(bank.questions,prefs,'mixed',state.attempts)).map(q=>q.id),state.attempts);
       if(!pool.length){notify('No questions match these filters. Try selecting All topics.');return;}
       const length=Number($('#length-slider')?.value||$('#length')?.value||15);
-      startSession(pool.slice(0,length),'mixed');
+      startSession(pool.slice(0,length),'mixed',prefs);
     };
 
     // Exam start button: explicit start from left pane!
