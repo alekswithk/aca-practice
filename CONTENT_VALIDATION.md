@@ -96,3 +96,14 @@ python3 content/validate_bank.py
 ```
 
 To re-import and rebuild after an intentional source/content edit, run `python3 content/build_bank.py` then re-run validation. The builder uses the parent course-source folders; the delivered app uses only `questions.json`.
+
+## AI-generated questions (bank version 2026-11-09.2)
+
+210 new questions are marked `aiGenerated: true` and show an **AI-generated** tag in the app. They were written by Claude, not taken from an exam or the lessons.
+
+- **Practice set (160):** 20 per topic for all eight topics (`set: "bank"`). They join practice, follow-ups and the mixed exams.
+- **AI mock exam (50):** a fixed paper (`set: "mock-exam"`) with the past-paper layout. Part 1: 10 Consolidated Statements, 10 Financial Reporting, 10 Auditing (45 marks). Part 2: 6 Management Accounting, 4 Budgeting, 4 Variances, 3 Capital Budgeting, 3 Cost and Performance Management (45 marks). These questions never appear in practice, follow-ups, topic progress or the mixed exams. Choose **AI mock exam** in exam mode to sit it.
+
+Company names and figures are invented. Every numeric question (125 of them) is checked twice: the generator computes the option texts in Python, and a separate formula is re-evaluated with Decimal both at build time and by `validate_bank.py`. The build fails if the two disagree, if the correct option does not show the result, or if a wrong option shows it (except deliberate wrong-direction distractors such as “F” vs “U”). Where “None of the answers A)–D) is correct” is the key, the check confirms no listed option shows the result. Conceptual questions follow the course sections cited in their evidence; they were not reviewed by an examiner. Marks on the mock exam are study estimates.
+
+Rebuild with `python3 content/build_ai_questions.py`, then run `python3 content/validate_bank.py`.

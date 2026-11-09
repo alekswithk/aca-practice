@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {emptyState,shuffle,grade,makeAttempt,available,followup,topicStats,validateBackup,mergeBackups} from '../core.mjs';
+import {emptyState,shuffle,grade,makeAttempt,available,followup,topicStats,validateBackup,mergeBackups,mockExam,inPractice} from '../core.mjs';
 const bank=JSON.parse(readFileSync(new URL('../content/questions.json',import.meta.url)));
 const questions=bank.questions,q=questions.find(q=>q.id==='tax-01');
 for(const original of questions.filter(q=>q.status==='validated')){
@@ -39,10 +39,29 @@ console.log('PASS: shuffled grading for every scored question, snapshots, unknow
 // An existing browser profile upgrades the bank without losing drafts, attempts or option order.
 const legacy=structuredClone(restored);legacy.bankVersion='2026-09-30.1';legacy.attempts.forEach(a=>a.bankVersion=legacy.bankVersion);
 const upgraded=validateBackup(legacy,bank);assert.equal(upgraded.bankVersion,bank.bankVersion);assert.deepEqual(upgraded.attempts,legacy.attempts);assert.deepEqual(upgraded.drafts,legacy.drafts);assert.deepEqual(upgraded.session,legacy.session);
-assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,43);
-assert.equal(questions.filter(q=>q.topic==='Management Accounting'&&q.status==='review').length,8);
-assert.equal(questions.filter(q=>q.topic==='Management Accounting').length,51);
-console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 43 scored and 8 excluded.');
+const sourceMA=questions.filter(q=>q.topic==='Management Accounting'&&!q.aiGenerated);
+assert.equal(available(sourceMA,{topic:'Management Accounting'},'mixed',[]).length,43);
+assert.equal(sourceMA.filter(q=>q.status==='review').length,8);
+assert.equal(sourceMA.length,51);
+assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,43+20,'20 AI practice questions join the Management Accounting pool');
+console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 43 scored and 8 excluded; 20 AI questions added.');
+
+// AI-generated questions: 20 practice questions per topic, plus a separate 50-question mock exam that never enters practice pools.
+const topics=[...new Set(questions.filter(q=>!q.aiGenerated).map(q=>q.topic))];
+for(const topic of topics)assert.equal(questions.filter(q=>q.aiGenerated&&q.set==='bank'&&q.topic===topic).length,20,topic);
+const mock=mockExam(questions);
+assert.equal(mock.length,50);assert.deepEqual(mock.map(q=>q.examOrder),Array.from({length:50},(_,i)=>i+1));
+assert.equal(mockExam(questions,1).length,30);assert.equal(mockExam(questions,2).length,20);
+assert.equal(mockExam(questions,1).reduce((s,q)=>s+q.marks,0),45);assert.equal(mockExam(questions,2).reduce((s,q)=>s+q.marks,0),45);
+assert.ok(mock.every(q=>q.aiGenerated&&!inPractice(q)));
+const practiceIds=new Set(available(questions,{},'mixed',[]).map(q=>q.id));
+assert.ok(mock.every(q=>!practiceIds.has(q.id)),'mock questions never appear in practice');
+for(const m of mock){const a=makeAttempt(m,m.options.find(o=>o.id!==m.correctOptionId).id,'','2026-11-09T12:00:00Z','x',bank.bankVersion);const f=followup(m,a,questions,[]);assert.ok(!f||f.set!=='mock-exam');}
+const mockState=emptyState(bank.bankVersion);
+mockState.session={queue:mock.map(q=>q.id),index:0,order:mock[0].options.map(o=>o.id),mode:'exam-full',attemptId:null,attemptIds:[],examFlags:{},examInitialDuration:5400,examTimeRemaining:5400,examTopic:null,examSource:'mock'};
+assert.deepEqual(validateBackup(structuredClone(mockState),bank),mockState,'AI mock exam session survives a backup/reload');
+const badSource=structuredClone(mockState);badSource.session.examSource='other';assert.throws(()=>validateBackup(badSource,bank));
+console.log('PASS: 20 AI practice questions per topic; 50-question AI mock exam (45 + 45 marks) kept out of practice, mixed exams and follow-ups.');
 
 const exam=emptyState(bank.bankVersion);
 exam.session={queue:[q.id],index:0,order:q.options.map(o=>o.id),mode:'exam-topic',attemptId:null,attemptIds:[],examFlags:{[q.id]:true},examInitialDuration:2700,examTimeRemaining:1850,examTopic:q.topic};
