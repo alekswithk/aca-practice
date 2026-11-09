@@ -1,5 +1,5 @@
 export const STORAGE_KEY = 'aca-practice-v1';
-export const emptyState = bankVersion => ({app:'aca-practice',schemaVersion:1,bankVersion,drafts:{},attempts:[],session:null,preferences:{topic:'',subtopic:'',difficulty:'',origin:''},view:'practice'});
+export const emptyState = bankVersion => ({app:'aca-practice',schemaVersion:1,bankVersion,drafts:{},attempts:[],flags:{},session:null,preferences:{topic:'',subtopic:'',difficulty:'',origin:''},view:'practice'});
 export function shuffle(items, random=Math.random) {
   const result=[...items];
   for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}
@@ -108,6 +108,9 @@ export function topicBreakdown(questions,attempts){
   }
   return [...rows.values()].sort((x,y)=>(x.correct/x.total-y.correct/y.total)||(y.total-x.total)||byText(x.topic,y.topic));
 }
+// Practice flags: {questionId:{flagged,updatedAt}}. Unflagging keeps the entry
+// with flagged:false, so the newer choice wins when two copies are merged.
+export const flaggedIds=(questions,flags={})=>questions.filter(q=>q.status==='validated'&&flags[q.id]?.flagged).map(q=>q.id);
 // Spaced review, worked out from attempt history alone. A wrong, skipped or
 // guessed answer makes a question due 1 day later. The first sure correct
 // answer once it is due pushes it to a final check 3 days later; a second one
@@ -155,6 +158,15 @@ export function validateBackup(value,bank){
     if(a.confidence!==undefined)out.confidence=a.confidence;
     return out;
   });
+  const flags={};
+  if(value.flags!==undefined){
+    if(!object(value.flags))fail();
+    for(const [id,f] of Object.entries(value.flags)){
+      if(retired(id))continue;
+      if(!qs.has(id)||!object(f)||typeof f.flagged!=='boolean'||!date(f.updatedAt))fail();
+      flags[id]={flagged:f.flagged,updatedAt:f.updatedAt};
+    }
+  }
   const preferences={};for(const k of ['topic','subtopic','difficulty','origin']){
     const v=value.preferences[k];if(!str(v)||(v&&!bank.questions.some(q=>q[k]===v)))fail();preferences[k]=v;
   }
@@ -162,7 +174,7 @@ export function validateBackup(value,bank){
   const staleSession=s=>object(s)&&((Array.isArray(s.queue)&&s.queue.some(retired))||(Array.isArray(s.attemptIds)&&s.attemptIds.some(id=>dropped.has(id))));
   if(value.session!==null&&!staleSession(value.session)){
     const s=value.session;
-    if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','review','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
+    if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','review','flagged','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
     const q=qs.get(s.queue[s.index]);
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();
@@ -188,7 +200,7 @@ export function validateBackup(value,bank){
     }
   }
   if(!['home','practice','history','review'].includes(value.view))fail();
-  return {...emptyState(bank.bankVersion),drafts,attempts,preferences,session,view:value.view};
+  return {...emptyState(bank.bankVersion),drafts,attempts,flags,preferences,session,view:value.view};
 }
 export function mergeBackups(local,incoming){
   const attempts=new Map(local.attempts.map(a=>[a.id,a]));
@@ -202,5 +214,7 @@ export function mergeBackups(local,incoming){
   }
   const drafts={...local.drafts};
   for(const [id,d] of Object.entries(incoming.drafts))if(!drafts[id]||Date.parse(d.updatedAt)>Date.parse(drafts[id].updatedAt))drafts[id]=d;
-  return {...local,drafts,attempts:[...attempts.values()].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)),session:local.session||incoming.session};
+  const flags={...local.flags};
+  for(const [id,f] of Object.entries(incoming.flags??{}))if(!flags[id]||Date.parse(f.updatedAt)>Date.parse(flags[id].updatedAt))flags[id]=f;
+  return {...local,drafts,flags,attempts:[...attempts.values()].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)),session:local.session||incoming.session};
 }

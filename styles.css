@@ -644,3 +644,5 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
 /* Exam results by topic */
 .exam-topics { margin: .5rem 0 1.5rem; }
 .welcome > h3 { font-size: var(--fs-base); margin: 0; }
+.action-left { display: flex; align-items: center; gap: .6rem; }
+.action-left .flag-btn { min-height: 44px; padding: .65rem 1rem; border-radius: 8px; font-size: inherit; }

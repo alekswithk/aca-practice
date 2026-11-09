@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {emptyState,makeAttempt,isGuess,validateBackup,mergeBackups,reviewQueue,topicBreakdown} from '../core.mjs';
+import {emptyState,makeAttempt,isGuess,validateBackup,mergeBackups,reviewQueue,topicBreakdown,flaggedIds} from '../core.mjs';
 const bank=JSON.parse(readFileSync(new URL('../content/questions.json',import.meta.url)));
 const scored=bank.questions.filter(q=>q.status==='validated');
 const [q1,q2,q3]=scored;
@@ -78,4 +78,32 @@ const attempt=(q,kind,time,confidence)=>makeAttempt(q,kind==='correct'?q.correct
   ],'worst share first; ties put the larger topic first, then by name; unscored questions are left out');
   assert.deepEqual(topicBreakdown(bank.questions,[]),[]);
   console.log('PASS: exam topic breakdown.');
+}
+
+// Practice flags: optional in backups, newest choice wins on merge, so unflagging sticks.
+{
+  const base=emptyState(bank.bankVersion);
+  assert.deepEqual(base.flags,{});
+  const legacy=structuredClone(base);delete legacy.flags;
+  assert.deepEqual(validateBackup(legacy,bank).flags,{},'backups from before flags still load');
+  const retired=bank.questions.find(q=>q.status!=='validated');
+  const state={...structuredClone(base),flags:{[q1.id]:{flagged:true,updatedAt:at(1)},[q2.id]:{flagged:false,updatedAt:at(1)},[retired.id]:{flagged:true,updatedAt:at(1)}}};
+  const restored=validateBackup(structuredClone(state),bank);
+  assert.deepEqual(restored.flags,{[q1.id]:state.flags[q1.id],[q2.id]:state.flags[q2.id]},'flags round trip; retired questions are dropped');
+  assert.deepEqual(flaggedIds(bank.questions,restored.flags),[q1.id]);
+  assert.deepEqual(flaggedIds(bank.questions,undefined),[]);
+  for(const flags of [[],'x',{missing:{flagged:true,updatedAt:at(1)}},{[q1.id]:true},{[q1.id]:{flagged:'yes',updatedAt:at(1)}},{[q1.id]:{flagged:true,updatedAt:'never'}}]){
+    assert.throws(()=>validateBackup({...structuredClone(base),flags},bank),undefined,JSON.stringify(flags));
+  }
+  // Flags set on either side are kept; for the same question the newer change wins.
+  const a={...structuredClone(restored),flags:{[q1.id]:{flagged:false,updatedAt:at(3)},[q3.id]:{flagged:true,updatedAt:at(2)}}};
+  const merged=mergeBackups(a,restored);
+  assert.deepEqual(merged.flags,{[q1.id]:{flagged:false,updatedAt:at(3)},[q2.id]:{flagged:false,updatedAt:at(1)},[q3.id]:{flagged:true,updatedAt:at(2)}});
+  assert.deepEqual(mergeBackups(restored,a).flags,merged.flags,'merge order does not matter');
+  assert.deepEqual(flaggedIds(bank.questions,merged.flags),[q3.id]);
+  assert.deepEqual(mergeBackups(legacy,restored).flags,restored.flags,'a local copy without flags takes the incoming ones');
+  // Flagged sessions survive a backup.
+  const session={...structuredClone(restored),session:{queue:[q1.id],index:0,order:q1.options.map(o=>o.id),mode:'flagged',attemptId:null,attemptIds:[]}};
+  assert.deepEqual(validateBackup(structuredClone(session),bank),session);
+  console.log('PASS: practice flags validate, round trip, merge by newest change and start flagged sessions.');
 }

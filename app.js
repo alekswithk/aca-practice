@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue,topicBreakdown} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue,topicBreakdown,flaggedIds} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -410,7 +410,7 @@ function sessionSubtitle(session,completed){
     if(session.scope.subtopic)parts.push(topic);
     if(session.scope.difficulty)parts.push(session.scope.difficulty);
   }else{
-    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='review'?'Due for review':session.mode==='mixed'?'Mixed topics':'Practice mode');
+    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='review'?'Due for review':session.mode==='flagged'?'Flagged questions':session.mode==='mixed'?'Mixed topics':'Practice mode');
     if(session.mode==='mixed'&&session.scope?.difficulty)parts.push(session.scope.difficulty);
   }
   parts.push(`${completed} of ${session.queue.length} submitted`);
@@ -427,7 +427,9 @@ function homeQueues(){
   const review=reviewQueue(bank.questions,state.attempts,Date.now()),n=review.due.length,items=[];
   if(n)items.push(`<div class="queue-item"><div><strong>Due for review</strong><span class="muted">${n===1?'1 question you missed, skipped or guessed is':`${n} questions you missed, skipped or guessed are`} ready for another try.</span></div><button type="button" id="review-due">Review ${n===1?'1 question':`${n} questions`}</button></div>`);
   else if(review.nextAt)items.push(`<div class="queue-item"><div><strong>Due for review</strong><span class="muted">Nothing due right now. The next question comes back ${h(dueText(review.nextAt))}.</span></div></div>`);
-  return {html:items.length?`<section class="home-queues" aria-label="Review">${items.join('')}</section>`:'',review};
+  const flagged=flaggedIds(bank.questions,state.flags);
+  if(flagged.length)items.push(`<div class="queue-item"><div><strong>Flagged (${flagged.length})</strong><span class="muted">Questions you marked to come back to. Unflag them on the question.</span></div><button type="button" id="review-flagged">Practice flagged</button></div>`);
+  return {html:items.length?`<section class="home-queues" aria-label="Review">${items.join('')}</section>`:'',review,flagged};
 }
 
 // =================== PRACTICE MODE ===================
@@ -439,6 +441,7 @@ function renderHome(){
     $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
     $('#review-due')?.addEventListener('click',()=>startSession(shuffle(queues.review.due),'review'));
+    $('#review-flagged')?.addEventListener('click',()=>startSession(shuffle(queues.flagged),'flagged'));
     $$('[data-topic]').forEach(el=>el.onclick=()=>startTopicSession(el.dataset.topic));
 }
 
@@ -512,7 +515,10 @@ function renderPractice(){
           ${attempt?'':`<div class="confidence" role="radiogroup" aria-label="How sure are you?"><span class="muted" aria-hidden="true">How sure are you?</span><div class="confidence-pills">${[['sure','Sure'],['guess','Guessing']].map(([v,t])=>`<label><input type="radio" name="confidence" value="${v}" ${(confidence.id===q.id?confidence.value:'sure')===v?'checked':''}><span>${t}</span></label>`).join('')}</div></div>`}
           <p id="answer-error" class="danger" role="alert"></p>
           <div class="action-bar">
-            <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
+            <div class="action-left">
+              <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
+              ${flagButton(Boolean(state.flags[q.id]?.flagged))}
+            </div>
             <div class="action-buttons">
               ${!attempt?`<button type="button" id="unknown" class="quiet">Skip</button>`:''}
               <button class="primary" type="submit" id="btn-action" ${!attempt&&!selectedId?'disabled':''}>
@@ -550,10 +556,17 @@ function renderPractice(){
 
   $$('input[name=confidence]').forEach(el=>el.addEventListener('change',()=>{confidence={id:q.id,value:el.value};}));
   $('#unknown')?.addEventListener('click',()=>submit(q,null));
+  const toggleFlag=()=>{
+    const on=!state.flags[q.id]?.flagged;state.flags[q.id]={flagged:on,updatedAt:now()};save();
+    $('#practice-flag').outerHTML=flagButton(on);$('#practice-flag').onclick=toggleFlag;$('#practice-flag').focus();
+  };
+  $('#practice-flag').onclick=toggleFlag;
   $('#previous-question').onclick=()=>{if(session.index>0)goToQuestion(session.index-1);};
   $('#end-session').onclick=showResults;
   bindFeedback(q,attempt);
 }
+
+const flagButton=on=>`<button type="button" id="practice-flag" class="flag-btn ${on?'flagged':''}" aria-pressed="${on}" title="${on?'Remove from your flagged questions':'Keep this question in your flagged list on Home'}">${on?'Flagged':'Flag'} <span aria-hidden="true">⚑</span></button>`;
 
 function submit(q,optionId){
   if(state.session.attemptId)return;
