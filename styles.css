@@ -22,7 +22,7 @@
   --fs-lg: 1.125rem;
   --fs-xl: 1.75rem;
   color-scheme: light;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Gill Sans', 'Gill Sans MT', 'Gill Sans Nova', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
   font-optical-sizing: auto;
   interpolate-size: allow-keywords;
   color: var(--ink);
