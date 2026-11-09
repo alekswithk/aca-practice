@@ -22,6 +22,7 @@ let themeChanging=false;
 let activeUser=null,cloud=null,storageKey=STORAGE_KEY;
 
 const now=()=>new Date().toISOString();
+const reduceMotion=()=>matchMedia('(prefers-reduced-motion: reduce)').matches;
 const question=id=>bank.questions.find(q=>q.id===id);
 
 const preciseSubtopics={
@@ -95,12 +96,16 @@ async function toggleTheme(){
     try{localStorage.setItem('aca_theme',isDark?'dark':'light');}catch{notify('Theme changed for this visit. Browser storage is unavailable.');}
     $('#theme-toggle').setAttribute('aria-checked',String(isDark));
   };
-  if(!document.startViewTransition||matchMedia('(prefers-reduced-motion: reduce)').matches){update();return;}
+  if(reduceMotion()){update();return;}
+  // Knob: slides with ease-in-out and stretches ~12% at mid-slide, then settles.
+  const knob=()=>{const on=root.classList.contains('dark'),[a,b]=on?[0,24]:[24,0];$('.theme-switch-thumb').animate([{transform:`translateX(${a}px)`,width:'22px'},{transform:`translateX(${(a+b)/2-1.5}px)`,width:'25px'},{transform:`translateX(${b}px)`,width:'22px'}],{duration:300,easing:'ease-in-out'});};
+  if(!document.startViewTransition){update();knob();return;}
+  delete root.dataset.vt; // no page-transition names inside the theme snapshot
   const rect=$('#theme-toggle').getBoundingClientRect();
   const x=rect.left+rect.width/2,y=rect.top+rect.height/2;
   const radius=Math.hypot(Math.max(x,innerWidth-x),Math.max(y,innerHeight-y));
   themeChanging=true;root.classList.add('theme-changing');
-  const transition=document.startViewTransition(update);
+  const transition=document.startViewTransition(()=>{update();knob();});
   try{
     await transition.ready;
     await root.animate({clipPath:[`circle(0px at ${x}px ${y}px)`,`circle(${radius}px at ${x}px ${y}px)`]},{duration:650,easing:'cubic-bezier(.22,1,.36,1)',pseudoElement:'::view-transition-new(root)'}).finished;
@@ -322,6 +327,21 @@ function setView(next,focus=true){
   if(focus){$('#main').focus();if(next==='home')window.scrollTo(0,0);}
 }
 
+// Page transitions (View Transitions API). html[data-vt] switches on the
+// view-transition-names for one transition only, so names stay unique and the
+// theme reveal never sees them. Instant when unsupported, reduced or mid theme change.
+let vtPending=false,vtToken=0,lastScreen='';
+function pageTransition(kind,update){
+  if(!document.startViewTransition||reduceMotion()||themeChanging){update();return;}
+  if(vtPending)return; // ignore repeat input before the first update has run
+  const token=++vtToken;vtPending=true;root.dataset.vt=kind;
+  const t=document.startViewTransition(()=>{vtPending=false;update();});
+  t.finished.catch(()=>{}).finally(()=>{if(token===vtToken)delete root.dataset.vt;});
+}
+// True the first time a screen renders, false on re-renders of it (save, sync):
+// entrance staggers play once per visit.
+function freshScreen(key){const fresh=key!==lastScreen;lastScreen=key;return fresh;}
+
 function focusQuestion(){
   const target=$('.question');
   if(!target)return;
@@ -369,6 +389,7 @@ function render(){
   else if(appMode==='exam'&&state.session&&state.session.mode.startsWith('exam'))renderExamActive();
   else if(appMode==='exam'&&(!state.session||!state.session.mode.startsWith('exam')))renderExamOverview();
   else renderPractice();
+  if(view!=='home'&&!(view==='practice'&&!state.session&&appMode==='practice'))lastScreen=view+appMode;
   bindNotes();updateAvailable();
   if($('#global-save').classList.contains('failed'))$$('.save-status').forEach(el=>{el.textContent='Not saved — export a backup';el.classList.add('failed');});
 }
@@ -418,12 +439,18 @@ function sessionSubtitle(session,completed){
 // =================== PRACTICE MODE ===================
 function renderHome(){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
-    const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length;
-    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
+    const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length,stagger=freshScreen('home')?' stagger':'';
+    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid${stagger}">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}" style="--i:${index}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
     if(state.session)$('#welcome-start').textContent='Resume session';
     $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
-    $$('[data-topic]').forEach(el=>el.onclick=()=>startTopicSession(el.dataset.topic));
+    // The clicked card's title morphs into the session heading, if that heading
+    // ends up on screen (a long question scrolls it under the header: plain fade then).
+    $$('[data-topic]').forEach(el=>el.onclick=()=>{el.classList.add('vt-source');pageTransition('topic',()=>{
+      startTopicSession(el.dataset.topic);
+      const title=$('.session-head h2');
+      if(root.dataset.vt&&(!title||title.getBoundingClientRect().top<$('.masthead').getBoundingClientRect().bottom))root.dataset.vt='topic-fade';
+    });});
 }
 
 // Starts a mixed-difficulty practice session limited to one topic.
@@ -433,12 +460,12 @@ function startTopicSession(topic){
 
 // End-of-session cards: the questions answered wrong in this session (to look
 // at again, exactly those), and the least covered topic overall.
-function recommendationCards(sessionAttempts){
+function recommendationCards(sessionAttempts,stagger=false){
   const scored=bank.questions.filter(q=>q.status==='validated');
   const {leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
   const wrong=[...new Set(sessionAttempts.filter(a=>a.outcome==='incorrect').map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
   const cards=[];
-  if(wrong.length)cards.push(`<div class="recommendation wrong-review"><p>Look again at your wrong answers</p><ol class="wrong-list">${wrong.map(id=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li><span class="muted">${h(q.topic)}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(wrong.join(','))}">Retry ${wrong.length===1?'this question':`these ${wrong.length} questions`}</button></div>`);
+  if(wrong.length)cards.push(`<div class="recommendation wrong-review"><p>Look again at your wrong answers</p><ol class="wrong-list${stagger?' stagger':''}">${wrong.map((id,i)=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li style="--i:${i}"><span class="muted">${h(q.topic)}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(wrong.join(','))}">Retry ${wrong.length===1?'this question':`these ${wrong.length} questions`}</button></div>`);
   if(leastCovered)cards.push(`<div class="recommendation"><p>Least covered: ${h(leastCovered)}</p><button type="button" data-recommend-topic="${h(leastCovered)}">Practice ${h(leastCovered)}</button></div>`);
   if(!cards.length)return '';
   return `<div class="recommendations">${cards.join('')}</div>`;
@@ -544,6 +571,8 @@ function submit(q,optionId){
   state.session.attemptIds.push(attempt.id);
   save();
   render();
+  // One soft ring on the correct option; wrong answers get no extra motion.
+  if(attempt.outcome==='correct')$('.option.correct-option')?.classList.add('pulse');
   $('#feedback-heading')?.focus();
 }
 
@@ -578,7 +607,9 @@ function advanceQuestion(){
   goToQuestion(s.index+1);
 }
 
-function goToQuestion(index){
+// The session head and progress bar hold still while the question area crossfades.
+function goToQuestion(index){pageTransition('question',()=>showQuestion(index));}
+function showQuestion(index){
   const s=state.session;
   s.questionOrders=s.questionOrders||{};
   s.questionOrders[s.queue[s.index]]=[...s.order];
@@ -688,7 +719,7 @@ function renderExamOverview(){
     radio.checked=true;radio.dispatchEvent(new Event('change'));
   });
   $('#overview-topic')?.addEventListener('change',e=>{$('#exam-topic-select').value=e.target.value;renderExamOverview();});
-  $('#overview-start').onclick=()=>{$('.options-menu').open=false;$('#start-exam').click();};
+  $('#overview-start').onclick=()=>{closeOptionsMenu();$('#start-exam').click();};
 }
 
 function launchExam(part,topic){
@@ -958,7 +989,7 @@ function showExamResults(){
         <button class="primary" id="btn-exam-again">Take another exam</button>
         <button id="btn-exam-history">View learning history</button>
       </div>
-      ${recommendationCards(rows)}
+      ${recommendationCards(rows,freshScreen('exam-results'))}
     </section>
     <section class="dashboard-section">
       <h3>Review exam exercises</h3>
@@ -1010,7 +1041,7 @@ function showResults(){
         <button class="primary" id="again">Start another session</button>
         <button id="results-history">See learning history</button>
       </div>
-      ${recommendationCards(rows)}
+      ${recommendationCards(rows,freshScreen('results'))}
     </section>
   `;
   $('#again').onclick=()=>$('#setup').requestSubmit();
@@ -1053,7 +1084,8 @@ function download(text,name){
 function setHeaderCollapsed(collapsed,focus=false){
   root.classList.toggle('header-collapsed',collapsed);
   $('#header-show').hidden=!collapsed;
-  if(collapsed)$('.options-menu').open=false;
+  if(collapsed)closeOptionsMenu(true);
+  root.classList.toggle('header-swap',focus); // icon swap animates only on user toggles, not on load
   try{localStorage.setItem('aca_header',collapsed?'collapsed':'open');}catch{}
   if(focus)(collapsed?$('#header-show'):$('#header-hide')).focus();
 }
@@ -1070,8 +1102,24 @@ function bindOptionsMenu(){
     if(el.open)sections.forEach(other=>{if(other!==el)other.open=false;});
   }));
   menu.addEventListener('toggle',()=>{if(!menu.open)sections.forEach(el=>el.open=false);});
-  document.addEventListener('click',e=>{if(menu.open&&!menu.contains(e.target))menu.open=false;});
-  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){menu.open=false;menu.querySelector('summary').focus();}});
+  // <details> closes instantly, so the summary click is intercepted to play the exit first.
+  menu.querySelector('summary').addEventListener('click',e=>{
+    if(menu.classList.contains('closing')){e.preventDefault();menu.classList.remove('closing');}
+    else if(menu.open){e.preventDefault();closeOptionsMenu();}
+  });
+  menu.querySelector('.options-panel').addEventListener('animationend',e=>{if(e.target===e.currentTarget&&menu.classList.contains('closing'))closeOptionsMenu(true);});
+  document.addEventListener('click',e=>{if(menu.open&&!menu.contains(e.target))closeOptionsMenu();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&menu.open){closeOptionsMenu();menu.querySelector('summary').focus();}});
+}
+// Popover exit: shrinks back toward the trigger (.closing, 150ms), then closes.
+// instant skips the animation (reduced motion, hidden header, animation end).
+function closeOptionsMenu(instant=false){
+  const menu=$('.options-menu');
+  if(!menu.open)return;
+  if(instant||reduceMotion()||!menu.offsetParent){menu.classList.remove('closing');menu.open=false;return;}
+  if(menu.classList.contains('closing'))return;
+  menu.classList.add('closing');
+  setTimeout(()=>{if(menu.classList.contains('closing'))closeOptionsMenu(true);},250); // fallback if animationend is missed
 }
 
 async function init(){
@@ -1239,7 +1287,7 @@ async function init(){
 // Global keyboard shortcuts (Enter to check/advance, 1-5 / A-E to select)
 document.addEventListener('pointerdown',e=>{
   const button=e.target.closest('button.primary:not(:disabled)');
-  if(!button||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  if(!button||reduceMotion())return;
   const rect=button.getBoundingClientRect(),size=Math.max(rect.width,rect.height)*2;
   const ripple=document.createElement('span');ripple.className='button-ripple';ripple.setAttribute('aria-hidden','true');
   Object.assign(ripple.style,{width:`${size}px`,height:`${size}px`,left:`${e.clientX-rect.left}px`,top:`${e.clientY-rect.top}px`});
