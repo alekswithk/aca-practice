@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
-import {emptyState,makeAttempt,isGuess,validateBackup,mergeBackups,reviewQueue} from '../core.mjs';
+import {emptyState,makeAttempt,isGuess,validateBackup,mergeBackups,reviewQueue,topicBreakdown} from '../core.mjs';
 const bank=JSON.parse(readFileSync(new URL('../content/questions.json',import.meta.url)));
 const scored=bank.questions.filter(q=>q.status==='validated');
 const [q1,q2,q3]=scored;
@@ -64,4 +64,18 @@ const attempt=(q,kind,time,confidence)=>makeAttempt(q,kind==='correct'?q.correct
   state.session={queue:[q1.id],index:0,order:q1.options.map(o=>o.id),mode:'review',attemptId:null,attemptIds:[]};
   assert.deepEqual(validateBackup(structuredClone(state),bank),state);
   console.log('PASS: due-for-review rules (1 day, 3-day final check, early answers ignored, restarts) and review sessions.');
+}
+
+// Exam score by topic, weakest share first.
+{
+  const topic=t=>scored.filter(q=>q.topic===t);
+  const [fr1,fr2]=topic('Financial Reporting'),[au1,au2]=topic('Auditing'),[cs1]=topic('Consolidated Statements'),[bu1]=topic('Budgeting');
+  const retired=bank.questions.find(q=>q.status!=='validated');
+  const rows=[attempt(fr1,'correct',at(1)),attempt(fr2,'incorrect',at(1)),attempt(au1,'unknown',at(1)),attempt(au2,'incorrect',at(1)),attempt(cs1,'correct',at(1)),attempt(bu1,'incorrect',at(1)),{...attempt(fr1,'correct',at(1)),questionId:retired.id}];
+  assert.deepEqual(topicBreakdown(bank.questions,rows),[
+    {topic:'Auditing',correct:0,total:2},{topic:'Budgeting',correct:0,total:1},
+    {topic:'Financial Reporting',correct:1,total:2},{topic:'Consolidated Statements',correct:1,total:1},
+  ],'worst share first; ties put the larger topic first, then by name; unscored questions are left out');
+  assert.deepEqual(topicBreakdown(bank.questions,[]),[]);
+  console.log('PASS: exam topic breakdown.');
 }

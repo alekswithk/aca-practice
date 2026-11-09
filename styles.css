@@ -640,3 +640,7 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
 .queue-item .muted { display: block; line-height: 1.45; margin-top: .15rem; }
 .queue-item button { flex-shrink: 0; }
 @media (max-width:760px) { .queue-item { flex-direction: column; align-items: stretch; } }
+
+/* Exam results by topic */
+.exam-topics { margin: .5rem 0 1.5rem; }
+.welcome > h3 { font-size: var(--fs-base); margin: 0; }

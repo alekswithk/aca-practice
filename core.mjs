@@ -98,6 +98,16 @@ export function recommendTopics(questions, sessionAttempts, allAttempts=sessionA
   const leastCovered=ranked.find(t=>t.topic!==mostMistakes)?.topic??null;
   return {mostMistakes,leastCovered:ranked.length>1?leastCovered:null};
 }
+// Correct out of total per topic for a set of attempts (e.g. one exam), weakest share first.
+export function topicBreakdown(questions,attempts){
+  const scored=scoredById(questions),rows=new Map();
+  for(const a of attempts){
+    const q=scored.get(a.questionId);if(!q)continue;
+    const r=rows.get(q.topic)??{topic:q.topic,correct:0,total:0};
+    r.total++;if(a.outcome==='correct')r.correct++;rows.set(q.topic,r);
+  }
+  return [...rows.values()].sort((x,y)=>(x.correct/x.total-y.correct/y.total)||(y.total-x.total)||byText(x.topic,y.topic));
+}
 // Spaced review, worked out from attempt history alone. A wrong, skipped or
 // guessed answer makes a question due 1 day later. The first sure correct
 // answer once it is due pushes it to a final check 3 days later; a second one

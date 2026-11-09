@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue,topicBreakdown} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -963,6 +963,7 @@ function showExamResults(){
   const incorrect=rows.filter(a=>a.outcome==='incorrect').length;
   const unanswered=rows.length-correct-incorrect;
   const scorePct=rows.length?Math.round((correct/rows.length)*100):0;
+  const byTopic=topicBreakdown(bank.questions,rows);
   state.session=null;
   save();
 
@@ -975,6 +976,7 @@ function showExamResults(){
         <div><strong>${incorrect}</strong>Incorrect</div>
         <div><strong>${unanswered}</strong>Unanswered</div>
       </div>
+      ${byTopic.length?`<h3>By topic</h3><div class="table-wrap exam-topics"><table class="topic-table"><caption class="visually-hidden">Exam score by topic, weakest first</caption><thead><tr><th scope="col">Topic</th><th scope="col">Correct</th><th scope="col">Share</th></tr></thead><tbody>${byTopic.map(t=>`<tr><th scope="row">${h(t.topic)}</th><td>${t.correct} / ${t.total}</td><td>${Math.round(100*t.correct/t.total)}%</td></tr>`).join('')}</tbody></table></div>`:''}
       <div class="actions">
         <button class="primary" id="btn-exam-again">Take another exam</button>
         <button id="btn-exam-history">View learning history</button>
