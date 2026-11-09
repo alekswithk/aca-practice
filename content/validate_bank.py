@@ -1,7 +1,7 @@
 """Independent numeric recomputation and content-integrity gate. No dependencies."""
 import json, re
 from collections import Counter
-from decimal import Decimal, ROUND_HALF_UP, ROUND_CEILING
+from decimal import Decimal, ROUND_HALF_UP, ROUND_CEILING, ROUND_FLOOR
 from pathlib import Path
 D=lambda x: Decimal(str(x))
 CENT=Decimal('.01')
@@ -95,6 +95,15 @@ def solve(c):
   if x.get('roundedWacc'): rate=rate.quantize(D('.0001'),rounding=ROUND_HALF_UP)
   return (x['ebit']*(1-x['tax'])-(x['assets']-x['liabilities'])*rate).quantize(D(1),rounding=ROUND_HALF_UP)
  if k=='ros': return (x['ebit']/x['ros']).quantize(D(1),rounding=ROUND_HALF_UP)
+ if k=='formula':
+  # AI-generated questions: re-evaluate the stored formula with Decimal, separately from the generator's own arithmetic.
+  env={name:([D(i) for i in v] if isinstance(v,list) else D(v)) for name,v in c['inputs'].items()}
+  env.update({'max':max,'min':min,'sum':sum,'abs':abs,'D':D})
+  formula=re.sub(r'(?<![\w.])(\d+\.\d+)',r"D('\1')",c['formula'])
+  value=eval(formula,{'__builtins__':{}},env)
+  mode={'half':ROUND_HALF_UP,'up':ROUND_CEILING,'down':ROUND_FLOOR}[c.get('rounding','half')]
+  q=D(1).scaleb(-c.get('round',0))
+  return [D(v).quantize(q,rounding=mode) for v in value] if isinstance(value,tuple) else value.quantize(q,rounding=mode)
  raise AssertionError(k)
 
 def run():
@@ -108,6 +117,8 @@ def run():
   assert len(set(ids))==len(ids) and len(ids)>=2,q['id']
   assert q['difficulty'] in ('Easy','Medium','Hard'),q['id']
   assert q['evidence'] and q['source']['path'] and q['prompt'],q['id']
+  if q.get('aiGenerated'):
+   assert q['origin']=='generated' and q['set'] in ('bank','mock-exam') and q['source']['path']=='AI-generated study question',q['id']
   if q['origin']=='original':
    source_path=path.parents[2]/q['source']['path']
    if not source_path.exists(): source_path=path.parents[2]/'ACA'/q['source']['path']
@@ -132,7 +143,13 @@ def run():
    assert q['workedCalculation'] and check['unit'] in ('CHF','MCHF','units','percent','currency units','years'),q['id']
    correct=next(o for o in q['options'] if o['id']==q['correctOptionId'])
    numbers=re.findall(r'(?<!\w)(\d{1,3}(?:[,’]\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?!\w)',correct['text'])
-   if numbers:
+   if correct['text'].startswith('None of the answers'):
+    # The key is "none of the above": no listed option may show the computed result.
+    expected_values=expected_decimal if isinstance(expected_decimal,list) else [abs(expected_decimal)]
+    for option in q['options']:
+     shown={D(v.replace(',','').replace('’','')) for v in re.findall(r'(?<!\w)(\d{1,3}(?:[,’]\d{3})+(?:\.\d+)?|\d+(?:\.\d+)?)(?!\w)',option['text'])}
+     assert not all(v in shown for v in expected_values),(q['id'],option['text'])
+   elif numbers:
     values={D(v.replace(',','').replace('’','')) for v in numbers}
     expected_values=expected_decimal if isinstance(expected_decimal,list) else [abs(expected_decimal)]
     assert all(v in values for v in expected_values),(q['id'],correct['text'],expected)
@@ -145,6 +162,12 @@ def run():
    numeric+=1
  counts=Counter(q['status'] for q in qs); origins=Counter(q['origin'] for q in qs)
  assert sum(item['count'] for item in bank['sourceInventory'])==origins['original']
+ ai=Counter(q['set'] for q in qs if q.get('aiGenerated'))
+ mock=[q for q in qs if q.get('set')=='mock-exam']
+ if mock:
+  assert sum(q['marks'] for q in mock if q['examPart']==1)==45 and sum(q['marks'] for q in mock if q['examPart']==2)==45
+  assert sorted(q['examOrder'] for q in mock)==list(range(1,len(mock)+1))
+ print(f"AI-generated: {ai['bank']} practice questions, {ai['mock-exam']} mock-exam questions.")
  print(f"PASS: {len(qs)} records; {origins['original']} source imports; {origins['generated']} generated; {numeric} independent numeric recomputations; {counts['validated']} scored; {counts['review']} excluded.")
  if missing_sources: print(f"Source excerpt comparisons skipped: {len(missing_sources)} original files are outside this standalone repository.")
  return bank,numeric

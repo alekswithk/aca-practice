@@ -38,13 +38,16 @@ export function unexploredFirst(ids,attempts){
   const seen=new Set(attempts.map(a=>a.questionId));
   return [...ids.filter(id=>!seen.has(id)),...ids.filter(id=>seen.has(id))];
 }
+// Questions of the separate AI mock exam are only used by that exam, never in practice pools or mixed exams.
+export const inPractice=q=>q.status==='validated' && q.set!=='mock-exam';
+export const mockExam=(questions,part)=>questions.filter(q=>q.status==='validated' && q.set==='mock-exam' && (!part||q.examPart===part)).sort((a,b)=>a.examOrder-b.examOrder);
 export function available(questions,filters,mode,attempts){
   const latest=latestAttempts(attempts);
-  return questions.filter(q=>q.status==='validated' && Object.entries(filters).every(([k,v])=>!v||q[k]===v) && (mode!=='missed'||(latest.has(q.id)&&latest.get(q.id).outcome!=='correct')));
+  return questions.filter(q=>inPractice(q) && Object.entries(filters).every(([k,v])=>!v||q[k]===v) && (mode!=='missed'||(latest.has(q.id)&&latest.get(q.id).outcome!=='correct')));
 }
 export function followup(q,attempt,questions,attempts){
-  const candidates=questions.filter(x=>x.status==='validated' && x.origin==='generated' && x.id!==q.id && (attempt.misconception?x.targets.includes(attempt.misconception):x.subtopic===q.subtopic));
-  const pool=candidates.length?candidates:questions.filter(x=>x.status==='validated' && x.id!==q.id && x.subtopic===q.subtopic);
+  const candidates=questions.filter(x=>inPractice(x) && x.origin==='generated' && x.id!==q.id && (attempt.misconception?x.targets.includes(attempt.misconception):x.subtopic===q.subtopic));
+  const pool=candidates.length?candidates:questions.filter(x=>inPractice(x) && x.id!==q.id && x.subtopic===q.subtopic);
   const latest=latestAttempts(attempts);
   return pool.sort((a,b)=>(Date.parse(latest.get(a.id)?.timestamp)||0)-(Date.parse(latest.get(b.id)?.timestamp)||0))[0]||null;
 }
@@ -56,7 +59,7 @@ export function topicStats(questions,attempts){
   });
 }
 // Attempts on questions that are not scored are ignored throughout.
-const scoredById=questions=>new Map(questions.filter(q=>q.status==='validated').map(q=>[q.id,q]));
+const scoredById=questions=>new Map(questions.filter(inPractice).map(q=>[q.id,q]));
 const byText=(x,y)=>x<y?-1:x>y?1:0;
 // One entry per topic with scored questions, in first-seen order. Counts questions, not attempts.
 export function topicProgress(questions, attempts){
@@ -99,8 +102,9 @@ export function recommendTopics(questions, sessionAttempts, allAttempts=sessionA
   return {mostMistakes,leastCovered:ranked.length>1?leastCovered:null};
 }
 // Correct out of total per topic for a set of attempts (e.g. one exam), weakest share first.
+// Includes mock-exam questions: this table is shown after any exam, the AI mock included.
 export function topicBreakdown(questions,attempts){
-  const scored=scoredById(questions),rows=new Map();
+  const scored=new Map(questions.filter(q=>q.status==='validated').map(q=>[q.id,q])),rows=new Map();
   for(const a of attempts){
     const q=scored.get(a.questionId);if(!q)continue;
     const r=rows.get(q.topic)??{topic:q.topic,correct:0,total:0};
@@ -110,7 +114,7 @@ export function topicBreakdown(questions,attempts){
 }
 // Practice flags: {questionId:{flagged,updatedAt}}. Unflagging keeps the entry
 // with flagged:false, so the newer choice wins when two copies are merged.
-export const flaggedIds=(questions,flags={})=>questions.filter(q=>q.status==='validated'&&flags[q.id]?.flagged).map(q=>q.id);
+export const flaggedIds=(questions,flags={})=>questions.filter(q=>inPractice(q)&&flags[q.id]?.flagged).map(q=>q.id);
 // Spaced review, worked out from attempt history alone. A wrong, skipped or
 // guessed answer makes a question due 1 day later. The first sure correct
 // answer once it is due pushes it to a final check 3 days later; a second one
@@ -196,7 +200,9 @@ export function validateBackup(value,bank){
       const initial=s.examInitialDuration??(s.mode==='exam-full'?5400:2700),remaining=s.examTimeRemaining??initial;
       if(!Number.isInteger(initial)||initial<=0||!Number.isInteger(remaining)||remaining<0||remaining>initial)fail();
       if(s.examTopic!=null&&(!str(s.examTopic)||!bank.questions.some(q=>q.topic===s.examTopic)))fail();
+      if(s.examSource!==undefined&&!['bank','mock'].includes(s.examSource))fail();
       Object.assign(session,{examFlags:{...flags},examInitialDuration:initial,examTimeRemaining:remaining,examTopic:s.examTopic??null});
+      if(s.examSource==='mock')session.examSource='mock';
     }
   }
   if(!['home','practice','history','review'].includes(value.view))fail();

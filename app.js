@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue,topicBreakdown,flaggedIds} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue,topicBreakdown,flaggedIds,inPractice,mockExam} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -16,6 +16,8 @@ const label={correct:'Correct',incorrect:'Incorrect',unknown:'I don’t know'};
 const controllingTopics=['Management Accounting','Budgeting','Variances','Capital Budgeting','Cost and Performance Management'];
 let bank,state,storageBlocked=false,unreadable=null,pendingImport=null,view='practice';
 let appMode='practice'; // 'practice' or 'exam'
+let examSource='bank'; // 'bank' = random mix from the question bank, 'mock' = the separate AI mock exam
+const aiBadge=q=>q?.aiGenerated?'<span class="ai-badge" title="Written by AI for practice. Figures were checked by script; not from an official exam.">AI-generated</span>':'';
 let examTimerInterval=null;
 let examTimerPaused=false;
 let themeChanging=false;
@@ -455,7 +457,7 @@ function homeQueues(){
 
 // =================== PRACTICE MODE ===================
 function renderHome(){
-    const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
+    const scored=bank.questions.filter(inPractice),latest=latestAttempts(state.attempts);
     const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length,queues=homeQueues(),stagger=freshScreen('home')?' stagger':'';
     $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div>${queues.html}<section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid${stagger}">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}" style="--i:${index}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
     if(state.session)$('#welcome-start').textContent='Resume session';
@@ -480,9 +482,9 @@ function startTopicSession(topic){
 // End-of-session cards: the questions answered wrong in this session (to look
 // at again, exactly those), and the least covered topic overall.
 function recommendationCards(sessionAttempts,stagger=false){
-  const scored=bank.questions.filter(q=>q.status==='validated');
+  const scored=bank.questions.filter(inPractice);
   const {leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
-  const pick=test=>[...new Set(sessionAttempts.filter(test).map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
+  const pick=test=>[...new Set(sessionAttempts.filter(test).map(a=>a.questionId))].filter(id=>question(id)&&inPractice(question(id)));
   const wrong=pick(a=>a.outcome==='incorrect'),guessed=pick(isGuess).filter(id=>!wrong.includes(id)),ids=[...wrong,...guessed];
   const cards=[];
   if(ids.length)cards.push(`<div class="recommendation wrong-review"><p>${guessed.length?'Look again at these':'Look again at your wrong answers'}</p><ol class="wrong-list${stagger?' stagger':''}">${ids.map((id,i)=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li style="--i:${i}"><span class="muted">${h(q.topic)}${guessed.includes(id)?' (guessed)':''}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(ids.join(','))}">Retry ${ids.length===1?'this question':`these ${ids.length} questions`}</button></div>`);
@@ -522,6 +524,7 @@ function renderPractice(){
     <progress max="${session.queue.length}" value="${session.index+(attempt?1:0)}" aria-label="Session progress"></progress>
     <div class="question-layout">
       <article class="question" tabindex="-1" aria-label="Current question">
+        ${q.aiGenerated?`<div class="question-tags">${aiBadge(q)}</div>`:''}
         ${q.scenario?`<div class="scenario">${format(q.scenario)}</div>`:''}
         <div class="prompt" id="question-prompt">${format(q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,''))}</div>
         ${q.assumptions.length?`<details class="assumptions"><summary>Assumptions for this question</summary>${q.assumptions.map(s=>`<p>${h(s)}</p>`).join('')}</details>`:''}
@@ -657,7 +660,8 @@ function showQuestion(index){
 // =================== EXAM MODE ===================
 function renderExamOverview(){
   stopExamTimer();
-  const selectedPart=document.querySelector('input[name="exam-part"]:checked')?.value||'full';
+  let selectedPart=document.querySelector('input[name="exam-part"]:checked')?.value||'full';
+  if(examSource==='mock'&&selectedPart==='topic'){selectedPart='full';const radio=document.querySelector('input[name="exam-part"][value="full"]');if(radio)radio.checked=true;$('#exam-topic-select-wrap')?.classList.add('hidden');}
   const selectedTopic=$('#exam-topic-select')?.value||'Financial Reporting';
 
   let config={
@@ -697,7 +701,7 @@ function renderExamOverview(){
       ]
     };
   }else if(selectedPart==='topic'){
-    const count=bank?bank.questions.filter(q=>q.status==='validated'&&q.topic===selectedTopic).length:0;
+    const count=bank?bank.questions.filter(q=>inPractice(q)&&q.topic===selectedTopic).length:0;
     config={
       title:`Topic focus exam: ${selectedTopic}`,
       duration:'45 minutes',
@@ -710,11 +714,31 @@ function renderExamOverview(){
     };
   }
 
-  const scopes=[['part1','Part 1'],['part2','Part 2'],['full','Whole exam'],['topic','One topic']];
+  if(examSource==='mock'){
+    const p1=mockExam(bank?.questions||[],1),p2=mockExam(bank?.questions||[],2);
+    const marks=list=>list.reduce((sum,q)=>sum+(q.marks||0),0);
+    const count=(list,topics)=>list.filter(q=>topics.includes(q.topic)).length;
+    const part1={title:`Part 1: Accounting & auditing (45 min · ${marks(p1)} marks)`,desc:`${p1.length} exercises: ${count(p1,['Consolidated Statements','Financial Reporting'])} Financial Reporting & Consolidation, ${count(p1,['Auditing'])} Auditing.`};
+    const part2={title:`Part 2: Controlling (45 min · ${marks(p2)} marks)`,desc:`${p2.length} exercises: ${controllingTopics.map(t=>`${count(p2,[t])} ${t}`).join(', ')}.`};
+    const pick=selectedPart==='part1'?[p1,[part1]]:selectedPart==='part2'?[p2,[part2]]:[[...p1,...p2],[part1,part2]];
+    config={
+      title:selectedPart==='part1'?'AI mock exam · Part 1':selectedPart==='part2'?'AI mock exam · Part 2':'AI mock exam · Both parts',
+      duration:selectedPart==='full'?'90 minutes':'45 minutes',
+      exerciseCount:`${pick[0].length} exercises`,
+      marks:`${marks(pick[0])} marks total`,
+      description:'A fixed paper of new AI-generated questions in the layout of the past exams. None of these questions appear in practice or in the mixed exams, so the paper stays fresh.',
+      modules:pick[1]
+    };
+  }
+  const scopes=examSource==='mock'?[['part1','Part 1'],['part2','Part 2'],['full','Whole exam']]:[['part1','Part 1'],['part2','Part 2'],['full','Whole exam'],['topic','One topic']];
+  const sources=[['bank','Mixed from question bank'],['mock','AI mock exam']];
   const topics=[...$('#exam-topic-select').options].map(o=>o.value);
   $('#main').innerHTML=`
     <div class="home-top">
       <section class="welcome study-hero">
+        <div class="scope-picker source-picker" role="radiogroup" aria-label="Exam questions">
+          ${sources.map(([value,name])=>`<button type="button" role="radio" aria-checked="${value===examSource}" data-exam-source="${value}">${name}</button>`).join('')}
+        </div>
         <div class="scope-picker" role="radiogroup" aria-label="Exam scope">
           ${scopes.map(([value,name])=>`<button type="button" role="radio" aria-checked="${value===selectedPart}" data-exam-scope="${value}">${name}</button>`).join('')}
         </div>
@@ -733,7 +757,7 @@ function renderExamOverview(){
     <section class="topic-section">
       <div class="section-heading">
         <h2>What this exam covers</h2>
-        <p class="muted">Based directly on official past exam papers.</p>
+        <p class="muted">${examSource==='mock'?'AI-generated paper. Same structure as the past papers; not an official exam.':'Based directly on official past exam papers.'}</p>
       </div>
       <div class="topic-grid">
         ${config.modules.map((m,idx)=>`
@@ -752,6 +776,7 @@ function renderExamOverview(){
     const radio=document.querySelector(`input[name="exam-part"][value="${el.dataset.examScope}"]`);
     radio.checked=true;radio.dispatchEvent(new Event('change'));
   });
+  $$('[data-exam-source]').forEach(el=>el.onclick=()=>{examSource=el.dataset.examSource;renderExamOverview();});
   $('#overview-topic')?.addEventListener('change',e=>{$('#exam-topic-select').value=e.target.value;renderExamOverview();});
   $('#overview-start').onclick=()=>{closeOptionsMenu();$('#start-exam').click();};
 }
@@ -761,28 +786,33 @@ function launchExam(part,topic){
   let durationSeconds=45*60;
   let modeName='exam-part1';
   let examTopicName=null;
+  const source=examSource==='mock'&&part!=='topic'?'mock':'bank';
 
-  if(part==='full'){
-    const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
-    const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
-    const controlling=shuffle(bank.questions.filter(q=>q.status==='validated'&&controllingTopics.includes(q.topic))).slice(0,20);
+  if(source==='mock'){
+    pool=mockExam(bank.questions,part==='part1'?1:part==='part2'?2:null).map(q=>q.id);
+    durationSeconds=part==='full'?90*60:45*60;
+    modeName=part==='full'?'exam-full':part==='part2'?'exam-part2':'exam-part1';
+  }else if(part==='full'){
+    const acct=shuffle(bank.questions.filter(q=>inPractice(q)&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
+    const audit=shuffle(bank.questions.filter(q=>inPractice(q)&&q.topic==='Auditing')).slice(0,10);
+    const controlling=shuffle(bank.questions.filter(q=>inPractice(q)&&controllingTopics.includes(q.topic))).slice(0,20);
     pool=[...acct,...audit,...controlling].map(q=>q.id);
     durationSeconds=90*60;
     modeName='exam-full';
   }else if(part==='part1'){
-    const acct=shuffle(bank.questions.filter(q=>q.status==='validated'&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
-    const audit=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic==='Auditing')).slice(0,10);
+    const acct=shuffle(bank.questions.filter(q=>inPractice(q)&&(q.topic==='Consolidated Statements'||q.topic==='Financial Reporting'))).slice(0,20);
+    const audit=shuffle(bank.questions.filter(q=>inPractice(q)&&q.topic==='Auditing')).slice(0,10);
     pool=[...acct,...audit].map(q=>q.id);
     durationSeconds=45*60;
     modeName='exam-part1';
   }else if(part==='part2'){
-    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&controllingTopics.includes(q.topic))).slice(0,20).map(q=>q.id);
+    pool=shuffle(bank.questions.filter(q=>inPractice(q)&&controllingTopics.includes(q.topic))).slice(0,20).map(q=>q.id);
     durationSeconds=45*60;
     modeName='exam-part2';
   }else if(part==='topic'){
     const chosenTopic=topic||$('#exam-topic-select')?.value||'Financial Reporting';
     examTopicName=chosenTopic;
-    pool=shuffle(bank.questions.filter(q=>q.status==='validated'&&q.topic===chosenTopic)).slice(0,20).map(q=>q.id);
+    pool=shuffle(bank.questions.filter(q=>inPractice(q)&&q.topic===chosenTopic)).slice(0,20).map(q=>q.id);
     durationSeconds=45*60;
     modeName='exam-topic';
   }
@@ -810,6 +840,7 @@ function launchExam(part,topic){
     examTimeRemaining:durationSeconds,
     examFlags:{}
   };
+  if(source==='mock')state.session.examSource='mock';
   setView('practice',false);
   focusQuestion();
 }
@@ -873,7 +904,7 @@ function renderExamActive(){
   const d=state.drafts[q.id];
   const m=Math.floor((s.examTimeRemaining||0)/60),sec=(s.examTimeRemaining||0)%60;
   const isPart1=s.mode==='exam-part1',isPart2=s.mode==='exam-part2',isFull=s.mode==='exam-full';
-  const examTitle=isPart1?'Part 1: Accounting & Auditing':isPart2?'Part 2: Controlling':isFull?'Whole Mock Exam':(s.examTopic?`Topic: ${s.examTopic}`:'Topic Exam');
+  const examTitle=(s.examSource==='mock'?'AI mock exam · ':'')+(isPart1?'Part 1: Accounting & Auditing':isPart2?'Part 2: Controlling':isFull?(s.examSource==='mock'?'Both parts':'Whole Mock Exam'):(s.examTopic?`Topic: ${s.examTopic}`:'Topic Exam'));
 
   $('#main').innerHTML=`
     <div class="exam-banner">
@@ -913,7 +944,8 @@ function renderExamActive(){
         <div class="exam-exercise-head">
           <div class="exam-exercise-title">
             <span class="exam-badge">Exercise ${s.index+1}</span>
-            <span class="exam-marks">${q.marks?`(${q.marks} Marks)`:'(1–2 Marks)'}</span>
+            <span class="exam-marks">${q.marks?`(${q.marks} Mark${q.marks===1?'':'s'})`:'(1–2 Marks)'}</span>
+            ${aiBadge(q)}
           </div>
           <button type="button" id="btn-flag" class="flag-btn ${s.examFlags?.[q.id]?'flagged':''}" aria-pressed="${Boolean(s.examFlags?.[q.id])}">
             ${s.examFlags?.[q.id]?'Flagged for review ⚑':'Flag for review ⚑'}
@@ -1008,12 +1040,17 @@ function showExamResults(){
   const unanswered=rows.length-correct-incorrect;
   const scorePct=rows.length?Math.round((correct/rows.length)*100):0;
   const byTopic=topicBreakdown(bank.questions,rows);
+  const allMarked=rows.length&&rows.every(a=>question(a.questionId)?.marks);
+  const marksTotal=allMarked?rows.reduce((sum,a)=>sum+question(a.questionId).marks,0):0;
+  const marksEarned=allMarked?rows.reduce((sum,a)=>sum+(a.outcome==='correct'?question(a.questionId).marks:0),0):0;
+  const wasMock=s.examSource==='mock';
   state.session=null;
   save();
 
   $('#main').innerHTML=`
     <section class="welcome">
-      <h2>Exam score: ${correct} / ${rows.length} (${scorePct}%)</h2>
+      <h2>${wasMock?'AI mock exam score':'Exam score'}: ${correct} / ${rows.length} (${scorePct}%)</h2>
+      ${allMarked?`<p><strong>Marks: ${marksEarned} / ${marksTotal}</strong> (${Math.round(100*marksEarned/marksTotal)}%)</p>`:''}
       <p>Passing benchmark is typically 50%. Wrong answers incurred zero deductions.</p>
       <div class="result-grid">
         <div><strong>${correct}</strong>Correct marks</div>
@@ -1035,7 +1072,7 @@ function showExamResults(){
         const chosenOpt=q.options.find(o=>o.id===a.optionId);
         return `
           <details class="history-item">
-            <summary><strong class="outcome-${h(a.outcome)}">${label[a.outcome]}</strong> — ${h(q.topic)} · ${h(q.prompt.slice(0,90))}…</summary>
+            <summary><strong class="outcome-${h(a.outcome)}">${label[a.outcome]}</strong> — ${h(q.topic)} · ${h(q.prompt.slice(0,90))}… ${aiBadge(q)}</summary>
             ${q.scenario?`<div class="scenario">${format(q.scenario)}</div>`:''}
             <div class="prompt">${format(q.prompt)}</div>
             <p><strong>Your answer:</strong> ${chosenOpt?h(optionText(chosenOpt)):'Unanswered'}</p>
@@ -1181,14 +1218,14 @@ async function init(){
     view=state.view;
 
     // Populate topics
-    const topics=[...new Set(bank.questions.filter(q=>q.status==='validated').map(q=>q.topic))].sort();
+    const topics=[...new Set(bank.questions.filter(inPractice).map(q=>q.topic))].sort();
     topics.forEach(t=>{
       for(const select of [$('#topic'),$('#exam-topic-select')]){
         if(![...select.options].some(o=>o.value===t))select.add(new Option(t,t));
       }
       if(!preciseSubtopics[t])preciseSubtopics[t]=[
         {val:'',text:`All ${t} areas`},
-        ...[...new Set(bank.questions.filter(q=>q.status==='validated'&&q.topic===t).map(q=>q.subtopic))].sort().map(s=>({val:s,text:s}))
+        ...[...new Set(bank.questions.filter(q=>inPractice(q)&&q.topic===t).map(q=>q.subtopic))].sort().map(s=>({val:s,text:s}))
       ];
     });
     populateSubtopics(state.preferences.topic||'');
