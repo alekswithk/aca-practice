@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -20,6 +20,8 @@ let examTimerInterval=null;
 let examTimerPaused=false;
 let themeChanging=false;
 let activeUser=null,cloud=null,storageKey=STORAGE_KEY;
+// Sure / Guessing choice for the open practice question, kept until it is checked.
+let confidence={id:null,value:'sure'};
 
 const now=()=>new Date().toISOString();
 const question=id=>bank.questions.find(q=>q.id===id);
@@ -436,9 +438,10 @@ function startTopicSession(topic){
 function recommendationCards(sessionAttempts){
   const scored=bank.questions.filter(q=>q.status==='validated');
   const {leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
-  const wrong=[...new Set(sessionAttempts.filter(a=>a.outcome==='incorrect').map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
+  const pick=test=>[...new Set(sessionAttempts.filter(test).map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
+  const wrong=pick(a=>a.outcome==='incorrect'),guessed=pick(isGuess).filter(id=>!wrong.includes(id)),ids=[...wrong,...guessed];
   const cards=[];
-  if(wrong.length)cards.push(`<div class="recommendation wrong-review"><p>Look again at your wrong answers</p><ol class="wrong-list">${wrong.map(id=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li><span class="muted">${h(q.topic)}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(wrong.join(','))}">Retry ${wrong.length===1?'this question':`these ${wrong.length} questions`}</button></div>`);
+  if(ids.length)cards.push(`<div class="recommendation wrong-review"><p>${guessed.length?'Look again at these':'Look again at your wrong answers'}</p><ol class="wrong-list">${ids.map(id=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li><span class="muted">${h(q.topic)}${guessed.includes(id)?' (guessed)':''}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(ids.join(','))}">Retry ${ids.length===1?'this question':`these ${ids.length} questions`}</button></div>`);
   if(leastCovered)cards.push(`<div class="recommendation"><p>Least covered: ${h(leastCovered)}</p><button type="button" data-recommend-topic="${h(leastCovered)}">Practice ${h(leastCovered)}</button></div>`);
   if(!cards.length)return '';
   return `<div class="recommendations">${cards.join('')}</div>`;
@@ -492,6 +495,7 @@ function renderPractice(){
               </label>`;
             }).join('')}
           </fieldset>
+          ${attempt?'':`<div class="confidence" role="radiogroup" aria-label="How sure are you?"><span class="muted" aria-hidden="true">How sure are you?</span><div class="confidence-pills">${[['sure','Sure'],['guess','Guessing']].map(([v,t])=>`<label><input type="radio" name="confidence" value="${v}" ${(confidence.id===q.id?confidence.value:'sure')===v?'checked':''}><span>${t}</span></label>`).join('')}</div></div>`}
           <p id="answer-error" class="danger" role="alert"></p>
           <div class="action-bar">
             <button type="button" id="previous-question" ${session.index===0?'disabled':''}>Previous</button>
@@ -530,6 +534,7 @@ function renderPractice(){
     }
   };
 
+  $$('input[name=confidence]').forEach(el=>el.addEventListener('change',()=>{confidence={id:q.id,value:el.value};}));
   $('#unknown')?.addEventListener('click',()=>submit(q,null));
   $('#previous-question').onclick=()=>{if(session.index>0)goToQuestion(session.index-1);};
   $('#end-session').onclick=showResults;
@@ -538,7 +543,8 @@ function renderPractice(){
 
 function submit(q,optionId){
   if(state.session.attemptId)return;
-  const attempt=makeAttempt(q,optionId,state.drafts[q.id]?.notes||'',now(),crypto.randomUUID(),bank.bankVersion);
+  const sure=confidence.id===q.id?confidence.value:'sure';confidence={id:null,value:'sure'};
+  const attempt=makeAttempt(q,optionId,state.drafts[q.id]?.notes||'',now(),crypto.randomUUID(),bank.bankVersion,sure);
   state.attempts.push(attempt);
   state.session.attemptId=attempt.id;
   state.session.attemptIds.push(attempt.id);
@@ -553,6 +559,7 @@ function feedback(q,a){
   return `
     <section class="feedback" data-outcome="${h(a.outcome)}">
       <h3 class="outcome-${h(a.outcome)}" id="feedback-heading" tabindex="-1">${label[a.outcome]}</h3>
+      ${isGuess(a)?'<p class="muted">You marked this as a guess.</p>':''}
       <p><strong>Correct answer:</strong> ${h(shownLabel(order,correct.id))}. ${h(optionText(correct))}</p>
       <p>${h(q.explanation)}</p>
       ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}

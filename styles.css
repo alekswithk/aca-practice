@@ -623,3 +623,11 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
 @media (prefers-contrast: more) {
   html:root { --line: #6b6e75; --control-line: #6b6e75; }
 }
+
+/* Sure / Guessing before checking a practice answer */
+.confidence { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem .75rem; margin-top: 1rem; }
+.confidence-pills { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+.confidence-pills label { position: relative; min-height: 34px; display: grid; place-items: center; padding: .3rem .9rem; border: 1px solid transparent; border-radius: 7px; color: var(--muted); font-size: var(--fs-sm); font-weight: 600; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.confidence-pills input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.confidence-pills label:has(input:checked) { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.confidence-pills label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }

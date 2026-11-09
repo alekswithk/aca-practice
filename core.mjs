@@ -22,10 +22,15 @@ export function grade(q, optionId) {
   if(!q.options.some(o=>o.id===optionId)) throw new Error('Choose a valid answer.');
   return optionId===q.correctOptionId?'correct':'incorrect';
 }
-export function makeAttempt(q,optionId,notes,timestamp,id,bankVersion){
+// confidence ('sure'|'guess') is only recorded for answered practice questions.
+// Attempts without it (older ones, exams, skips) count as sure.
+export function makeAttempt(q,optionId,notes,timestamp,id,bankVersion,confidence){
   const outcome=grade(q,optionId);
-  return {id,questionId:q.id,optionId,outcome,misconception:outcome==='incorrect'?q.options.find(o=>o.id===optionId).misconception:null,notesSnapshot:notes,timestamp,bankVersion};
+  const attempt={id,questionId:q.id,optionId,outcome,misconception:outcome==='incorrect'?q.options.find(o=>o.id===optionId).misconception:null,notesSnapshot:notes,timestamp,bankVersion};
+  if(confidence&&optionId!==null)attempt.confidence=confidence;
+  return attempt;
 }
+export const isGuess=a=>a.outcome==='correct'&&a.confidence==='guess';
 export function latestAttempts(attempts){return new Map([...attempts].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)).map(a=>[a.questionId,a]));}
 // Questions never attempted come first (each group keeps its shuffled order),
 // so a topic's unexplored questions are all asked before any repeats.
@@ -115,9 +120,11 @@ export function validateBackup(value,bank){
   }).map(a=>{
     const q=qs.get(a?.questionId);
     if(!object(a)||!q||q.status!=='validated'||!str(a.id)||!a.id||ids.has(a.id)||!date(a.timestamp)||!str(a.notesSnapshot)||a.notesSnapshot.length>1000000||!str(a.bankVersion)||!option(q.id,a.optionId)||!['correct','incorrect','unknown'].includes(a.outcome))fail();
-    if((a.optionId===null)!==(a.outcome==='unknown')||!(a.misconception===null||str(a.misconception)))fail();
+    if((a.optionId===null)!==(a.outcome==='unknown')||!(a.misconception===null||str(a.misconception))||(a.confidence!==undefined&&!['sure','guess'].includes(a.confidence)))fail();
     if(a.bankVersion===bank.bankVersion && (grade(q,a.optionId)!==a.outcome || (a.outcome==='incorrect'?q.options.find(o=>o.id===a.optionId).misconception:null)!==a.misconception))fail();
-    ids.add(a.id);return {id:a.id,questionId:q.id,optionId:a.optionId,outcome:a.outcome,misconception:a.misconception,notesSnapshot:a.notesSnapshot,timestamp:a.timestamp,bankVersion:a.bankVersion};
+    ids.add(a.id);const out={id:a.id,questionId:q.id,optionId:a.optionId,outcome:a.outcome,misconception:a.misconception,notesSnapshot:a.notesSnapshot,timestamp:a.timestamp,bankVersion:a.bankVersion};
+    if(a.confidence!==undefined)out.confidence=a.confidence;
+    return out;
   });
   const preferences={};for(const k of ['topic','subtopic','difficulty','origin']){
     const v=value.preferences[k];if(!str(v)||(v&&!bank.questions.some(q=>q[k]===v)))fail();preferences[k]=v;
@@ -156,8 +163,12 @@ export function validateBackup(value,bank){
 }
 export function mergeBackups(local,incoming){
   const attempts=new Map(local.attempts.map(a=>[a.id,a]));
+  // A copy saved by an older version lacks confidence; that is not a conflict, and the copy that has it is kept.
+  const bare=({confidence,...rest})=>JSON.stringify(rest);
   for(const a of incoming.attempts){
-    if(attempts.has(a.id)&&JSON.stringify(attempts.get(a.id))!==JSON.stringify(a)) throw new Error('Conflicting attempt IDs in this backup. No data was changed.');
+    const prev=attempts.get(a.id);
+    if(prev&&bare(prev)!==bare(a)) throw new Error('Conflicting attempt IDs in this backup. No data was changed.');
+    if(prev?.confidence!==undefined)continue;
     attempts.set(a.id,a);
   }
   const drafts={...local.drafts};
