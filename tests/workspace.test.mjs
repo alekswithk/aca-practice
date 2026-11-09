@@ -156,7 +156,7 @@ try{
   await page.reload();await page.locator('.question').waitFor();await focusedQuestion();
   if(width===375)await page.screenshot({path:join(output,'exam-mobile.png'),fullPage:true});
  }
- const download=page.waitForEvent('download');await page.locator('.storage > summary').click();await page.locator('#export').click();
+ const download=page.waitForEvent('download');await page.locator('#account-panel > summary').click();await page.locator('#export').click();
  const backup=JSON.parse(readFileSync(await (await download).path(),'utf8'));
  assert.equal(backup.session.examFlags[first],true);assert.equal(backup.drafts[first].notes,'Exam notes persist.');
  await page.locator('.palette-btn').last().click();assert.equal(await page.locator('#btn-exam-next').textContent(),'Finish');

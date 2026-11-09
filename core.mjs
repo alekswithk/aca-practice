@@ -27,6 +27,12 @@ export function makeAttempt(q,optionId,notes,timestamp,id,bankVersion){
   return {id,questionId:q.id,optionId,outcome,misconception:outcome==='incorrect'?q.options.find(o=>o.id===optionId).misconception:null,notesSnapshot:notes,timestamp,bankVersion};
 }
 export function latestAttempts(attempts){return new Map([...attempts].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)).map(a=>[a.questionId,a]));}
+// Questions never attempted come first (each group keeps its shuffled order),
+// so a topic's unexplored questions are all asked before any repeats.
+export function unexploredFirst(ids,attempts){
+  const seen=new Set(attempts.map(a=>a.questionId));
+  return [...ids.filter(id=>!seen.has(id)),...ids.filter(id=>seen.has(id))];
+}
 export function available(questions,filters,mode,attempts){
   const latest=latestAttempts(attempts);
   return questions.filter(q=>q.status==='validated' && Object.entries(filters).every(([k,v])=>!v||q[k]===v) && (mode!=='missed'||(latest.has(q.id)&&latest.get(q.id).outcome!=='correct')));
@@ -125,6 +131,10 @@ export function validateBackup(value,bank){
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();
     session={queue:[...s.queue],index:s.index,order:pinNoneLast(s.order,q.options),mode:s.mode,attemptId:s.attemptId,attemptIds:[...s.attemptIds]};
+    if(s.scope!==undefined){
+      if(!object(s.scope)||!['topic','subtopic','difficulty'].every(k=>str(s.scope[k]??'')))fail();
+      session.scope={topic:s.scope.topic??'',subtopic:s.scope.subtopic??'',difficulty:s.scope.difficulty??''};
+    }
     if(s.questionOrders!==undefined){
       if(!object(s.questionOrders))fail();
       for(const [id,order] of Object.entries(s.questionOrders)){
