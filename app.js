@@ -408,7 +408,7 @@ function sessionSubtitle(session,completed){
     if(session.scope.subtopic)parts.push(topic);
     if(session.scope.difficulty)parts.push(session.scope.difficulty);
   }else{
-    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?'Retry':session.mode==='mixed'?'Mixed topics':'Practice mode');
+    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='mixed'?'Mixed topics':'Practice mode');
     if(session.mode==='mixed'&&session.scope?.difficulty)parts.push(session.scope.difficulty);
   }
   parts.push(`${completed} of ${session.queue.length} submitted`);
@@ -431,17 +431,23 @@ function startTopicSession(topic){
   $('#topic').value=topic;populateSubtopics(topic);$('#subtopic').value='';$('#difficulty').value='';$('#setup').requestSubmit();
 }
 
-// Two cards at the end of a session; a null recommendation gets no card.
+// End-of-session cards: the questions answered wrong in this session (to look
+// at again, exactly those), and the least covered topic overall.
 function recommendationCards(sessionAttempts){
   const scored=bank.questions.filter(q=>q.status==='validated');
-  const {mostMistakes,leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
-  const cards=[['Most mistakes',mostMistakes],['Least covered',leastCovered]].filter(([,topic])=>topic);
+  const {leastCovered}=recommendTopics(scored,sessionAttempts,state.attempts);
+  const wrong=[...new Set(sessionAttempts.filter(a=>a.outcome==='incorrect').map(a=>a.questionId))].filter(id=>question(id)?.status==='validated');
+  const cards=[];
+  if(wrong.length)cards.push(`<div class="recommendation wrong-review"><p>Look again at your wrong answers</p><ol class="wrong-list">${wrong.map(id=>{const q=question(id);const text=q.prompt.replace(/^\d+(?:\.\d+)?\.?\s*(?:\(\d+ marks?\)\s*)?/,'');return `<li><span class="muted">${h(q.topic)}</span>${h(text.length>110?text.slice(0,110).trimEnd()+'…':text)}</li>`;}).join('')}</ol><button type="button" class="primary" id="retry-wrong" data-retry-ids="${h(wrong.join(','))}">Retry ${wrong.length===1?'this question':`these ${wrong.length} questions`}</button></div>`);
+  if(leastCovered)cards.push(`<div class="recommendation"><p>Least covered: ${h(leastCovered)}</p><button type="button" data-recommend-topic="${h(leastCovered)}">Practice ${h(leastCovered)}</button></div>`);
   if(!cards.length)return '';
-  return `<div class="recommendations">${cards.map(([title,topic])=>`<div class="recommendation"><p>${title}: ${h(topic)}</p><button type="button" data-recommend-topic="${h(topic)}">Practice ${h(topic)}</button></div>`).join('')}</div>`;
+  return `<div class="recommendations">${cards.join('')}</div>`;
 }
 
 function bindRecommendations(){
   $$('[data-recommend-topic]').forEach(el=>el.onclick=()=>startTopicSession(el.dataset.recommendTopic));
+  const retry=$('#retry-wrong');
+  if(retry)retry.onclick=()=>startSession(shuffle(retry.dataset.retryIds.split(',')),'retry');
 }
 
 function renderPractice(){

@@ -507,6 +507,8 @@ summary { min-height: 44px; padding: .6rem 0; font-weight: 600; }
 .recommendations strong { font-size: var(--fs-base); font-weight: 600; overflow-wrap: anywhere; }
 .recommendation p { margin: 0; font-weight: 600; }
 .recommendations > * > button { margin-top: auto; }
+.wrong-list { margin: .25rem 0 .5rem; padding-left: 1.2rem; display: grid; gap: .6rem; font-size: var(--fs-sm); line-height: 1.45; }
+.wrong-list li > .muted { display: block; font-size: var(--fs-xs); }
 
 /* Tables */
 .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-top: 1rem; }
