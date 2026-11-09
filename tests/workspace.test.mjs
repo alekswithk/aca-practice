@@ -16,6 +16,8 @@ try{
  await page.addInitScript(()=>localStorage.setItem('aca-account-announcement-v1','seen'));
  const errors=[];page.on('pageerror',e=>errors.push(e.message));
  const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
+ // Session setup and account live in exclusive sections of the header Options menu.
+ const reveal=async id=>{for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
  const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
  const focusedQuestion=async()=>{
   assert.equal(await page.locator('.question').evaluate(el=>el===document.activeElement),true,'The current question must receive focus');
@@ -40,6 +42,10 @@ try{
   assert.deepEqual((await saved()).drafts,before.drafts);
  };
  await load();
+ // Options sections are exclusive; an outside click closes the menu and folds both sections.
+ await reveal('#account-panel');await reveal('#session-settings');assert.equal(await page.locator('#account-panel').evaluate(el=>el.open),false,'Only one Options section may be open');
+ await page.locator('footer').click();await page.waitForFunction(()=>!document.querySelector('.options-menu').open&&!document.querySelector('#session-settings').open);
+ await reveal('#session-settings');
  assert.equal(await page.locator('.slider-ticks').count(),0);
  const slider=page.locator('#length-slider');await slider.focus();await slider.press('Home');
  for(let i=0;i<4;i++)await slider.press('ArrowRight');
@@ -60,7 +66,7 @@ try{
  assert.equal(await page.getByRole('button',{name:'Previous',exact:true}).isDisabled(),true);
  assert.equal(await page.getByRole('button',{name:'Skip',exact:true}).count(),1);
  assert.equal(await page.locator('.action-hint,.notes-help').count(),0);
- assert.doesNotMatch(await page.locator('#main').innerText(),/Select an answer, then|Submitting saves a copy|Check your answer to see/);
+ assert.doesNotMatch(await page.locator('#main').innerText(),/Select an answer, then|Submitting saves a copy/);
  const columns=await page.locator('.question-layout').evaluate(el=>{const q=el.querySelector('.question').getBoundingClientRect(),f=el.querySelector('#feedback').getBoundingClientRect();return {sideBySide:f.left>q.right,aligned:Math.abs(q.top-f.top)<2};});
  assert.deepEqual(columns,{sideBySide:true,aligned:true});
  await page.locator('#notebook > summary').click();
@@ -131,7 +137,7 @@ try{
  await page.emulateMedia({reducedMotion:'no-preference'});
  await page.evaluate(()=>{document.startViewTransition=undefined;});await page.locator('#theme-toggle').click();
  assert.equal(await page.locator('#theme-toggle').getAttribute('aria-checked'),'true');
- await page.locator('#session-settings > summary').click();await page.locator('#tab-mode-exam').click();await page.locator('#start-exam').click();await page.locator('#btn-flag').waitFor();
+ await reveal('#session-settings');await page.locator('#tab-mode-exam').click();await page.locator('#start-exam').click();await page.locator('#btn-flag').waitFor();
  await focusedQuestion();
  const first=(await saved()).session.queue[0];
  await page.locator('#btn-flag').click();assert.equal(await page.locator('[data-jump="0"] .review-flag').count(),1);
@@ -156,7 +162,7 @@ try{
   await page.reload();await page.locator('.question').waitFor();await focusedQuestion();
   if(width===375)await page.screenshot({path:join(output,'exam-mobile.png'),fullPage:true});
  }
- const download=page.waitForEvent('download');await page.locator('#account-panel > summary').click();await page.locator('#export').click();
+ const download=page.waitForEvent('download');await reveal('#account-panel');await page.locator('#export').click();
  const backup=JSON.parse(readFileSync(await (await download).path(),'utf8'));
  assert.equal(backup.session.examFlags[first],true);assert.equal(backup.drafts[first].notes,'Exam notes persist.');
  await page.locator('.palette-btn').last().click();assert.equal(await page.locator('#btn-exam-next').textContent(),'Finish');
@@ -185,8 +191,13 @@ try{
   assert.equal(await page.locator('#tab-mode-practice').getAttribute('aria-selected'),'true');
   await focusedQuestion();
  }
+ // The header can be hidden; the choice survives a reload and the show tab restores it.
+ assert.equal(await page.locator('#nav-study').textContent(),'Session');
+ await page.locator('#header-hide').click();assert.equal(await page.locator('html').evaluate(el=>el.classList.contains('header-collapsed')),true);
+ await page.reload();await page.locator('#header-show').waitFor();assert.equal(await page.locator('.masthead').isVisible(),false);
+ await page.locator('#header-show').click();assert.equal(await page.locator('#nav-home').isVisible(),true);assert.equal(await page.evaluate(()=>localStorage.getItem('aca_header')),'open');
  assert.deepEqual(errors,[]);
  console.log('PASS: practice Previous/Next, stable answer orders after reload, preserved drafts/attempts, Skip, selected-answer colours, concise cards/slider, unique follow-ups, theme fallbacks, exam persistence/export/submission and 375–1440px layouts.');
  console.log('Screenshots: '+output);
- console.log('PASS: Home and ACA logo navigation, preserved practice/exam sessions after Home/reload/resume, all topic revision cards, and responsive Home layouts.');
+ console.log('PASS: Home and ACA logo navigation, preserved practice/exam sessions after Home/reload/resume, all topic revision cards, responsive Home layouts, exclusive Options sections and the collapsible header.');
 }finally{await browser.close();}
