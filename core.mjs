@@ -98,6 +98,25 @@ export function recommendTopics(questions, sessionAttempts, allAttempts=sessionA
   const leastCovered=ranked.find(t=>t.topic!==mostMistakes)?.topic??null;
   return {mostMistakes,leastCovered:ranked.length>1?leastCovered:null};
 }
+// Spaced review, worked out from attempt history alone. A wrong, skipped or
+// guessed answer makes a question due 1 day later. The first sure correct
+// answer once it is due pushes it to a final check 3 days later; a second one
+// then clears it. Sure correct answers given before the due time change nothing,
+// and any new wrong, skipped or guessed answer starts over at 1 day.
+const DAY=864e5;
+export const needsReview=a=>a.outcome!=='correct'||a.confidence==='guess';
+export function reviewQueue(questions,attempts,now=Date.now()){
+  const scored=scoredById(questions),t=typeof now==='number'?now:Date.parse(now),items=new Map();
+  for(const a of [...attempts].sort((x,y)=>Date.parse(x.timestamp)-Date.parse(y.timestamp))){
+    if(!scored.has(a.questionId))continue;
+    const time=Date.parse(a.timestamp),cur=items.get(a.questionId);
+    if(needsReview(a))items.set(a.questionId,{step:1,dueAt:time+DAY});
+    else if(cur&&time>=cur.dueAt){if(cur.step===1)items.set(a.questionId,{step:2,dueAt:time+3*DAY});else items.delete(a.questionId);}
+  }
+  const list=[...items].map(([id,s])=>({id,...s}));
+  const due=list.filter(i=>i.dueAt<=t).sort((x,y)=>(x.dueAt-y.dueAt)||byText(x.id,y.id)),later=list.filter(i=>i.dueAt>t);
+  return {due:due.map(i=>i.id),pending:later.length,nextAt:later.length?new Date(Math.min(...later.map(i=>i.dueAt))).toISOString():null};
+}
 export function validateBackup(value,bank){
   const fail=()=>{throw new Error('Invalid or incompatible backup. Your current data has not been changed.');};
   const object=x=>x && typeof x==='object' && !Array.isArray(x);
@@ -133,7 +152,7 @@ export function validateBackup(value,bank){
   const staleSession=s=>object(s)&&((Array.isArray(s.queue)&&s.queue.some(retired))||(Array.isArray(s.attemptIds)&&s.attemptIds.some(id=>dropped.has(id))));
   if(value.session!==null&&!staleSession(value.session)){
     const s=value.session;
-    if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
+    if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','review','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
     const q=qs.get(s.queue[s.index]);
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();

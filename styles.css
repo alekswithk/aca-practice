@@ -631,3 +631,12 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
 .confidence-pills input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
 .confidence-pills label:has(input:checked) { background: var(--surface); color: var(--ink); border-color: var(--line); }
 .confidence-pills label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Home: due for review and flagged questions */
+.home-top:has(+ .home-queues) { margin-bottom: 1rem; }
+.home-queues { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+.queue-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.queue-item strong { display: block; font-size: var(--fs-base); font-weight: 600; }
+.queue-item .muted { display: block; line-height: 1.45; margin-top: .15rem; }
+.queue-item button { flex-shrink: 0; }
+@media (max-width:760px) { .queue-item { flex-direction: column; align-items: stretch; } }

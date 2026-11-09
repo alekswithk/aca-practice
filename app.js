@@ -1,4 +1,4 @@
-import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics} from './core.mjs';
+import {STORAGE_KEY,emptyState,shuffle,unexploredFirst,shuffleOptions,pinNoneLast,makeAttempt,isGuess,grade,available,followup,latestAttempts,validateBackup,mergeBackups,topicProgress,recommendTopics,reviewQueue} from './core.mjs';
 import {createProgressSync,progressKey} from './cloud.mjs';
 import {supabaseConfig} from './supabase-config.mjs';
 
@@ -410,21 +410,35 @@ function sessionSubtitle(session,completed){
     if(session.scope.subtopic)parts.push(topic);
     if(session.scope.difficulty)parts.push(session.scope.difficulty);
   }else{
-    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='mixed'?'Mixed topics':'Practice mode');
+    parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='review'?'Due for review':session.mode==='mixed'?'Mixed topics':'Practice mode');
     if(session.mode==='mixed'&&session.scope?.difficulty)parts.push(session.scope.difficulty);
   }
   parts.push(`${completed} of ${session.queue.length} submitted`);
   return parts.join(' · ');
 }
 
+// "today at 14:30", "tomorrow at 9:05", "on Fri 13 Nov"
+function dueText(iso){
+  const at=new Date(iso),day=d=>new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime();
+  const days=Math.round((day(at)-day(new Date()))/864e5),time=at.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  return days<=0?`today at ${time}`:days===1?`tomorrow at ${time}`:`on ${at.toLocaleDateString([],{weekday:'short',day:'numeric',month:'short'})}`;
+}
+function homeQueues(){
+  const review=reviewQueue(bank.questions,state.attempts,Date.now()),n=review.due.length,items=[];
+  if(n)items.push(`<div class="queue-item"><div><strong>Due for review</strong><span class="muted">${n===1?'1 question you missed, skipped or guessed is':`${n} questions you missed, skipped or guessed are`} ready for another try.</span></div><button type="button" id="review-due">Review ${n===1?'1 question':`${n} questions`}</button></div>`);
+  else if(review.nextAt)items.push(`<div class="queue-item"><div><strong>Due for review</strong><span class="muted">Nothing due right now. The next question comes back ${h(dueText(review.nextAt))}.</span></div></div>`);
+  return {html:items.length?`<section class="home-queues" aria-label="Review">${items.join('')}</section>`:'',review};
+}
+
 // =================== PRACTICE MODE ===================
 function renderHome(){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
-    const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length;
-    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
+    const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length,queues=homeQueues();
+    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div>${queues.html}<section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
     if(state.session)$('#welcome-start').textContent='Resume session';
     $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
+    $('#review-due')?.addEventListener('click',()=>startSession(shuffle(queues.review.due),'review'));
     $$('[data-topic]').forEach(el=>el.onclick=()=>startTopicSession(el.dataset.topic));
 }
 
@@ -559,7 +573,7 @@ function feedback(q,a){
   return `
     <section class="feedback" data-outcome="${h(a.outcome)}">
       <h3 class="outcome-${h(a.outcome)}" id="feedback-heading" tabindex="-1">${label[a.outcome]}</h3>
-      ${isGuess(a)?'<p class="muted">You marked this as a guess.</p>':''}
+      ${isGuess(a)?'<p class="muted">You marked this as a guess, so it comes back for review tomorrow.</p>':''}
       <p><strong>Correct answer:</strong> ${h(shownLabel(order,correct.id))}. ${h(optionText(correct))}</p>
       <p>${h(q.explanation)}</p>
       ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
