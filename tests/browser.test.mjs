@@ -4,7 +4,7 @@ import {readFileSync,mkdirSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {homedir,tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {STORAGE_KEY,topicProgress} from '../core.mjs';
+import {STORAGE_KEY,topicProgress,inPractice} from '../core.mjs';
 const require=createRequire(import.meta.url);
 let playwright;
 try{playwright=require(process.env.PLAYWRIGHT_MODULE||'playwright');}catch{playwright=require(join(homedir(),'.codex/skills/deck-design-pdf/node_modules/playwright'));}
@@ -27,7 +27,7 @@ try{
  const data=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
  await load();
  await page.selectOption('#topic','Financial Reporting');await page.selectOption('#difficulty','Hard');
- assert.equal(Number((await page.locator('#available').textContent()).split(' ')[0]),bank.questions.filter(q=>q.status==='validated'&&q.topic==='Financial Reporting'&&q.difficulty==='Hard').length);
+ assert.equal(Number((await page.locator('#available').textContent()).split(' ')[0]),bank.questions.filter(q=>inPractice(q)&&q.topic==='Financial Reporting'&&q.difficulty==='Hard').length);
  await page.selectOption('#subtopic','Deferred taxes');await page.selectOption('#difficulty','');
  await page.locator('#start').hover();await page.mouse.down();await page.waitForFunction(()=>new DOMMatrix(getComputedStyle(document.querySelector('#start')).transform).a<.999);assert.equal((await data()).session,null,'Press feedback must happen before committing the action');await page.mouse.up();let state=await data();const firstId=state.session.queue[0],q=bank.questions.find(q=>q.id===firstId);assert.equal(q.subtopic,'Deferred taxes');assert.ok(state.session.queue.every(id=>bank.questions.find(q=>q.id===id).subtopic==='Deferred taxes'));assert.equal(await page.locator('.question').evaluate(el=>el.getAnimations().length),0,'Frequently used questions must appear immediately');
  assert.equal(await page.locator('.feedback').count(),0);assert.equal(await page.getByText('Preserved original question',{exact:false}).count(),0);

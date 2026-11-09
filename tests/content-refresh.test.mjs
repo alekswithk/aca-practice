@@ -3,7 +3,7 @@ import {readFileSync,mkdirSync} from 'node:fs';
 import {createRequire} from 'node:module';
 import {homedir,tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {emptyState,STORAGE_KEY} from '../core.mjs';
+import {emptyState,STORAGE_KEY,inPractice} from '../core.mjs';
 const require=createRequire(import.meta.url);
 let playwright;
 try{playwright=require(process.env.PLAYWRIGHT_MODULE||'playwright');}catch{playwright=require(join(homedir(),'.codex/skills/deck-design-pdf/node_modules/playwright'));}
@@ -23,9 +23,10 @@ try{
   const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
   await load();
   for(const [topic,count] of [['Capital Budgeting',13],['Cost and Performance Management',14]]){
-    assert.equal(bank.questions.filter(q=>q.topic===topic&&q.status==='validated').length,count);
+    // The refreshed human-written set keeps its size; practice also includes AI-generated questions (not the AI mock exam).
+    assert.equal(bank.questions.filter(q=>q.topic===topic&&q.status==='validated'&&!q.aiGenerated).length,count);
     await openSetup();await page.selectOption('#topic',topic);
-    assert.match(await page.locator('#available').textContent(),new RegExp(`^${count} matching`));
+    assert.match(await page.locator('#available').textContent(),new RegExp(`^${bank.questions.filter(q=>q.topic===topic&&inPractice(q)).length} matching`));
     assert.ok(await page.locator('#subtopic option').count()>1);
     assert.equal(await page.locator(`#exam-topic-select option[value="${topic}"]`).count(),1);
     await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.options-menu').open,null,{timeout:1000}).catch(()=>{});assert.equal(await page.locator('.options-menu').evaluate(el=>el.open),false,'Escape must close the Options menu (after its short exit animation)');
@@ -85,12 +86,19 @@ try{
     await page.locator('#start-exam').click();
     assert.ok((await saved()).session.queue.every(id=>bank.questions.find(q=>q.id===id).topic===topic));
     if(topic==='Cost and Performance Management'){
+      // The topic exam draws 20 of the topic's questions; make sure the table question is one of them.
+      if(!(await saved()).session.queue.includes('cpm-fritz-9.1')){
+        await page.evaluate(key=>{const st=JSON.parse(localStorage.getItem(key));st.session.queue[st.session.queue.length-1]='cpm-fritz-9.1';localStorage.setItem(key,JSON.stringify(st));},STORAGE_KEY);
+        await page.reload();await page.locator('[data-jump]').first().waitFor();
+      }
       const index=(await saved()).session.queue.indexOf('cpm-fritz-9.1');
       await page.locator(`[data-jump="${index}"]`).click();
       assert.equal(await page.locator('.question .exercise-table tbody tr').count(),3);
       await page.locator('input[name=exam-answer][value=a]').check();
+      const examQueue=(await saved()).session.queue,withTables=examQueue.filter(id=>bank.questions.find(q=>q.id===id).scenario.includes('|')).length;
       await page.locator('#btn-exam-finish').click();
-      assert.equal(await page.locator('.history-item .exercise-table').count(),1,'Exam review keeps the cpm-fritz-9.1 table (9.2 is retired)');
+      assert.ok(withTables>=1);
+      assert.equal(await page.locator('.history-item .exercise-table').count(),withTables,'Exam review keeps every table, including cpm-fritz-9.1 (9.2 is retired)');
       await page.locator('#btn-exam-again').click();
     }else await page.locator('#btn-exam-cancel').click();
   }

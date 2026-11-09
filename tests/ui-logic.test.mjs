@@ -3,7 +3,7 @@ import {readFileSync} from 'node:fs';
 import {topicProgress,recommendTopics} from '../core.mjs';
 const bank=JSON.parse(readFileSync(new URL('../content/questions.json',import.meta.url)));
 const questions=bank.questions;
-const scored=topic=>questions.filter(q=>q.status==='validated'&&q.topic===topic);
+const scored=topic=>questions.filter(q=>q.status==='validated'&&q.set!=='mock-exam'&&q.topic===topic);
 const attempt=(questionId,outcome,n=0)=>({id:`${questionId}-${outcome}-${n}`,questionId,optionId:null,outcome,misconception:null,notesSnapshot:'',timestamp:`2026-11-09T10:00:${String(n).padStart(2,'0')}.000Z`,bankVersion:bank.bankVersion});
 const synthetic=spec=>Object.entries(spec).flatMap(([topic,count])=>Array.from({length:count},(_,i)=>({id:`${topic}-${i}`,topic,status:'validated'})));
 
@@ -27,7 +27,7 @@ assert.equal(progressNoise.find(t=>t.topic===review.topic)?.answered??0,0);
 assert.deepEqual(topicProgress(synthetic({Empty:0,Real:1}),[]).map(t=>t.topic),['Real']);
 assert.deepEqual(topicProgress([{id:'r',topic:'Only review',status:'review'}],[]),[]);
 const order=topicProgress(questions,[]).map(t=>t.topic);
-assert.deepEqual(order,[...new Set(questions.filter(q=>q.status==='validated').map(q=>q.topic))],'first-seen order');
+assert.deepEqual(order,[...new Set(questions.filter(q=>q.status==='validated'&&q.set!=='mock-exam').map(q=>q.topic))],'first-seen order');
 console.log('PASS: topicProgress ignores unscored questions and keeps first-seen order.');
 
 // Null cases.
