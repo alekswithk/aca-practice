@@ -18,24 +18,27 @@ try{
   page.on('dialog',dialog=>dialog.accept());
   await page.addInitScript(()=>{Math.random=()=>.5;});
   const load=async()=>{await page.goto(base);await page.locator('#start:not([disabled])').waitFor({state:'attached'});};
-  const openSetup=async()=>{if(!await page.locator('#session-settings').evaluate(el=>el.open))await page.locator('#session-settings > summary').click();};
+  // Session setup is an exclusive section inside the header Options menu.
+  const openSetup=async()=>{await page.waitForFunction(()=>!document.querySelector('.options-menu.closing'),null,{timeout:2000});for(const s of ['.options-menu','#session-settings'])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
   const saved=()=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),STORAGE_KEY);
   await load();
-  for(const [topic,count] of [['Capital Budgeting',14],['Cost and Performance Management',16]]){
+  for(const [topic,count] of [['Capital Budgeting',13],['Cost and Performance Management',14]]){
     assert.equal(bank.questions.filter(q=>q.topic===topic&&q.status==='validated').length,count);
-    await page.selectOption('#topic',topic);
+    await openSetup();await page.selectOption('#topic',topic);
     assert.match(await page.locator('#available').textContent(),new RegExp(`^${count} matching`));
     assert.ok(await page.locator('#subtopic option').count()>1);
     assert.equal(await page.locator(`#exam-topic-select option[value="${topic}"]`).count(),1);
-    await page.locator('[data-topic="'+topic+'"]').click();
+    await page.keyboard.press('Escape');await page.waitForFunction(()=>!document.querySelector('.options-menu').open,null,{timeout:1000}).catch(()=>{});assert.equal(await page.locator('.options-menu').evaluate(el=>el.open),false,'Escape must close the Options menu (after its short exit animation)');
+    await page.locator('[data-topic="'+topic+'"]').click();await page.waitForFunction(()=>!document.documentElement.dataset.vt,null,{timeout:3000});
     assert.ok((await saved()).session.queue.every(id=>bank.questions.find(q=>q.id===id).topic===topic));
     await page.evaluate(key=>localStorage.removeItem(key),STORAGE_KEY);
     await load();
   }
 
   // Every exercise table must stay available with its question, including after a reload.
-  const tableQuestions=bank.questions.filter(q=>/^(cap-|cpm-)/.test(q.id)&&q.scenario.includes('|'));
-  assert.equal(tableQuestions.length,7);
+  // cpm-fritz-9.2 is a retired duplicate of 9.1 (status review), so six validated tables remain.
+  const tableQuestions=bank.questions.filter(q=>/^(cap-|cpm-)/.test(q.id)&&q.scenario.includes('|')&&q.status==='validated');
+  assert.equal(tableQuestions.length,6);
   for(const q of tableQuestions){
     const state=emptyState(bank.bankVersion);
     state.session={queue:[q.id],index:0,order:q.options.map(o=>o.id),mode:'retry',attemptId:null,attemptIds:[]};
@@ -67,8 +70,9 @@ try{
   await page.locator('input[name=answer][value="a"]').check();
   await page.locator('#answer-form button[type=submit]').click();
   await page.locator('.feedback[data-outcome=correct]').waitFor();
+  // Learning history is now a per-topic progress table (no per-attempt replay); the answered table question counts there.
   await page.locator('#nav-history').click();
-  assert.equal(await page.locator('.history-item .exercise-table').count(),1);
+  assert.doesNotMatch(await page.locator('tbody tr').filter({hasText:'Cost and Performance Management'}).textContent(),/\b0%/);
 
   await page.setViewportSize({width:1440,height:1000});
   await page.locator('#nav-study').click();
@@ -86,7 +90,7 @@ try{
       assert.equal(await page.locator('.question .exercise-table tbody tr').count(),3);
       await page.locator('input[name=exam-answer][value=a]').check();
       await page.locator('#btn-exam-finish').click();
-      assert.equal(await page.locator('.history-item .exercise-table').count(),2);
+      assert.equal(await page.locator('.history-item .exercise-table').count(),1,'Exam review keeps the cpm-fritz-9.1 table (9.2 is retired)');
       await page.locator('#btn-exam-again').click();
     }else await page.locator('#btn-exam-cancel').click();
   }
@@ -100,6 +104,6 @@ try{
     await page.locator('#btn-exam-cancel').click();
   }
   assert.deepEqual(errors,[]);
-  console.log('PASS: 30 additions available in practice, focus filters and exams; seven tables retain their data, align numbers, scroll on phones and appear in history.');
+  console.log('PASS: 30 additions available in practice, focus filters and exams; six validated tables retain their data, align numbers, scroll on phones and appear in exam review.');
   console.log('Screenshots: '+output);
 }finally{await browser.close();}

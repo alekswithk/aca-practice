@@ -28,6 +28,8 @@ try{
   const context=await browser.newContext({viewport:{width:1440,height:1000},colorScheme:'light',reducedMotion:'reduce'});
   await context.route('https://cdn.jsdelivr.net/**',route=>route.fulfill({contentType:'text/javascript',body:mock}));
   const page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
+  // Account and session setup are exclusive sections inside the header Options menu.
+  const reveal=async id=>{await page.waitForFunction(()=>!document.querySelector('.options-menu.closing'),null,{timeout:2000});for(const s of ['.options-menu',id])if(!await page.locator(s).evaluate(el=>el.open))await page.locator(s+' > summary').click();};
   const saved=key=>page.evaluate(key=>JSON.parse(localStorage.getItem(key)),key);
   const load=async()=>{await page.goto(process.env.ACA_TEST_URL||'http://127.0.0.1:8011/');await page.locator('#google-login:not([disabled])').waitFor({state:'attached'});};
   await load();
@@ -47,21 +49,22 @@ try{
   await page.locator('#announcement-dismiss').click();
   await load();assert.equal(await announcement.isVisible(),false,'The announcement must not repeat after reload');
   await page.setViewportSize({width:1440,height:1000});
-  await page.locator('#account-panel > summary').click();
+  await reveal('#account-panel');
   await page.locator('#google-login').click();
   assert.equal(await page.evaluate(()=>window.testOAuth.provider),'google');
   assert.match(await page.evaluate(()=>window.testOAuth.options.redirectTo),/127\.0\.0\.1/);
   await page.evaluate(()=>window.failOAuth=true);await page.locator('#google-login').click();
   await page.locator('#cloud-status').filter({hasText:'Sign-in failed. Google sign-in unavailable'}).waitFor();
-  if(!await page.locator('#session-settings').evaluate(el=>el.open))await page.locator('#session-settings > summary').click();
-  await page.locator('#start').click();await page.locator('#notebook > summary').click();
+  await reveal('#session-settings');assert.equal(await page.locator('#account-panel').evaluate(el=>el.open),false,'Options sections must be exclusive');
+  await page.locator('#start').click();await page.keyboard.press('Escape');await page.locator('#notebook > summary').click();
   await page.locator('textarea[data-notes]').fill('Guest note');
   const guest=await saved(STORAGE_KEY);
-  await page.evaluate(()=>window.testAuth.signIn('a'));
+  await page.evaluate(()=>window.testAuth.signIn('a'));await reveal('#account-panel');
   await page.getByText('Saved to your account',{exact:true}).waitFor();
   const keyA=STORAGE_KEY+':user:a';
   assert.equal((await saved(keyA)).attempts.length,1);
   assert.equal((await saved(keyA)).drafts[q.id].notes,'Saved on another device');
+  assert.equal(await page.locator('#account-actions').isVisible(),true);
   assert.equal(await page.locator('#google-login').isVisible(),false);
   assert.equal(await page.locator('#reset').isDisabled(),true);
   assert.deepEqual(await saved(STORAGE_KEY),guest,'Sign-in must preserve guest data');

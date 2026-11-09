@@ -1,5 +1,5 @@
 export const STORAGE_KEY = 'aca-practice-v1';
-export const emptyState = bankVersion => ({app:'aca-practice',schemaVersion:1,bankVersion,drafts:{},attempts:[],session:null,preferences:{topic:'',subtopic:'',difficulty:'',origin:''},view:'practice'});
+export const emptyState = bankVersion => ({app:'aca-practice',schemaVersion:1,bankVersion,drafts:{},attempts:[],flags:{},session:null,preferences:{topic:'',subtopic:'',difficulty:'',origin:''},view:'practice'});
 export function shuffle(items, random=Math.random) {
   const result=[...items];
   for(let i=result.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[result[i],result[j]]=[result[j],result[i]];}
@@ -22,10 +22,15 @@ export function grade(q, optionId) {
   if(!q.options.some(o=>o.id===optionId)) throw new Error('Choose a valid answer.');
   return optionId===q.correctOptionId?'correct':'incorrect';
 }
-export function makeAttempt(q,optionId,notes,timestamp,id,bankVersion){
+// confidence ('sure'|'guess') is only recorded for answered practice questions.
+// Attempts without it (older ones, exams, skips) count as sure.
+export function makeAttempt(q,optionId,notes,timestamp,id,bankVersion,confidence){
   const outcome=grade(q,optionId);
-  return {id,questionId:q.id,optionId,outcome,misconception:outcome==='incorrect'?q.options.find(o=>o.id===optionId).misconception:null,notesSnapshot:notes,timestamp,bankVersion};
+  const attempt={id,questionId:q.id,optionId,outcome,misconception:outcome==='incorrect'?q.options.find(o=>o.id===optionId).misconception:null,notesSnapshot:notes,timestamp,bankVersion};
+  if(confidence&&optionId!==null)attempt.confidence=confidence;
+  return attempt;
 }
+export const isGuess=a=>a.outcome==='correct'&&a.confidence==='guess';
 export function latestAttempts(attempts){return new Map([...attempts].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)).map(a=>[a.questionId,a]));}
 // Questions never attempted come first (each group keeps its shuffled order),
 // so a topic's unexplored questions are all asked before any repeats.
@@ -93,6 +98,38 @@ export function recommendTopics(questions, sessionAttempts, allAttempts=sessionA
   const leastCovered=ranked.find(t=>t.topic!==mostMistakes)?.topic??null;
   return {mostMistakes,leastCovered:ranked.length>1?leastCovered:null};
 }
+// Correct out of total per topic for a set of attempts (e.g. one exam), weakest share first.
+export function topicBreakdown(questions,attempts){
+  const scored=scoredById(questions),rows=new Map();
+  for(const a of attempts){
+    const q=scored.get(a.questionId);if(!q)continue;
+    const r=rows.get(q.topic)??{topic:q.topic,correct:0,total:0};
+    r.total++;if(a.outcome==='correct')r.correct++;rows.set(q.topic,r);
+  }
+  return [...rows.values()].sort((x,y)=>(x.correct/x.total-y.correct/y.total)||(y.total-x.total)||byText(x.topic,y.topic));
+}
+// Practice flags: {questionId:{flagged,updatedAt}}. Unflagging keeps the entry
+// with flagged:false, so the newer choice wins when two copies are merged.
+export const flaggedIds=(questions,flags={})=>questions.filter(q=>q.status==='validated'&&flags[q.id]?.flagged).map(q=>q.id);
+// Spaced review, worked out from attempt history alone. A wrong, skipped or
+// guessed answer makes a question due 1 day later. The first sure correct
+// answer once it is due pushes it to a final check 3 days later; a second one
+// then clears it. Sure correct answers given before the due time change nothing,
+// and any new wrong, skipped or guessed answer starts over at 1 day.
+const DAY=864e5;
+export const needsReview=a=>a.outcome!=='correct'||a.confidence==='guess';
+export function reviewQueue(questions,attempts,now=Date.now()){
+  const scored=scoredById(questions),t=typeof now==='number'?now:Date.parse(now),items=new Map();
+  for(const a of [...attempts].sort((x,y)=>Date.parse(x.timestamp)-Date.parse(y.timestamp))){
+    if(!scored.has(a.questionId))continue;
+    const time=Date.parse(a.timestamp),cur=items.get(a.questionId);
+    if(needsReview(a))items.set(a.questionId,{step:1,dueAt:time+DAY});
+    else if(cur&&time>=cur.dueAt){if(cur.step===1)items.set(a.questionId,{step:2,dueAt:time+3*DAY});else items.delete(a.questionId);}
+  }
+  const list=[...items].map(([id,s])=>({id,...s}));
+  const due=list.filter(i=>i.dueAt<=t).sort((x,y)=>(x.dueAt-y.dueAt)||byText(x.id,y.id)),later=list.filter(i=>i.dueAt>t);
+  return {due:due.map(i=>i.id),pending:later.length,nextAt:later.length?new Date(Math.min(...later.map(i=>i.dueAt))).toISOString():null};
+}
 export function validateBackup(value,bank){
   const fail=()=>{throw new Error('Invalid or incompatible backup. Your current data has not been changed.');};
   const object=x=>x && typeof x==='object' && !Array.isArray(x);
@@ -115,10 +152,21 @@ export function validateBackup(value,bank){
   }).map(a=>{
     const q=qs.get(a?.questionId);
     if(!object(a)||!q||q.status!=='validated'||!str(a.id)||!a.id||ids.has(a.id)||!date(a.timestamp)||!str(a.notesSnapshot)||a.notesSnapshot.length>1000000||!str(a.bankVersion)||!option(q.id,a.optionId)||!['correct','incorrect','unknown'].includes(a.outcome))fail();
-    if((a.optionId===null)!==(a.outcome==='unknown')||!(a.misconception===null||str(a.misconception)))fail();
+    if((a.optionId===null)!==(a.outcome==='unknown')||!(a.misconception===null||str(a.misconception))||(a.confidence!==undefined&&!['sure','guess'].includes(a.confidence)))fail();
     if(a.bankVersion===bank.bankVersion && (grade(q,a.optionId)!==a.outcome || (a.outcome==='incorrect'?q.options.find(o=>o.id===a.optionId).misconception:null)!==a.misconception))fail();
-    ids.add(a.id);return {id:a.id,questionId:q.id,optionId:a.optionId,outcome:a.outcome,misconception:a.misconception,notesSnapshot:a.notesSnapshot,timestamp:a.timestamp,bankVersion:a.bankVersion};
+    ids.add(a.id);const out={id:a.id,questionId:q.id,optionId:a.optionId,outcome:a.outcome,misconception:a.misconception,notesSnapshot:a.notesSnapshot,timestamp:a.timestamp,bankVersion:a.bankVersion};
+    if(a.confidence!==undefined)out.confidence=a.confidence;
+    return out;
   });
+  const flags={};
+  if(value.flags!==undefined){
+    if(!object(value.flags))fail();
+    for(const [id,f] of Object.entries(value.flags)){
+      if(retired(id))continue;
+      if(!qs.has(id)||!object(f)||typeof f.flagged!=='boolean'||!date(f.updatedAt))fail();
+      flags[id]={flagged:f.flagged,updatedAt:f.updatedAt};
+    }
+  }
   const preferences={};for(const k of ['topic','subtopic','difficulty','origin']){
     const v=value.preferences[k];if(!str(v)||(v&&!bank.questions.some(q=>q[k]===v)))fail();preferences[k]=v;
   }
@@ -126,7 +174,7 @@ export function validateBackup(value,bank){
   const staleSession=s=>object(s)&&((Array.isArray(s.queue)&&s.queue.some(retired))||(Array.isArray(s.attemptIds)&&s.attemptIds.some(id=>dropped.has(id))));
   if(value.session!==null&&!staleSession(value.session)){
     const s=value.session;
-    if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
+    if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','review','flagged','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
     const q=qs.get(s.queue[s.index]);
     if(s.order.length!==q.options.length||new Set(s.order).size!==s.order.length||!s.order.every(id=>q.options.some(o=>o.id===id))||!Array.isArray(s.attemptIds)||!s.attemptIds.every(id=>ids.has(id)))fail();
     if(s.attemptId!==null&&!attempts.some(a=>a.id===s.attemptId&&a.questionId===q.id))fail();
@@ -152,15 +200,21 @@ export function validateBackup(value,bank){
     }
   }
   if(!['home','practice','history','review'].includes(value.view))fail();
-  return {...emptyState(bank.bankVersion),drafts,attempts,preferences,session,view:value.view};
+  return {...emptyState(bank.bankVersion),drafts,attempts,flags,preferences,session,view:value.view};
 }
 export function mergeBackups(local,incoming){
   const attempts=new Map(local.attempts.map(a=>[a.id,a]));
+  // A copy saved by an older version lacks confidence; that is not a conflict, and the copy that has it is kept.
+  const bare=({confidence,...rest})=>JSON.stringify(rest);
   for(const a of incoming.attempts){
-    if(attempts.has(a.id)&&JSON.stringify(attempts.get(a.id))!==JSON.stringify(a)) throw new Error('Conflicting attempt IDs in this backup. No data was changed.');
+    const prev=attempts.get(a.id);
+    if(prev&&bare(prev)!==bare(a)) throw new Error('Conflicting attempt IDs in this backup. No data was changed.');
+    if(prev?.confidence!==undefined)continue;
     attempts.set(a.id,a);
   }
   const drafts={...local.drafts};
   for(const [id,d] of Object.entries(incoming.drafts))if(!drafts[id]||Date.parse(d.updatedAt)>Date.parse(drafts[id].updatedAt))drafts[id]=d;
-  return {...local,drafts,attempts:[...attempts.values()].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)),session:local.session||incoming.session};
+  const flags={...local.flags};
+  for(const [id,f] of Object.entries(incoming.flags??{}))if(!flags[id]||Date.parse(f.updatedAt)>Date.parse(flags[id].updatedAt))flags[id]=f;
+  return {...local,drafts,flags,attempts:[...attempts.values()].sort((a,b)=>Date.parse(a.timestamp)-Date.parse(b.timestamp)),session:local.session||incoming.session};
 }

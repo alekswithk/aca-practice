@@ -17,14 +17,16 @@ try{
   const page=await browser.newPage();
   await page.addInitScript(()=>localStorage.setItem('aca-account-announcement-v1','seen'));
   await page.goto(base);
-  await page.locator('#start:not([disabled])').waitFor();
+  await page.locator('#start:not([disabled])').waitFor({state:'attached'});
   await page.evaluate(key=>{
     const saved=JSON.parse(localStorage.getItem(key));
     saved.preferences.origin='generated';
     localStorage.setItem(key,JSON.stringify(saved));
   },STORAGE_KEY);
   await page.reload();
-  await page.locator('#start:not([disabled])').waitFor();
+  await page.locator('#start:not([disabled])').waitFor({state:'attached'});
+  // Session setup sits in an exclusive section of the header Options menu.
+  await page.locator('.options-menu > summary').click();await page.locator('#session-settings > summary').click();
   assert.equal(await page.locator('#origin').inputValue(),'');
   assert.equal(Number((await page.locator('#available').textContent()).split(' ')[0]),count(''));
   await page.selectOption('#topic','Budgeting');

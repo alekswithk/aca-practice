@@ -68,7 +68,7 @@ button, .file-button {
   font-weight: 600;
   transition: background-color .15s ease, border-color .15s ease, transform .12s var(--ease-out);
 }
-button:not(:disabled):active, .file-button:active { transform: scale(.98); }
+button:not(:disabled):active, .file-button:active { transform: scale(.97); }
 button:disabled { opacity: .55; cursor: default; }
 button.primary { position: relative; isolation: isolate; overflow: hidden; background: var(--green); border-color: var(--green); color: var(--on-green); }
 button.quiet { border: 0; background: transparent; padding-left: 0; text-align: left; }
@@ -112,6 +112,13 @@ html.header-collapsed .masthead { display: none; }
   background: var(--surface); color: var(--muted);
 }
 .header-show[hidden] { display: none; }
+/* Hide/show swap (user toggles only): the tab slides down, header fades in, icons crossfade with a slight blur */
+html.header-swap .header-show { animation: tab-in .2s var(--ease-out); }
+html.header-swap:not(.header-collapsed) .masthead { animation: fade-in .18s var(--ease-out); }
+html.header-swap .header-show svg, html.header-swap .header-toggle svg { animation: icon-in .22s var(--ease-out); }
+@keyframes tab-in { from { transform: translate(-50%, -100%); } }
+@keyframes fade-in { from { opacity: 0; } }
+@keyframes icon-in { from { opacity: 0; filter: blur(3px); transform: scale(.8); } }
 nav { display: flex; gap: .25rem; flex-wrap: wrap; padding: .25rem; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
 nav button { border: 1px solid transparent; background: transparent; color: var(--muted); font-size: var(--fs-sm); padding: .5rem .85rem; }
 nav button[aria-pressed=true] { color: var(--ink); background: var(--surface); border-color: var(--line); }
@@ -132,15 +139,19 @@ nav button[aria-pressed=true] { color: var(--ink); background: var(--surface); b
   transform: rotate(45deg) translate(-2px, -2px);
   transition: transform .2s var(--ease-out);
 }
-.options-menu[open] > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
+.options-menu[open]:not(.closing) > summary::after { transform: rotate(225deg) translate(-2px, -2px); }
 .options-menu > summary:hover, .options-menu[open] > summary { border-color: var(--green); }
 .options-menu[open] > :not(summary) {
   position: absolute; top: calc(100% + .5rem); right: 0; z-index: 6;
   width: min(24rem, calc(100vw - 2rem)); max-height: calc(100dvh - 8rem); overflow: auto;
   padding: 1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-  animation: menu-in .2s var(--ease-out);
 }
 .options-menu > summary { display: inline-flex; }
+/* Popover grows out of the trigger (top right) and shrinks back into it, exit ~20% shorter */
+.options-menu[open] > .options-panel { transform-origin: top right; animation: popover-in .18s var(--ease-out); }
+.options-menu.closing > .options-panel { animation: popover-out .15s var(--ease-out) forwards; pointer-events: none; }
+@keyframes popover-in { from { opacity: 0; transform: scale(.95); } }
+@keyframes popover-out { to { opacity: 0; transform: scale(.95); } }
 
 /* Options list: one row per section, only one section open at a time */
 .options-menu[open] > .options-panel { padding: .4rem; }
@@ -163,7 +174,7 @@ nav button[aria-pressed=true] { color: var(--ink); background: var(--surface); b
 .section-chevron {
   width: .45rem; height: .45rem; margin-right: .3rem; flex: none;
   border-right: 1.5px solid var(--muted); border-bottom: 1.5px solid var(--muted);
-  transform: rotate(45deg); transition: transform .2s var(--ease-out);
+  transform: rotate(45deg); transition: transform .2s var(--ease-out), border-color .2s ease;
 }
 .options-section[open] .section-chevron { transform: rotate(225deg); }
 .section-body { padding: .5rem .6rem 1rem; animation: menu-in .2s var(--ease-out); }
@@ -195,7 +206,7 @@ html.dark .theme-switch-track { background-color: var(--active); }
   background-color: #ffffff;
   border: 1px solid var(--control-line);
   border-radius: 9999px;
-  transition: transform .25s var(--ease-out), background-color .25s ease;
+  transition: transform .3s ease-in-out, background-color .25s ease; /* app.js adds the mid-slide stretch */
 }
 html.dark .theme-switch-thumb {
   transform: translateX(24px);
@@ -346,6 +357,9 @@ progress::-moz-progress-bar { background: var(--green); border-radius: 6px; }
 .option:has(input:checked) { background: var(--active); border-color: var(--ink); }
 .option input { margin: .3rem 0 0; accent-color: var(--ink); flex-shrink: 0; width: 18px; height: 18px; }
 .option.correct-option { color: var(--green); border-color: var(--green) !important; background: var(--pale) !important; }
+/* Correct answer: one soft ring expanding and fading */
+.option.pulse { animation: success-pulse .5s var(--ease-out); }
+@keyframes success-pulse { from { box-shadow: 0 0 0 0 color-mix(in srgb, var(--green) 45%, transparent); } to { box-shadow: 0 0 0 10px color-mix(in srgb, var(--green) 0%, transparent); } }
 .option.wrong-option { color: var(--error); border-color: var(--error) !important; background: var(--wrong) !important; }
 .answer-result { margin-left: auto; font-size: var(--fs-xs); font-weight: 600; padding-top: .15rem; }
 .option:has(.answer-result) { cursor: default; }
@@ -521,6 +535,10 @@ summary { min-height: 44px; padding: .6rem 0; font-weight: 600; }
 .recommendations > * > button { margin-top: auto; }
 .wrong-list { margin: .25rem 0 .5rem; padding-left: 1.2rem; display: grid; gap: .6rem; font-size: var(--fs-sm); line-height: 1.45; }
 .wrong-list li > .muted { display: block; font-size: var(--fs-xs); }
+/* First render of Home / results: rows rise in, 35ms apart, delays capped at 280ms.
+   fill backwards only, so the press scale on cards still works afterwards */
+.stagger > * { animation: rise-in .3s var(--ease-out) backwards; animation-delay: calc(min(var(--i, 0), 8) * 35ms); }
+@keyframes rise-in { from { opacity: 0; transform: translateY(6px); } }
 
 /* Tables */
 .table-wrap { overflow: auto; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); margin-top: 1rem; }
@@ -601,17 +619,35 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
   .action-bar { flex-direction: column; align-items: stretch; }
   .action-buttons { justify-content: space-between; width: 100%; }
   .action-buttons button.primary { flex: 1; }
+  .action-buttons { flex-wrap: wrap; }
+  .action-buttons .confidence, .action-buttons .confidence-pills { width: 100%; }
   .exam-banner { flex-direction: column; align-items: flex-start; }
   .exam-banner-controls, .exam-nav-bar, .exam-nav-left, .exam-nav-right, .palette-header { flex-wrap: wrap; }
   .exam-timer-box { flex-wrap: wrap; }
   .recommendations, .topic-grid { grid-template-columns: 1fr; }
-  select, .notes-panel textarea { font-size: 16px; }
+  select, .notes-panel textarea { font-size: 16px !important; } /* beats the exam topic select's inline .8rem so phones do not zoom */
   .question, .explanation-panel { padding: 1rem; }
 }
 
 /* Theme change and button ripple */
 ::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
 ::view-transition-new(root) { z-index: 2; }
+/* Page transitions (names exist only while html[data-vt] is set, see pageTransition in app.js) */
+html[data-vt=topic] .topic-card.vt-source .topic-title, html[data-vt=topic] .session-head h2 { view-transition-name: session-title; width: fit-content; }
+html[data-vt^=topic]::view-transition-old(root) { animation: vt-out .15s ease-out both; }
+html[data-vt^=topic]::view-transition-new(root) { animation: vt-in .22s var(--ease-out) both; }
+::view-transition-group(session-title) { animation-duration: .3s; animation-timing-function: var(--ease-out); }
+html[data-vt=question] .session-head { view-transition-name: session-head; }
+html[data-vt=question] main progress { view-transition-name: session-progress; }
+html[data-vt=question] .question-layout { view-transition-name: question-area; }
+::view-transition-group(session-head), ::view-transition-group(session-progress), ::view-transition-group(question-area) { animation: none; }
+::view-transition-old(session-head), ::view-transition-old(session-progress) { animation: none; display: none; }
+::view-transition-new(session-head), ::view-transition-new(session-progress) { animation: none; }
+::view-transition-old(question-area) { animation: vt-out .15s var(--ease-out) both; }
+::view-transition-new(question-area) { animation: vt-rise .2s var(--ease-out) both; }
+@keyframes vt-out { to { opacity: 0; } }
+@keyframes vt-in { from { opacity: 0; } }
+@keyframes vt-rise { from { opacity: 0; transform: translateY(6px); } }
 .theme-changing *, .theme-changing { transition: none !important; }
 .button-ripple { position: absolute; border-radius: 50%; background: currentColor; pointer-events: none; opacity: .15; transform: translate(-50%, -50%) scale(0); animation: button-ripple .5s ease-out forwards; z-index: -1; }
 @keyframes button-ripple { to { transform: translate(-50%, -50%) scale(1); opacity: 0; } }
@@ -623,3 +659,26 @@ dialog .danger { background: var(--error); color: #ffffff; border-color: var(--e
 @media (prefers-contrast: more) {
   html:root { --line: #6b6e75; --control-line: #6b6e75; }
 }
+
+/* Sure / Guessing before checking a practice answer */
+.confidence { display: flex; align-items: center; }
+.confidence-pills { display: inline-grid; grid-template-columns: 1fr 1fr; gap: 4px; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; }
+.confidence-pills label { position: relative; min-height: 34px; display: grid; place-items: center; padding: .3rem .9rem; border: 1px solid transparent; border-radius: 7px; color: var(--muted); font-size: var(--fs-sm); font-weight: 600; cursor: pointer; transition: background-color .15s ease, color .15s ease; }
+.confidence-pills input { position: absolute; inset: 0; margin: 0; opacity: 0; cursor: pointer; }
+.confidence-pills label:has(input:checked) { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.confidence-pills label:has(input:focus-visible) { outline: 2px solid var(--focus); outline-offset: 2px; }
+
+/* Home: due for review and flagged questions */
+.home-top:has(+ .home-queues) { margin-bottom: 1rem; }
+.home-queues { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; margin-bottom: 3rem; }
+.queue-item { display: flex; align-items: center; justify-content: space-between; gap: 1rem; padding: 1rem 1.1rem; background: var(--surface); border: 1px solid var(--line); border-radius: 10px; min-width: 0; }
+.queue-item strong { display: block; font-size: var(--fs-base); font-weight: 600; }
+.queue-item .muted { display: block; line-height: 1.45; margin-top: .15rem; }
+.queue-item button { flex-shrink: 0; }
+@media (max-width:760px) { .queue-item { flex-direction: column; align-items: stretch; } }
+
+/* Exam results by topic */
+.exam-topics { margin: .5rem 0 1.5rem; }
+.welcome > h3 { font-size: var(--fs-base); margin: 0; }
+.action-left { display: flex; align-items: center; gap: .6rem; }
+.action-left .flag-btn { min-height: 44px; padding: .65rem 1rem; border-radius: 8px; font-size: inherit; }

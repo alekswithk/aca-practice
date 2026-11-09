@@ -55,3 +55,23 @@ const pending=sync.flush();sync.setUser(null);local=fresh();status='Guest';relea
 assert.equal(await pending,false);assert.deepEqual(local,fresh());assert.equal(status,'Guest');assert.equal(writes,beforeWrites);
 readHook=null;
 console.log('PASS: cloud merge, revision conflicts, in-flight edits, session restore, failures, validation and account isolation.');
+
+// Flags sync between devices, and unflagging on one device is not undone by the other's older copy.
+{
+  const at=d=>`2026-11-0${d}T10:00:00.000Z`,sid=bank.questions.filter(q=>q.status==='validated').map(q=>q.id);
+  let local2=fresh(),remote2=null;
+  const client2={
+    from(){return {select(){return this;},eq(){return this;},async maybeSingle(){return {data:structuredClone(remote2),error:null};}};},
+    async rpc(_n,args){if(args.p_expected_revision!==(remote2?.revision??0))return {data:null,error:null};remote2={state:structuredClone(args.p_state),revision:(remote2?.revision??0)+1};return {data:remote2.revision,error:null};},
+  };
+  const s2=createProgressSync({client:client2,getState:()=>local2,applyState:s=>{local2=s;},validate:s=>validateBackup(s,bank),onStatus:()=>{}});
+  s2.setUser('user-b');
+  local2.flags={[sid[0]]:{flagged:true,updatedAt:at(1)},[sid[1]]:{flagged:true,updatedAt:at(1)}};
+  assert.equal(await s2.flush(),true);
+  remote2.state.flags[sid[2]]={flagged:true,updatedAt:at(2)};remote2.revision++;
+  local2.flags[sid[0]]={flagged:false,updatedAt:at(3)};
+  assert.equal(await s2.flush(),true);
+  assert.deepEqual(Object.entries(remote2.state.flags).filter(([,f])=>f.flagged).map(([id])=>id).sort(),[sid[1],sid[2]].sort());
+  assert.deepEqual(local2.flags,remote2.state.flags);
+  console.log('PASS: cloud sync keeps flags from both devices and respects a newer unflag.');
+}
