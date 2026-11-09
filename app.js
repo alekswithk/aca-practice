@@ -381,7 +381,7 @@ function startSession(ids,mode){
 function renderHome(){
     const scored=bank.questions.filter(q=>q.status==='validated'),latest=latestAttempts(state.attempts);
     const revisit=[...latest.values()].filter(a=>a.outcome!=='correct').length;
-    $('#main').innerHTML=`<section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">0${index+1}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
+    $('#main').innerHTML=`<div class="home-top"><section class="welcome study-hero"><h2>Practice by topic or run a mixed session.</h2><p class="muted">Every answer comes with a worked explanation, including why each wrong option is wrong.</p><div class="actions"><button class="primary" id="welcome-start">${state.attempts.length?'Keep practicing':'Start practicing'}</button><button id="welcome-exam">Launch exam mode</button></div></section><div class="study-stats" aria-label="Study overview"><div><strong>${state.attempts.length}</strong><span>Attempts logged</span></div><div><strong>${revisit}</strong><span>Questions to revisit</span></div><div><strong>${scored.length}</strong><span>Validated questions</span></div></div></div><section class="topic-section"><div class="section-heading"><h2>Find your focus</h2></div><div class="topic-grid">${[...new Set(scored.map(q=>q.topic))].map((topic,index)=>{const pool=scored.filter(q=>q.topic===topic),seen=pool.filter(q=>latest.has(q.id)).length;return `<button class="topic-card" data-topic="${h(topic)}"><span class="topic-number" aria-hidden="true">${String(index+1).padStart(2,'0')}</span><span class="topic-title">${h(topic)}</span><span class="topic-count">${pool.length} questions · ${seen} explored</span><span class="topic-track" aria-hidden="true"><span style="width:${100*seen/pool.length}%"></span></span></button>`;}).join('')}</div></section>`;
     if(state.session)$('#welcome-start').textContent='Resume session';
     $('#welcome-start').onclick=()=>state.session?$('#nav-study').click():$('#setup').requestSubmit();
     $('#welcome-exam').onclick=()=>setAppMode('exam');
@@ -460,7 +460,7 @@ function renderPractice(){
           </div>
         </form>
       </article>
-      <aside id="feedback" class="explanation-panel" aria-label="Question explanation">${attempt?feedback(q,attempt):'<h3>Explanation</h3><p class="muted">Not checked</p>'}</aside>
+      <aside id="feedback" class="explanation-panel" aria-label="Question explanation">${attempt?feedback(q,attempt):'<h3>Explanation</h3><p class="muted">Check your answer to see the worked solution and why each option is right or wrong.</p>'}</aside>
       <details id="notebook" class="notes-panel optional-notes" ${d?.notes?'open':''}>
         <summary>Calculations & notes <span class="muted">Optional</span></summary>
         ${notes(q)}
@@ -504,7 +504,7 @@ function submit(q,optionId){
 }
 
 function feedback(q,a){
-  const correct=q.options.find(o=>o.id===q.correctOptionId),selected=q.options.find(o=>o.id===a.optionId),suggested=a.outcome!=='correct'?followup(q,a,bank.questions,state.attempts):null;
+  const correct=q.options.find(o=>o.id===q.correctOptionId),suggested=a.outcome!=='correct'?followup(q,a,bank.questions,state.attempts):null;
   const order=state.session.order;
   return `
     <section class="feedback" data-outcome="${h(a.outcome)}">
@@ -512,8 +512,7 @@ function feedback(q,a){
       <p><strong>Correct answer:</strong> ${h(shownLabel(order,correct.id))}. ${h(optionText(correct))}</p>
       <p>${h(q.explanation)}</p>
       ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
-      ${a.outcome==='incorrect'?`<p><strong>Why your choice is wrong:</strong> ${h(selected.explanation)}</p>`:''}
-      <details><summary>Explain all answer options</summary><ul>${order.map(id=>{const o=q.options.find(o=>o.id===id);return `<li><strong>${h(shownLabel(order,id))}. ${h(optionText(o))}</strong>${o.id===correct.id?' — correct':''}<br>${h(o.explanation)}</li>`;}).join('')}</ul></details>
+      <details class="option-explanations" open><summary>Every option explained</summary><ul>${order.map(id=>{const o=q.options.find(o=>o.id===id),cls=o.id===correct.id?'is-correct':o.id===a.optionId?'is-chosen':'';return `<li class="${cls}"><span class="option-line"><strong>${h(shownLabel(order,id))}. ${h(optionText(o))}</strong>${o.id===correct.id?'<small>Correct</small>':o.id===a.optionId?'<small>Your answer</small>':''}</span><span>${h(o.explanation.replace(/^Correct answer\.\s*/,''))}</span></li>`;}).join('')}</ul></details>
       ${suggested?`<div class="actions"><button id="followup" data-question="${h(suggested.id)}">Try relevant follow-up question</button></div>`:''}
     </section>
   `;
@@ -602,21 +601,29 @@ function renderExamOverview(){
     };
   }
 
+  const scopes=[['part1','Part 1'],['part2','Part 2'],['full','Whole exam'],['topic','One topic']];
+  const topics=[...$('#exam-topic-select').options].map(o=>o.value);
   $('#main').innerHTML=`
-    <section class="welcome study-hero">
-      <h2>${h(config.title)}</h2>
-      <p class="exam-lead">${h(config.description)}</p>
-    </section>
-
-    <div class="study-stats">
-      <div><strong>${h(config.duration)}</strong><span>Duration</span></div>
-      <div><strong>${h(config.exerciseCount)}</strong><span>Exercise count</span></div>
-      <div><strong>${h(config.marks)}</strong><span>Total marks</span></div>
+    <div class="home-top">
+      <section class="welcome study-hero">
+        <div class="scope-picker" role="radiogroup" aria-label="Exam scope">
+          ${scopes.map(([value,name])=>`<button type="button" role="radio" aria-checked="${value===selectedPart}" data-exam-scope="${value}">${name}</button>`).join('')}
+        </div>
+        <h2>${h(config.title)}</h2>
+        <p class="exam-lead">${h(config.description)}</p>
+        ${selectedPart==='topic'?`<label class="overview-topic">Topic <select id="overview-topic">${topics.map(t=>`<option ${t===selectedTopic?'selected':''}>${h(t)}</option>`).join('')}</select></label>`:''}
+        <div class="actions"><button class="primary" type="button" id="overview-start">Start exam</button></div>
+      </section>
+      <div class="study-stats">
+        <div><strong>${h(config.duration.replace(' minutes',''))}</strong><span>Minutes</span></div>
+        <div><strong>${h(config.exerciseCount.replace(' exercises',''))}</strong><span>Exercises</span></div>
+        <div><strong>${h(config.marks.replace(' marks total',''))}</strong><span>Marks</span></div>
+      </div>
     </div>
 
     <section class="topic-section">
       <div class="section-heading">
-        <h2>Syllabus coverage for selected exam</h2>
+        <h2>What this exam covers</h2>
         <p class="muted">Based directly on official past exam papers.</p>
       </div>
       <div class="topic-grid">
@@ -632,6 +639,12 @@ function renderExamOverview(){
 
     <p class="muted">One correct answer per question. No deductions for incorrect answers.</p>
   `;
+  $$('[data-exam-scope]').forEach(el=>el.onclick=()=>{
+    const radio=document.querySelector(`input[name="exam-part"][value="${el.dataset.examScope}"]`);
+    radio.checked=true;radio.dispatchEvent(new Event('change'));
+  });
+  $('#overview-topic')?.addEventListener('change',e=>{$('#exam-topic-select').value=e.target.value;renderExamOverview();});
+  $('#overview-start').onclick=()=>{$('.options-menu').open=false;$('#start-exam').click();};
 }
 
 function launchExam(part,topic){
@@ -917,6 +930,7 @@ function showExamResults(){
             <p><strong>Your answer:</strong> ${chosenOpt?h(optionText(chosenOpt)):'Unanswered'}</p>
             <p><strong>Correct answer:</strong> ${h(optionText(correctOpt))}</p>
             <div class="options" aria-label="Reviewed answer options">${q.options.map(o=>`<div class="option ${o.id===a.optionId?(o.id===q.correctOptionId?'correct-option':'wrong-option'):''}"><span>${h(optionText(o))}${o.id===a.optionId?' (your answer)':''}</span>${o.id===a.optionId?`<small class="answer-result">${o.id===q.correctOptionId?'Correct':'Incorrect'}</small>`:''}</div>`).join('')}</div>
+            ${a.outcome==='incorrect'&&chosenOpt?`<p><strong>Why your answer is wrong:</strong> ${h(chosenOpt.explanation)}</p>`:''}
             <p>${h(q.explanation)}</p>
             ${q.workedCalculation?`<div class="calculation">${h(q.workedCalculation)}</div>`:''}
           </details>
@@ -967,10 +981,10 @@ function renderHistory(){
   const rows=topicProgress(bank.questions,state.attempts);
 
   $('#main').innerHTML=`
-    <h2>Learning history</h2>
+    <div class="section-heading"><h2>Learning history</h2><p class="muted">Share of each topic you have answered, and how many questions you last got wrong.</p></div>
     ${rows.length?`<div class="table-wrap">
       <table class="topic-table">
-        <caption>Progress by topic</caption>
+        <caption class="visually-hidden">Progress by topic</caption>
         <thead>
           <tr><th scope="col">Topic</th><th scope="col">Answered</th><th scope="col">Questions missed</th></tr>
         </thead>

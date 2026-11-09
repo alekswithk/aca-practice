@@ -95,11 +95,18 @@ export function validateBackup(value,bank){
   const option=(id,v)=>v===null||qs.get(id)?.options.some(o=>o.id===v);
   if(!object(value)||value.app!=='aca-practice'||value.schemaVersion!==1||!str(value.bankVersion)||!object(value.drafts)||!Array.isArray(value.attempts)||!object(value.preferences))fail();
   const drafts={};
+  // Questions retired from scoring (e.g. duplicates) are still in the bank.
+  // Records that point at them are dropped instead of rejecting the whole backup.
+  const retired=id=>qs.has(id)&&qs.get(id).status!=='validated';
   for(const [id,d] of Object.entries(value.drafts)){
+    if(retired(id))continue;
     if(!qs.has(id)||!object(d)||!str(d.notes)||d.notes.length>1000000||!option(id,d.selected)||!date(d.updatedAt))fail();
     drafts[id]={notes:d.notes,selected:d.selected,updatedAt:d.updatedAt};
   }
-  const ids=new Set();const attempts=value.attempts.map(a=>{
+  const ids=new Set(),dropped=new Set();const attempts=value.attempts.filter(a=>{
+    if(object(a)&&retired(a.questionId)){if(str(a.id))dropped.add(a.id);return false;}
+    return true;
+  }).map(a=>{
     const q=qs.get(a?.questionId);
     if(!object(a)||!q||q.status!=='validated'||!str(a.id)||!a.id||ids.has(a.id)||!date(a.timestamp)||!str(a.notesSnapshot)||a.notesSnapshot.length>1000000||!str(a.bankVersion)||!option(q.id,a.optionId)||!['correct','incorrect','unknown'].includes(a.outcome))fail();
     if((a.optionId===null)!==(a.outcome==='unknown')||!(a.misconception===null||str(a.misconception)))fail();
@@ -110,7 +117,8 @@ export function validateBackup(value,bank){
     const v=value.preferences[k];if(!str(v)||(v&&!bank.questions.some(q=>q[k]===v)))fail();preferences[k]=v;
   }
   let session=null;
-  if(value.session!==null){
+  const staleSession=s=>object(s)&&((Array.isArray(s.queue)&&s.queue.some(retired))||(Array.isArray(s.attemptIds)&&s.attemptIds.some(id=>dropped.has(id))));
+  if(value.session!==null&&!staleSession(value.session)){
     const s=value.session;
     if(!object(s)||!Array.isArray(s.queue)||!s.queue.length||new Set(s.queue).size!==s.queue.length||!s.queue.every(id=>qs.get(id)?.status==='validated')||!Number.isInteger(s.index)||s.index<0||s.index>=s.queue.length||!Array.isArray(s.order)||!str(s.mode)||!['mixed','topic','missed','retry','followup','exam','exam-part1','exam-part2','exam-full','exam-topic'].includes(s.mode))fail();
     const q=qs.get(s.queue[s.index]);
