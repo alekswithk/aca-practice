@@ -1,6 +1,6 @@
 # ACA practice
 
-A study app for ACA exam questions. Practise by topic, take timed exams, add notes, and review your history. It runs in the browser with no install.
+A study app for ACA exam questions. Practice by topic, take timed exams, add notes, and review your history. It runs in the browser with no install.
 
 ## Open it on the web
 
