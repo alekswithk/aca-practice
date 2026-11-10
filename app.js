@@ -37,7 +37,10 @@ const preciseSubtopics={
     {val:"Impairment",text:"Impairment of assets and impairment tests"},
     {val:"Goodwill",text:"Goodwill subsequent measurement (IFRS vs FER)"},
     {val:"Accounting frameworks",text:"Frameworks: principle- vs rule-based and Swiss CO"},
-    {val:"Pensions",text:"Employee benefits and defined-benefit pension risk"}
+    {val:"Pensions",text:"Employee benefits and defined-benefit pension risk"},
+    {val:"Financial instruments",text:"IFRS 9 classification and bonds (effective interest)"},
+    {val:"Presentation (IFRS 18)",text:"IFRS 18 income statement categories and MPMs"},
+    {val:"Intangible assets",text:"Intangible assets (IAS 38 recognition)"}
   ],
   "Consolidated Statements":[
     {val:"",text:"All consolidation areas"},
@@ -57,7 +60,8 @@ const preciseSubtopics={
     {val:"Key Audit Matters",text:"Key audit matters (KAMs): purpose and disclosures"},
     {val:"Going concern",text:"Going concern assessment and reporting"},
     {val:"Expectation gap",text:"The audit expectation gap"},
-    {val:"Internal controls",text:"Internal control system (ICS) and governance"}
+    {val:"Internal controls",text:"Internal control system (ICS) and governance"},
+    {val:"Audit risk",text:"Audit risk model (inherent, control, detection risk)"}
   ],
   "Management Accounting":[
     {val:"",text:"All management accounting areas"},
@@ -65,7 +69,8 @@ const preciseSubtopics={
     {val:"Manufacturing cost flows",text:"Manufacturing cost flows and COGM / COGS"},
     {val:"Pricing and target costing",text:"Target costing and markup pricing"},
     {val:"Job costing",text:"Job costing and manufacturing overhead allocation"},
-    {val:"Cost concepts",text:"Direct vs indirect and fixed vs variable costs"}
+    {val:"Cost concepts",text:"Direct vs indirect and fixed vs variable costs"},
+    {val:"Activity-based costing",text:"Activity-based costing (ABC) overhead per unit"}
   ],
   "Budgeting":[
     {val:"",text:"All budgeting areas"},

@@ -3,6 +3,7 @@
 Run from the repository root:  python3 content/build_ai_questions.py
 
 - 160 practice questions (20 per topic) with set = "bank": they join the practice pools and mixed exams.
+- 104 practice questions from the two unofficial practice exams (ai_practice_exam.py, ai_practice_exam_2.py), also set = "bank".
 - 50 mock-exam questions with set = "mock-exam": only used by the "AI mock exam" source in exam mode.
 Every question has aiGenerated = true. Re-running replaces the previous AI questions, so the script is idempotent.
 Each module checks its own arithmetic against a separate formula before anything is written.
@@ -12,10 +13,10 @@ from collections import Counter
 from pathlib import Path
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
-import ai_fr, ai_cs, ai_audit, ai_ma, ai_bud, ai_var, ai_cap, ai_cpm, ai_mock  # noqa: E402,F401  (import order = question order)
+import ai_fr, ai_cs, ai_audit, ai_ma, ai_bud, ai_var, ai_cap, ai_cpm, ai_practice_exam, ai_practice_exam_2, ai_mock  # noqa: E402,F401  (import order = question order)
 from ai_common import QUESTIONS  # noqa: E402
 
-BANK_VERSION = '2026-11-09.2'
+BANK_VERSION = '2026-11-10.1'
 
 def main():
  path = HERE / 'questions.json'
