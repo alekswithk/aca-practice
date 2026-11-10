@@ -194,6 +194,10 @@ export function validateBackup(value,bank){
       }
       session.questionOrders=Object.fromEntries(Object.entries(s.questionOrders).map(([id,order])=>[id,pinNoneLast(order,qs.get(id).options)]));
     }
+    if(s.aiOnly!==undefined){
+      if(typeof s.aiOnly!=='boolean'||!Array.isArray(s.aiOffQueue??[])||!(s.aiOffQueue??[]).every(id=>qs.has(id)))fail();
+      if(s.aiOnly){session.aiOnly=true;session.aiOffQueue=[...(s.aiOffQueue??[])];}
+    }
     if(s.mode.startsWith('exam')){
       const flags=s.examFlags??{};
       if(!object(flags)||Object.entries(flags).some(([id,flag])=>!s.queue.includes(id)||typeof flag!=='boolean'))fail();
