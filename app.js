@@ -436,6 +436,7 @@ function sessionSubtitle(session,completed){
     parts.push(session.mode==='missed'?'Review missed / unknown':session.mode==='retry'?(session.queue.length>1?'Wrong answers from your last session':'Retry'):session.mode==='review'?'Due for review':session.mode==='flagged'?'Flagged questions':session.mode==='mixed'?'Mixed topics':'Practice mode');
     if(session.mode==='mixed'&&session.scope?.difficulty)parts.push(session.scope.difficulty);
   }
+  if(session.aiOnly)parts.push('AI-generated only');
   parts.push(`${completed} of ${session.queue.length} submitted`);
   return parts.join(' · ');
 }
@@ -519,7 +520,10 @@ function renderPractice(){
         <h2>${h(sessionTitle(session))}</h2>
         <p class="muted">${h(sessionSubtitle(session,completed))}</p>
       </div>
-      <button id="end-session">End session & see results</button>
+      <div class="session-actions">
+        <button type="button" id="ai-only" class="ai-only-btn${session.aiOnly?' active':''}" aria-pressed="${Boolean(session.aiOnly)}" title="${session.aiOnly?'Back to all questions for the rest of this session':'Use only AI-generated questions for the rest of this session'}">AI questions only</button>
+        <button id="end-session">End session & see results</button>
+      </div>
     </div>
     <progress max="${session.queue.length}" value="${session.index+(attempt?1:0)}" aria-label="Session progress"></progress>
     <div class="question-layout">
@@ -593,6 +597,7 @@ function renderPractice(){
   $('#practice-flag').onclick=toggleFlag;
   $('#previous-question').onclick=()=>{if(session.index>0)goToQuestion(session.index-1);};
   $('#end-session').onclick=showResults;
+  $('#ai-only').onclick=toggleAiOnly;
   bindFeedback(q,attempt);
 }
 
@@ -636,6 +641,38 @@ function bindFeedback(q,attempt){
     if(existing<0)s.queue.splice(s.index+1,0,id);
     goToQuestion(existing<0?s.index+1:existing);
   });
+}
+
+// Switches the questions still ahead in this session to AI-generated ones only,
+// and back. Answered questions stay where they are; so does the current one once
+// it is answered. A mixed session refills from its topic, focus area and
+// difficulty; other sessions (review, flagged, retry) keep only their AI questions.
+function toggleAiOnly(){
+  const s=state.session,on=!s.aiOnly;
+  const answered=s.attemptId?s.index+1:s.index;
+  const done=s.queue.slice(0,answered),rest=s.queue.slice(answered),currentId=s.queue[s.index];
+  let next;
+  if(on){
+    if(!rest.length){notify('No questions left in this session to switch.');return;}
+    const ai=rest.filter(id=>question(id)?.aiGenerated);
+    if(s.mode==='mixed'){
+      const scope={topic:s.scope?.topic||'',subtopic:s.scope?.subtopic||'',difficulty:s.scope?.difficulty||''};
+      const pool=available(bank.questions,scope,'mixed',state.attempts).filter(q=>q.aiGenerated&&!s.queue.includes(q.id));
+      next=[...ai,...unexploredFirst(shuffle(pool).map(q=>q.id),state.attempts)].slice(0,rest.length);
+    }else next=ai;
+    if(!next.length){notify('No AI-generated questions match this session.');return;}
+    s.aiOffQueue=rest;s.aiOnly=true;
+  }else{
+    next=(s.aiOffQueue||[]).filter(id=>!done.includes(id)&&question(id));
+    if(!next.length)next=rest;
+    delete s.aiOffQueue;delete s.aiOnly;
+  }
+  s.queue=[...done,...next];
+  if(s.questionOrders)for(const id of Object.keys(s.questionOrders))if(!s.queue.includes(id))delete s.questionOrders[id];
+  const id=s.queue[s.index];
+  if(id!==currentId)s.order=s.questionOrders?.[id]?pinNoneLast(s.questionOrders[id],question(id).options):shuffleOptions(question(id).options);
+  save();render();
+  $('#ai-only')?.focus();
 }
 
 function advanceQuestion(){
