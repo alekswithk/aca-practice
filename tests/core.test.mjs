@@ -43,12 +43,14 @@ const sourceMA=questions.filter(q=>q.topic==='Management Accounting'&&!q.aiGener
 assert.equal(available(sourceMA,{topic:'Management Accounting'},'mixed',[]).length,43);
 assert.equal(sourceMA.filter(q=>q.status==='review').length,8);
 assert.equal(sourceMA.length,51);
-assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,43+20,'20 AI practice questions join the Management Accounting pool');
+assert.equal(available(questions,{topic:'Management Accounting'},'mixed',[]).length,43+20+14,'20 AI practice questions and 14 practice-exam questions join the Management Accounting pool');
 console.log('PASS: legacy bank upgrade preserves learning data; all 51 management questions imported, 43 scored and 8 excluded; 20 AI questions added.');
 
 // AI-generated questions: 20 practice questions per topic, plus a separate 50-question mock exam that never enters practice pools.
 const topics=[...new Set(questions.filter(q=>!q.aiGenerated).map(q=>q.topic))];
-for(const topic of topics)assert.equal(questions.filter(q=>q.aiGenerated&&q.set==='bank'&&q.topic===topic).length,20,topic);
+for(const topic of topics)assert.equal(questions.filter(q=>q.aiGenerated&&q.set==='bank'&&q.topic===topic&&!q.id.startsWith('pe')).length,20,topic);
+assert.equal(questions.filter(q=>q.aiGenerated&&q.set==='bank'&&q.id.startsWith('pe-')).length,51,'practice exam 1');
+assert.equal(questions.filter(q=>q.aiGenerated&&q.set==='bank'&&q.id.startsWith('pe2-')).length,53,'practice exam 2');
 const mock=mockExam(questions);
 assert.equal(mock.length,50);assert.deepEqual(mock.map(q=>q.examOrder),Array.from({length:50},(_,i)=>i+1));
 assert.equal(mockExam(questions,1).length,30);assert.equal(mockExam(questions,2).length,20);
